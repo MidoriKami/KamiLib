@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using KamiLib.Interfaces;
 
 namespace KamiLib.CommandSystem;
@@ -6,6 +7,7 @@ namespace KamiLib.CommandSystem;
 public class SubCommand : ISubCommand
 {
     public string? CommandKeyword { get; init; }
+    public List<string>? Aliases { get; init; }
     public Action? CommandAction { get; init; }
     public Action<string?[]?>? ParameterAction { get; init; }
     public Func<bool>? CanExecute { get; init; }
@@ -13,6 +15,8 @@ public class SubCommand : ISubCommand
     public bool Hidden { get; init; }
 
     public string? GetCommand() => CommandKeyword;
+    public IEnumerable<string>? GetAliases() => Aliases;
+
     string? ISubCommand.GetHelpText() => GetHelpText?.Invoke();
 
     public bool Execute(CommandData commandData)
