@@ -3,7 +3,7 @@ using ImGuiNET;
 
 namespace KamiLib;
 
-internal static class Colors
+public static class Colors
 {
     public static Vector4 Purple = new(176 / 255.0f, 38 / 255.0f, 236 / 255.0f, 1.0f);
     public static Vector4 Blue = new(37 / 255.0f, 168 / 255.0f, 1.0f, 1.0f);

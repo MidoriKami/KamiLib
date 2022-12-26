@@ -2,7 +2,7 @@
 
 namespace KamiLib;
 
-internal static class Condition
+public static class Condition
 {
     public static bool IsBoundByDuty()
     {

@@ -2,7 +2,7 @@
 
 namespace KamiLib;
 
-internal static class Chat
+public static class Chat
 {
     private static string _pluginName = "Name Not Set";
     public static void SetPluginName(string pluginName) => _pluginName = pluginName;
