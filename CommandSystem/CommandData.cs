@@ -32,7 +32,8 @@ public class CommandData
         }
     }
 
-    public override string ToString() => $"{Command ?? "Empty Command"}, " +
+    public override string ToString() => $"{BaseCommand ?? "Empty Base Command"}, " +
+                                         $"{Command ?? "Empty Command"}, " +
                                          $"{SubCommand ?? "Empty SubCommand"}, " +
                                          $"{(Arguments is null ? "Empty Args" : string.Join(", ", Arguments))}";
 }

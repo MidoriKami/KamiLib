@@ -22,7 +22,7 @@ public static class Command
         }
         else
         {
-            Chat.PrintError($"The command '/{data.BaseCommand} {data.Command}' does not exist.");
+            Chat.PrintError($"The command '{data.BaseCommand} {data.Command}' does not exist.");
         }
     }
 }

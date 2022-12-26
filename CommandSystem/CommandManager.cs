@@ -41,9 +41,9 @@ public class CommandManager : IDisposable
     
     public void OnCommand(string command, string arguments)
     {
-        PluginLog.Debug($"Received Command `{command}` `{arguments}`");
-
         var commandData = Command.GetCommandData(command.ToLower(), arguments.ToLower());
+        
+        PluginLog.Debug($"Received Command: {commandData}");
         Command.ProcessCommand(commandData, Commands);
     }
 }
