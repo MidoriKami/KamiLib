@@ -1,1 +1,4 @@
 /obj/
+/bin/x64/Debug/KamiLib.deps.json
+/bin/x64/Debug/KamiLib.dll
+/bin/x64/Debug/KamiLib.pdb
