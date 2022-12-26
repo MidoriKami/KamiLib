@@ -34,6 +34,14 @@ public class HelpCommands: IPluginCommand
             if (!selectedSubCommand.Hidden)
             {
                 PrintHelpText(command, selectedSubCommand);
+
+                if (selectedSubCommand.GetAliases() is { } aliases)
+                {
+                    foreach (var alias in aliases)
+                    {
+                        PrintAliasHelpText(command, alias, selectedSubCommand);
+                    }
+                }
             }
         }
     }
@@ -51,7 +59,24 @@ public class HelpCommands: IPluginCommand
         {
             commandString += subCommand.GetCommand() + " ";
         }
+        
+        Chat.PrintHelp(commandString, subCommand.GetHelpText());
+    }
 
+    private static void PrintAliasHelpText(IPluginCommand mainCommand, string? alias, ISubCommand subCommand)
+    {
+        var commandString = $"/{KamiLib.PluginName.ToLower()} ";
+
+        if (mainCommand.CommandArgument is not null)
+        {
+            commandString += mainCommand.CommandArgument + " ";
+        }
+
+        if (alias is not null)
+        {
+            commandString += alias + " ";
+        }
+        
         Chat.PrintHelp(commandString, subCommand.GetHelpText());
     }
 }
