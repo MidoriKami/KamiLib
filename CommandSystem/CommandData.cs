@@ -1,4 +1,4 @@
-﻿namespace KamiLib;
+﻿namespace KamiLib.CommandSystem;
 
 public class CommandData
 {

@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using ImGuiNET;
 
-namespace KamiLib;
+namespace KamiLib.Utilities;
 
 public static class Colors
 {

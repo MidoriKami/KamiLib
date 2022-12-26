@@ -1,6 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 
-namespace KamiLib;
+namespace KamiLib.Utilities;
 
 public static class Condition
 {

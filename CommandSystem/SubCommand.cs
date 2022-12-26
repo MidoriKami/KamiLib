@@ -1,7 +1,7 @@
 ﻿using System;
 using KamiLib.Interfaces;
 
-namespace KamiLib;
+namespace KamiLib.CommandSystem;
 
 public class SubCommand : ISubCommand
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace KamiLib;
+namespace KamiLib.Utilities;
 
 public unsafe class BaseNode
 {

@@ -1,4 +1,6 @@
-﻿namespace KamiLib.Interfaces;
+﻿using KamiLib.CommandSystem;
+
+namespace KamiLib.Interfaces;
 
 public interface ISubCommand
 {

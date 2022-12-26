@@ -1,6 +1,6 @@
 ﻿using Dalamud.Game.Text.SeStringHandling;
 
-namespace KamiLib;
+namespace KamiLib.Utilities;
 
 public static class Chat
 {
