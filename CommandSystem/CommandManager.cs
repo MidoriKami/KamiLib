@@ -12,6 +12,8 @@ public class CommandManager : IDisposable
     private string HelpCommand => $"/{KamiLib.PluginName.ToLower()} help";
 
     public readonly List<IPluginCommand> Commands = new();
+
+    private readonly List<string> additionalCommands = new();
     
     public CommandManager()
     {
@@ -32,6 +34,20 @@ public class CommandManager : IDisposable
     {
         Service.Commands.RemoveHandler(SettingsCommand);
         Service.Commands.RemoveHandler(HelpCommand);
+
+        foreach (var additionalCommand in additionalCommands)
+        {
+            Service.Commands.RemoveHandler(additionalCommand);
+        }
+    }
+
+    public void AddHandler(string additionalCommand, string description)
+    {
+        additionalCommands.Add(additionalCommand);
+        Service.Commands.AddHandler(additionalCommand, new CommandInfo(OnCommand)
+        {
+            HelpMessage = description
+        });
     }
 
     public void AddCommand(IPluginCommand command)
