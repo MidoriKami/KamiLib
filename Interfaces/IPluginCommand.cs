@@ -13,13 +13,15 @@ public interface IPluginCommand
     
     public void Execute(CommandData data)
     {
-        var matchingSubCommands = SubCommands.Where(subCommand => subCommand.GetCommand() == data.SubCommand).ToList();
+        var matchingSubCommands = SubCommands
+            .Where(subCommand => MatchingSubCommand(subCommand, data.SubCommand))
+            .ToList();
 
         if (matchingSubCommands.Any())
         {
-            foreach (var _ in matchingSubCommands.Where(subCommand => subCommand.Execute(data)))
+            foreach (var subCommand in matchingSubCommands)
             {
-                Chat.Print("Command", "Command Successful");
+                subCommand.Execute(data);
             }
         }
         else
@@ -27,4 +29,13 @@ public interface IPluginCommand
             Chat.PrintError($"The command '{data.BaseCommand} {data.Command} {data.SubCommand}' does not exist.");
         }
     }
+
+    private bool MatchingSubCommand(ISubCommand subCommand, string? targetCommand)
+    {
+        if (subCommand.GetCommand() == targetCommand) return true;
+        if (subCommand.GetAliases()?.Contains(targetCommand) ?? false) return true;
+
+        return false;
+    }
+
 }
