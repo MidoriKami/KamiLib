@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState;
+﻿using Dalamud.Data;
+using Dalamud.Game.ClientState;
 using Dalamud.Game.Gui;
 using Dalamud.IoC;
 using Dalamud.Logging;
@@ -18,6 +19,7 @@ public class Service
     [PluginService] public static ChatGui Chat { get; private set; } = null!;
     [PluginService] public static GameGui GameGui { get; private set; } = null!;
     [PluginService] public static DalamudCondition Condition { get; private set; } = null!;
+    [PluginService] public static DataManager DataManager { get; private set; } = null!;
 }
 
 public static class KamiLib
