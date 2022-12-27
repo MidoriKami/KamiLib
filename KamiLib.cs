@@ -1,9 +1,11 @@
-﻿using Dalamud.Data;
+﻿using System;
+using Dalamud.Data;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.Gui;
 using Dalamud.IoC;
 using Dalamud.Logging;
 using Dalamud.Plugin;
+using KamiLib.BlacklistSystem;
 using KamiLib.CommandSystem;
 using KamiLib.WindowSystem;
 using DalamudCommandManager = Dalamud.Game.Command.CommandManager;
@@ -25,18 +27,22 @@ public class Service
 public static class KamiLib
 {
     public static string PluginName = string.Empty;
-    
+
     public static CommandManager CommandManager = null!;
     public static WindowManager WindowManager = null!;
-    
-    public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName)
+    public static Action SaveConfigFunction = null!;
+
+    public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName, Action saveConfig)
     {
         PluginLog.Debug("Initializing");
-        
+
         pluginInterface.Create<Service>();
 
         PluginName = pluginName;
-        
+        SaveConfigFunction = saveConfig;
+
+        BlacklistDraw.PrimeSearch();
+
         CommandManager = new CommandManager();
         WindowManager = new WindowManager();
     }
@@ -46,4 +52,6 @@ public static class KamiLib
         CommandManager.Dispose();
         WindowManager.Dispose();
     }
+
+    public static void SaveConfiguration() => SaveConfigFunction();
 }
