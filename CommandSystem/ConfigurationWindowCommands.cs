@@ -25,7 +25,13 @@ public class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
             {
                 if ( KamiLib.WindowManager.GetWindowOfType<T>() is {} mainWindow )
                 {
+                    Chat.Print("Command",!mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
+
                     mainWindow.IsOpen = !mainWindow.IsOpen;
+                }
+                else
+                {
+                    Chat.PrintError("Something went wrong trying to open Configuration Window");
                 }
             },
             CanExecute = () => !Service.ClientState.IsPvP,
