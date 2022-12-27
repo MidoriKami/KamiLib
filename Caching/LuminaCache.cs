@@ -8,7 +8,7 @@ public class LuminaCache<T> where T : ExcelRow
 {
     private readonly Func<uint, T?> searchAction;
 
-    public LuminaCache(Func<uint, T?>? action = null)
+    protected LuminaCache(Func<uint, T?>? action = null)
     {
         searchAction = action ?? (row => Service.DataManager.GetExcelSheet<T>()!.GetRow(row));
     }
