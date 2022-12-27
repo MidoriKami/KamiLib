@@ -6,16 +6,16 @@ namespace KamiLib.Caching;
 
 public class LuminaCache<T> where T : ExcelRow
 {
-    private readonly Func<uint, T> searchAction;
+    private readonly Func<uint, T?> searchAction;
 
-    public LuminaCache(Func<uint, T>? action = null)
+    public LuminaCache(Func<uint, T?>? action = null)
     {
-        searchAction = action ?? (row => Service.DataManager.GetExcelSheet<T>()!.GetRow(row)!);
+        searchAction = action ?? (row => Service.DataManager.GetExcelSheet<T>()!.GetRow(row));
     }
 
     private readonly Dictionary<uint, T> cache = new();
 
-    public T GetRow(uint id)
+    public T? GetRow(uint id)
     {
         if (cache.TryGetValue(id, out var value))
         {
@@ -23,7 +23,9 @@ public class LuminaCache<T> where T : ExcelRow
         }
         else
         {
-            return cache[id] = searchAction(id);
+            if (searchAction(id) is not { } result) return null;
+            
+            return cache[id] = result;
         }
     }
 }
