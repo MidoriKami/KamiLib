@@ -26,11 +26,11 @@ public class Service
 
 public static class KamiLib
 {
-    public static string PluginName = string.Empty;
-
-    public static CommandManager CommandManager = null!;
-    public static WindowManager WindowManager = null!;
-    public static Action SaveConfigFunction = null!;
+    public static string PluginName { get; private set; } = string.Empty;
+    public static CommandManager CommandManager { get; private set; } = null!;
+    public static WindowManager WindowManager { get; private set; } = null!;
+    
+    private static Action _saveConfigFunction = null!;
 
     public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName, Action saveConfig)
     {
@@ -39,7 +39,7 @@ public static class KamiLib
         pluginInterface.Create<Service>();
 
         PluginName = pluginName;
-        SaveConfigFunction = saveConfig;
+        _saveConfigFunction = saveConfig;
 
         BlacklistDraw.PrimeSearch();
 
@@ -53,5 +53,5 @@ public static class KamiLib
         WindowManager.Dispose();
     }
 
-    public static void SaveConfiguration() => SaveConfigFunction();
+    public static void SaveConfiguration() => _saveConfigFunction();
 }

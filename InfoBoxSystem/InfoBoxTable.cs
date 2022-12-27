@@ -73,7 +73,7 @@ public class InfoBoxTable
         return owner;
     }
 
-    private float GetWrapPosition()
+    private static float GetWrapPosition()
     {
         var region = ImGui.GetContentRegionAvail();
 

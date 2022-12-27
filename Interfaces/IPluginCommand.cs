@@ -30,7 +30,7 @@ public interface IPluginCommand
         }
     }
 
-    private bool MatchingSubCommand(ISubCommand subCommand, string? targetCommand)
+    private static bool MatchingSubCommand(ISubCommand subCommand, string? targetCommand)
     {
         if (subCommand.GetCommand() == targetCommand) return true;
         if (subCommand.GetAliases()?.Contains(targetCommand) ?? false) return true;
