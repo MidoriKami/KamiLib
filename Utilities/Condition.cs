@@ -1,39 +1,57 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using System;
+using Dalamud.Game.ClientState.Conditions;
 using KamiLib.Caching;
-using Lumina.Excel.GeneratedSheets;
 
 namespace KamiLib.Utilities;
 
 public static class Condition
 {
-    private static readonly LuminaCache<TerritoryType> TerritoryTypeCache = new();
-
     public static bool IsBoundByDuty()
     {
-        var baseBoundByDuty = Service.Condition[ConditionFlag.BoundByDuty];
-        var boundBy56 = Service.Condition[ConditionFlag.BoundByDuty56];
-        var boundBy95 = Service.Condition[ConditionFlag.BoundByDuty95];
+        if(IsInIslandSanctuary()) return false;
 
-        var territoryInfo = TerritoryTypeCache.GetRow(Service.ClientState.TerritoryType);
-
-        // Island Sanctuary
-        if (territoryInfo.TerritoryIntendedUse == 49)
-            return false;
-
-        return baseBoundByDuty || boundBy56 || boundBy95;
+        return Service.Condition[ConditionFlag.BoundByDuty] ||
+               Service.Condition[ConditionFlag.BoundByDuty56] ||
+               Service.Condition[ConditionFlag.BoundByDuty95];
     }
 
-    public static bool InCutsceneOrQuestEvent()
+    public static bool IsInCombat() => Service.Condition[ConditionFlag.InCombat];
+    public static bool IsInCutsceneOrQuestEvent() => IsInCutscene() || IsInQuestEvent();
+    public static bool IsDutyRecorderPlayback() => Service.Condition[ConditionFlag.DutyRecorderPlayback];
+    public static bool IsIslandDoingSomethingMode() => Service.GameGui.GetAddonByName("MJIPadGuide", 1) != IntPtr.Zero;
+
+    public static bool IsInCutscene()
     {
         return Service.Condition[ConditionFlag.OccupiedInCutSceneEvent] ||
                Service.Condition[ConditionFlag.WatchingCutscene] ||
-               Service.Condition[ConditionFlag.WatchingCutscene78] ||
-               Service.Condition[ConditionFlag.OccupiedInQuestEvent];
+               Service.Condition[ConditionFlag.WatchingCutscene78];
+    }
+    
+    public static bool IsInQuestEvent()
+    {
+        if (IsInIslandSanctuary() && IsIslandDoingSomethingMode()) return false;
+
+        return Service.Condition[ConditionFlag.OccupiedInQuestEvent];
     }
 
-    public static bool BetweenAreas()
+    public static bool IsBetweenAreas()
     {
         return Service.Condition[ConditionFlag.BetweenAreas] ||
                Service.Condition[ConditionFlag.BetweenAreas51];
+    }
+
+    public static bool IsInIslandSanctuary()
+    {
+        var territoryInfo = TerritoryTypeCache.Instance.GetRow(Service.ClientState.TerritoryType);
+        if (territoryInfo is null) return false;
+        
+        // Island Sanctuary
+        return territoryInfo.TerritoryIntendedUse == 49;
+    }
+    
+    public static bool IsCrafting()
+    {
+        return Service.Condition[ConditionFlag.Crafting] ||
+               Service.Condition[ConditionFlag.Crafting40];
     }
 }
