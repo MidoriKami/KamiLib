@@ -82,16 +82,16 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
         var bottomLeftCurveCenter = new Vector2(StartPosition.X + CurveRadius, StartPosition.Y + Size.Y - CurveRadius);
         var bottomRightCurveCenter = new Vector2(StartPosition.X + Size.X - CurveRadius, StartPosition.Y + Size.Y - CurveRadius);
 
-        DrawList.PathArcTo(topLeftCurveCenter, CurveRadius, MathF.PI, 1.5f * MathF.PI, SegmentResolution);
+        DrawList.PathArcTo(topLeftCurveCenter, CurveRadius, MathF.PI, 1.55f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
-        DrawList.PathArcTo(topRightCurveCenter, CurveRadius, 2.0f * MathF.PI, 1.5f * MathF.PI, SegmentResolution);
+        DrawList.PathArcTo(topRightCurveCenter, CurveRadius, 2.0f * MathF.PI, 1.45f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
-        DrawList.PathArcTo(bottomLeftCurveCenter, CurveRadius, 0.5f * MathF.PI, MathF.PI, SegmentResolution);
+        DrawList.PathArcTo(bottomLeftCurveCenter, CurveRadius, 0.5f * MathF.PI, 1.05f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
-        DrawList.PathArcTo(bottomRightCurveCenter, CurveRadius, 0.0f, 0.5f * MathF.PI, SegmentResolution);
+        DrawList.PathArcTo(bottomRightCurveCenter, CurveRadius, 0.0f, 0.5f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
     }
 
