@@ -153,7 +153,9 @@ public static class BlacklistDraw
         {
             if (!blacklistedAreas.Value.Any())
             {
-                ImGui.TextColored(Colors.Orange, "List is Empty");
+                const string text = "Blacklist is Empty";
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = ImGui.GetContentRegionAvail().X / 2 - ImGui.CalcTextSize(text).X / 2.0f});
+                ImGui.TextColored(Colors.Orange, text);
             }
             else
             {
