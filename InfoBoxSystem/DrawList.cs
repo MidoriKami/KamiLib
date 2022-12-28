@@ -66,7 +66,7 @@ public abstract class DrawList<T>
 
             var spacing = ImGui.GetStyle().ItemSpacing;
             cursorPosition += spacing;
-            ImGui.SetCursorPos(cursorPosition with { X = cursorPosition.X + 27.0f * ImGuiHelpers.GlobalScale, Y = cursorPosition.Y - spacing.Y});
+            ImGui.SetCursorPos(cursorPosition with { X = cursorPosition.X + 27.0f * ImGuiHelpers.GlobalScale });
 
             ImGui.TextUnformatted(label);
 
@@ -346,40 +346,51 @@ public abstract class DrawList<T>
     {
         if (buttonSize is not null)
         {
-            DrawActions.Add(() =>
-            {
-                if(disable) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.5f);
-                if (ImGui.Button(label, new Vector2(buttonSize.Value, 23.0f * ImGuiHelpers.GlobalScale)) && !disable)
-                {
-                    action.Invoke();
-                }
-                if(disable) ImGui.PopStyleVar();
-
-                if (hoverTooltip is not null && ImGui.IsItemHovered())
-                {
-                    ImGui.SetTooltip(hoverTooltip);
-                }
-            });
+            AddDisabledButtonWithSize(label, action, disable, buttonSize.Value, hoverTooltip);
         }
         else
         {
-            DrawActions.Add(() =>
-            {
-                if(disable) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.5f);
-                if (ImGui.Button(label) && !disable)
-                {
-                    action.Invoke();
-                }                
-                if(disable) ImGui.PopStyleVar();
-                
-                if (hoverTooltip is not null && ImGui.IsItemHovered())
-                {
-                    ImGui.SetTooltip(hoverTooltip);
-                }
-            });
+            AddDisabledButtonWithoutSize(label, action, disable, hoverTooltip);
         }
 
         return DrawListOwner;
+    }
+
+
+    private void AddDisabledButtonWithSize(string label, Action action, bool disable, float buttonSize, string? hoverTooltip = null)
+    {
+        DrawActions.Add(() =>
+        {
+            if(disable) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.5f);
+            if (ImGui.Button(label, new Vector2(buttonSize, 23.0f * ImGuiHelpers.GlobalScale)) && !disable)
+            {
+                action.Invoke();
+            }
+            if(disable) ImGui.PopStyleVar();
+
+            if (hoverTooltip is not null && ImGui.IsItemHovered() && disable)
+            {
+                ImGui.SetTooltip(hoverTooltip);
+            }
+        });
+    }
+
+    private void AddDisabledButtonWithoutSize(string label, Action action, bool disable, string? hoverTooltip = null)
+    {
+        DrawActions.Add(() =>
+        {
+            if(disable) ImGui.PushStyleVar(ImGuiStyleVar.Alpha, 0.5f);
+            if (ImGui.Button(label) && !disable)
+            {
+                action.Invoke();
+            }                
+            if(disable) ImGui.PopStyleVar();
+                
+            if (hoverTooltip is not null && ImGui.IsItemHovered() && disable)
+            {
+                ImGui.SetTooltip(hoverTooltip);
+            }
+        });
     }
     
     public T AddButton(string label, Action action, Vector2? buttonSize = null)

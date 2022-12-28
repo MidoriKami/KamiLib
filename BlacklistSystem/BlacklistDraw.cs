@@ -28,7 +28,7 @@ public static class BlacklistDraw
             .AddTitle("Currently Blacklisted Areas", out var innerWidth, 1.0f)
             .AddDummy(5.0f)
             .AddAction(() => BlacklistedAreasList(blacklistedAreas))
-            .AddDisabledButton(EntriesToRemove.Count == 0 ? "Reset Blacklist" : $"Remove {EntriesToRemove.Count} Selected Areas", () =>
+            .AddDisabledButton(EntriesToRemove.Count == 0 ? "Clear Blacklist" : $"Remove {EntriesToRemove.Count} Selected Areas", () =>
             {
                 if (EntriesToRemove.Count == 0)
                 {
@@ -41,7 +41,7 @@ public static class BlacklistDraw
                     EntriesToRemove.Clear();
                     KamiLib.SaveConfiguration();
                 }
-            }, !ImGui.GetIO().KeyShift, "Hold Shift to enable button", innerWidth)
+            }, !ImGui.GetIO().KeyShift, "Hold 'Shift' to enable button", innerWidth)
             .Draw();
     }
 
@@ -114,7 +114,7 @@ public static class BlacklistDraw
     {
         if (results is null) return; 
         
-        if (ImGui.BeginChild("###SearchResultsChild", new Vector2(InfoBox.Instance.InnerWidth, 125.0f * ImGuiHelpers.GlobalScale )))
+        if (ImGui.BeginChild("###SearchResultsChild", new Vector2(InfoBox.Instance.InnerWidth, 23.0f * 5 * ImGuiHelpers.GlobalScale )))
         {
             foreach (var result in results)
             {
@@ -144,9 +144,8 @@ public static class BlacklistDraw
     private static void BlacklistedAreasList(Setting<List<uint>> blacklistedAreas)
     {
         var itemCount = Math.Min(blacklistedAreas.Value.Count, 10);
-        var framePadding = ImGui.GetStyle().FramePadding;
-        var listHeight = 27.0f * itemCount * ImGuiHelpers.GlobalScale + framePadding.Y;
-        var minHeight = 27.0f * ImGuiHelpers.GlobalScale + framePadding.Y;
+        var listHeight = 23.0f * itemCount * ImGuiHelpers.GlobalScale;
+        var minHeight = 23.0f * ImGuiHelpers.GlobalScale;
 
         var size = new Vector2(InfoBox.Instance.InnerWidth, MathF.Max(listHeight, minHeight));
         
