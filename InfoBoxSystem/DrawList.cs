@@ -81,6 +81,20 @@ public abstract class DrawList<T>
         return DrawListOwner;
     }
 
+    public T Indent(int indent)
+    {
+        DrawActions.Add( () => ImGui.Indent(indent) );
+
+        return DrawListOwner;
+    }
+
+    public T UnIndent(int indent)
+    {
+        DrawActions.Add( () => ImGui.Unindent(indent) );
+
+        return DrawListOwner;
+    }
+
     public T AddConfigCheckbox(string label, Setting<bool> setting, string? helpText = null, string? additionalID = null)
     {
         DrawActions.Add(() =>

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace KamiLib.Interfaces;
+﻿namespace KamiLib.Interfaces;
 
 public interface ITabItem
 {
