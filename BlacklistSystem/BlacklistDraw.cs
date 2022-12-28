@@ -114,7 +114,7 @@ public static class BlacklistDraw
     {
         if (results is null) return; 
         
-        if (ImGui.BeginChild("###SearchResultsChild", new Vector2(InfoBox.Instance.InnerWidth, 23.0f * 5 * ImGuiHelpers.GlobalScale )))
+        if (ImGui.BeginChild("###SearchResultsChild", new Vector2(InfoBox.Instance.InnerWidth, 21.0f * 5 * ImGuiHelpers.GlobalScale )))
         {
             foreach (var result in results)
             {
@@ -144,8 +144,8 @@ public static class BlacklistDraw
     private static void BlacklistedAreasList(Setting<List<uint>> blacklistedAreas)
     {
         var itemCount = Math.Min(blacklistedAreas.Value.Count, 10);
-        var listHeight = 23.0f * itemCount * ImGuiHelpers.GlobalScale;
-        var minHeight = 23.0f * ImGuiHelpers.GlobalScale;
+        var listHeight = itemCount * ImGuiHelpers.GlobalScale * 21.0f;
+        var minHeight = 21.0f * ImGuiHelpers.GlobalScale;
 
         var size = new Vector2(InfoBox.Instance.InnerWidth, MathF.Max(listHeight, minHeight));
         
