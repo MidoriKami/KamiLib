@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
 using ImGuiNET;
 using KamiLib.Interfaces;
 
 namespace KamiLib.Utilities;
 
-public class TabBar : IDrawable, IDisposable
+public class TabBar : IDrawable
 {
     private readonly List<ITabItem> tabs = new();
     private readonly string tabBarID;
@@ -47,13 +46,5 @@ public class TabBar : IDrawable, IDisposable
         }
         
         ImGui.PopID();
-    }
-
-    public void Dispose()
-    {
-        foreach (var tab in tabs)
-        {
-            tab.Dispose();
-        }
     }
 }
