@@ -87,7 +87,7 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
         DrawList.PathArcTo(topRightCurveCenter, CurveRadius, 2.0f * MathF.PI, 1.45f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
-        DrawList.PathArcTo(bottomLeftCurveCenter, CurveRadius, 0.5f * MathF.PI, 0.975f * MathF.PI);
+        DrawList.PathArcTo(bottomLeftCurveCenter, CurveRadius, 0.5f * MathF.PI, 1.0f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
         DrawList.PathArcTo(bottomRightCurveCenter, CurveRadius, 0.0f, 0.5f * MathF.PI);
