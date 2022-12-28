@@ -12,7 +12,6 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
 {
     private static float CurveRadius => 13.0f * ImGuiHelpers.GlobalScale;
     private static float BorderThickness => 2.0f;
-    private static int SegmentResolution => 10;
     private static ImDrawListPtr DrawList => ImGui.GetWindowDrawList();
     private static Vector2 RegionAvailable => ImGui.GetContentRegionAvail();
     private static Vector2 StartPosition { get; set; }
@@ -88,7 +87,7 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
         DrawList.PathArcTo(topRightCurveCenter, CurveRadius, 2.0f * MathF.PI, 1.45f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
-        DrawList.PathArcTo(bottomLeftCurveCenter, CurveRadius, 0.5f * MathF.PI, 1.05f * MathF.PI);
+        DrawList.PathArcTo(bottomLeftCurveCenter, CurveRadius, 0.5f * MathF.PI, 0.975f * MathF.PI);
         DrawList.PathStroke(BorderColor.ToU32(), ImDrawFlags.None, BorderThickness);
 
         DrawList.PathArcTo(bottomRightCurveCenter, CurveRadius, 0.0f, 0.5f * MathF.PI);
