@@ -12,10 +12,10 @@ public class TabBar : IDrawable, IDisposable
     private readonly string tabBarID;
     private readonly Vector2 childSize;
 
-    public TabBar(string id, Vector2 size)
+    public TabBar(string id, Vector2? size = null)
     {
         tabBarID = id;
-        childSize = size;
+        childSize = size ?? Vector2.Zero;
     }
     
     public void AddTab(ITabItem tab) => tabs.Add(tab);
