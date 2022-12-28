@@ -2,7 +2,7 @@
 
 namespace KamiLib.Interfaces;
 
-public interface ITabItem : IDisposable
+public interface ITabItem
 {
     string TabName { get; }
     bool Enabled { get; }
