@@ -17,13 +17,13 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
     private static Vector2 RegionAvailable => ImGui.GetContentRegionAvail();
     private static Vector2 StartPosition { get; set; }
     private static Vector2 Size { get; set; }
-    private static Vector4 BorderColor { get; } = Colors.White with { W = 0.50f };
+    private static Vector4 BorderColor { get; } = Colors.White;
     private static Vector4 TitleColor { get; } = Colors.White;
     private static float TotalWidth { get; set; }
     private string Label { get; set; } = "Label Not Set";
     private float WidthPercentage { get; set; }
 
-    public float InnerWidth { get; set; }
+    public float InnerWidth { get; private set; }
 
     private InfoBox()
     {
