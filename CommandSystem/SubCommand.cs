@@ -13,6 +13,7 @@ public class SubCommand : ISubCommand
     public Func<bool>? CanExecute { get; init; }
     public Func<string>? GetHelpText { get; init; }
     public bool Hidden { get; init; }
+    public bool HasParameterAction => ParameterAction is not null;
 
     public string? GetCommand() => CommandKeyword;
     public IEnumerable<string>? GetAliases() => Aliases;

@@ -10,4 +10,5 @@ public interface ISubCommand
     bool Execute(CommandData commandData);
     string? GetHelpText();
     bool Hidden { get; }
+    bool HasParameterAction { get; }
 }

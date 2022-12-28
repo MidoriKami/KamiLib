@@ -59,6 +59,11 @@ public class HelpCommands: IPluginCommand
         {
             commandString += subCommand.GetCommand() + " ";
         }
+
+        if (subCommand.HasParameterAction)
+        {
+            commandString += "[value] ";
+        }
         
         Chat.PrintHelp(commandString, subCommand.GetHelpText());
     }
@@ -75,6 +80,11 @@ public class HelpCommands: IPluginCommand
         if (alias is not null)
         {
             commandString += alias + " ";
+        }
+        
+        if (subCommand.HasParameterAction)
+        {
+            commandString += "[value] ";
         }
         
         Chat.PrintHelp(commandString, subCommand.GetHelpText());
