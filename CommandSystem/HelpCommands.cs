@@ -16,7 +16,7 @@ public class HelpCommands: IPluginCommand
             CommandKeyword = null,
             CommandAction = () =>
             {
-                foreach (var command in KamiLib.CommandManager.Commands)
+                foreach (var command in KamiCommon.CommandManager.Commands)
                 {
                     PrintSubCommands(command);
                 }
@@ -48,7 +48,7 @@ public class HelpCommands: IPluginCommand
 
     private static void PrintHelpText(IPluginCommand mainCommand, ISubCommand subCommand)
     {
-        var commandString = $"/{KamiLib.PluginName.ToLower()} ";
+        var commandString = $"/{KamiCommon.PluginName.ToLower()} ";
 
         if (mainCommand.CommandArgument is not null)
         {
@@ -70,7 +70,7 @@ public class HelpCommands: IPluginCommand
 
     private static void PrintAliasHelpText(IPluginCommand mainCommand, string? alias, ISubCommand subCommand)
     {
-        var commandString = $"/{KamiLib.PluginName.ToLower()} ";
+        var commandString = $"/{KamiCommon.PluginName.ToLower()} ";
 
         if (mainCommand.CommandArgument is not null)
         {

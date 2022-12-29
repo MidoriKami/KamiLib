@@ -23,7 +23,7 @@ public class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
             CommandKeyword = null,
             CommandAction = () =>
             {
-                if ( KamiLib.WindowManager.GetWindowOfType<T>() is {} mainWindow )
+                if ( KamiCommon.WindowManager.GetWindowOfType<T>() is {} mainWindow )
                 {
                     Chat.Print("Command",!mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
 

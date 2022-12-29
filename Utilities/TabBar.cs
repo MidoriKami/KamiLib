@@ -24,7 +24,7 @@ public class TabBar : IDrawable
     {
         ImGui.PushID(tabBarID);
         
-        if (ImGui.BeginTabBar($"###{KamiLib.PluginName}TabBar", ImGuiTabBarFlags.NoTooltip))
+        if (ImGui.BeginTabBar($"###{KamiCommon.PluginName}TabBar", ImGuiTabBarFlags.NoTooltip))
         {
             foreach (var tab in tabs)
             {
@@ -32,7 +32,7 @@ public class TabBar : IDrawable
 
                 if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    if (ImGui.BeginChild($"###{KamiLib.PluginName}TabBarChild", childSize, false, ImGuiWindowFlags.NoScrollbar)) 
+                    if (ImGui.BeginChild($"###{KamiCommon.PluginName}TabBarChild", childSize, false, ImGuiWindowFlags.NoScrollbar)) 
                     {
                         ImGui.PushID(tab.TabName);
                         tab.Draw();

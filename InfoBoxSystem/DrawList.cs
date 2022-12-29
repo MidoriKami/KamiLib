@@ -106,7 +106,7 @@ public abstract class DrawList<T>
 
             if (ImGui.Checkbox($"##{label}", ref setting.Value))
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
 
             var spacing = ImGui.GetStyle().ItemSpacing;
@@ -146,7 +146,7 @@ public abstract class DrawList<T>
                     if (ImGui.Selectable(localizeFunction(value), setting.Value.Equals(value)))
                     {
                         setting.Value = value;
-                        KamiLib.SaveConfiguration();
+                        KamiCommon.SaveConfiguration();
                     }
                 }
 
@@ -163,7 +163,7 @@ public abstract class DrawList<T>
         {
             if (ImGui.ColorEdit4(label, ref setting.Value, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaPreviewHalf))
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
         });
 
@@ -178,7 +178,7 @@ public abstract class DrawList<T>
             
             if (ImGui.ColorEdit4($"##{label}", ref setting.Value, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaPreviewHalf))
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
             
             ImGui.SameLine();
@@ -186,7 +186,7 @@ public abstract class DrawList<T>
             if (ImGui.Button(defaultLabel))
             {
                 setting.Value = defaultValue;
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
             ImGui.EndDisabled();
             
@@ -215,7 +215,7 @@ public abstract class DrawList<T>
             ImGui.DragFloat(label, ref setting.Value, 0.01f * maxValue, minValue, maxValue, $"%.{precision}f");
             if (ImGui.IsItemDeactivatedAfterEdit())
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
         });
 
@@ -245,7 +245,7 @@ public abstract class DrawList<T>
             ImGui.SliderInt(label, ref setting.Value, minValue, maxValue);
             if (ImGui.IsItemDeactivatedAfterEdit())
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
         });
 
@@ -261,7 +261,7 @@ public abstract class DrawList<T>
             if (ImGui.RadioButton(label, ref value, Convert.ToInt32(buttonValue)))
             {
                 setting.Value = (TU)Enum.ToObject(typeof(TU), value);
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
 
             if (helpText != null)
@@ -286,7 +286,7 @@ public abstract class DrawList<T>
 
             if (ImGui.IsItemDeactivatedAfterEdit())
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
         });
 
@@ -309,7 +309,7 @@ public abstract class DrawList<T>
             ImGui.InputFloat2("", ref setting.Value);
             if (ImGui.IsItemDeactivatedAfterEdit())
             {
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
         });
 
@@ -325,7 +325,7 @@ public abstract class DrawList<T>
             if (ImGui.IsItemDeactivatedAfterEdit())
             {
                 settingsPriority.Value = Math.Clamp(settingsPriority.Value, min, max);
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
             }
         });
 

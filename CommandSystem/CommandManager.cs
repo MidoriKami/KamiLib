@@ -8,8 +8,8 @@ namespace KamiLib.CommandSystem;
 
 public class CommandManager : IDisposable
 {
-    private static string SettingsCommand => $"/{KamiLib.PluginName.ToLower()}";
-    private static string HelpCommand => $"/{KamiLib.PluginName.ToLower()} help";
+    private static string SettingsCommand => $"/{KamiCommon.PluginName.ToLower()}";
+    private static string HelpCommand => $"/{KamiCommon.PluginName.ToLower()} help";
 
     public readonly List<IPluginCommand> Commands = new();
 
@@ -59,7 +59,7 @@ public class CommandManager : IDisposable
     {
         var commandData = Command.GetCommandData(command.ToLower(), arguments.ToLower());
         
-        PluginLog.Debug($"[{KamiLib.PluginName}] Received Command: {commandData}");
+        PluginLog.Debug($"[{KamiCommon.PluginName}] Received Command: {commandData}");
         Command.ProcessCommand(commandData, Commands);
     }
 }

@@ -13,7 +13,7 @@ public class WindowManager : IDisposable
 
     public WindowManager()
     {
-        windowSystem = new WindowSystem(KamiLib.PluginName);
+        windowSystem = new WindowSystem(KamiCommon.PluginName);
         
         windows.ForEach(window => windowSystem.AddWindow(window));
         
@@ -37,5 +37,5 @@ public class WindowManager : IDisposable
 
     public T? GetWindowOfType<T>() => windows.OfType<T>().FirstOrDefault();
     private void DrawUI() => windowSystem.Draw();
-    private void DrawConfigUI() => KamiLib.CommandManager.OnCommand($"{KamiLib.PluginName}", "");
+    private void DrawConfigUI() => KamiCommon.CommandManager.OnCommand($"{KamiCommon.PluginName}", "");
 }

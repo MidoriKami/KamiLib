@@ -32,7 +32,7 @@ public abstract class SelectionWindow : Window, IDrawable
         var leftSideWidth = region.X * horizontalWeight - itemSpacing.X / 2.0f;
         var topLeftSideHeight = region.Y - verticalHeight - itemSpacing.Y / 2.0f;
 
-        if(ImGui.BeginChild($"###{KamiLib.PluginName}LeftSide", new Vector2( leftSideWidth, topLeftSideHeight), ShowBorders, ImGuiWindowFlags.NoDecoration))
+        if(ImGui.BeginChild($"###{KamiCommon.PluginName}LeftSide", new Vector2( leftSideWidth, topLeftSideHeight), ShowBorders, ImGuiWindowFlags.NoDecoration))
         {
             selectionList.Draw(GetSelectables());
         }
@@ -45,7 +45,7 @@ public abstract class SelectionWindow : Window, IDrawable
 
         var rightSideWidth = region.X * (1.0f - horizontalWeight) - itemSpacing.X / 2.0f;
         
-        if(ImGui.BeginChild($"###{KamiLib.PluginName}RightSide", new Vector2(rightSideWidth, 0), ShowBorders, (ShowScrollBar ? ImGuiWindowFlags.AlwaysVerticalScrollbar : ImGuiWindowFlags.None) | ImGuiWindowFlags.NoDecoration))
+        if(ImGui.BeginChild($"###{KamiCommon.PluginName}RightSide", new Vector2(rightSideWidth, 0), ShowBorders, (ShowScrollBar ? ImGuiWindowFlags.AlwaysVerticalScrollbar : ImGuiWindowFlags.None) | ImGuiWindowFlags.NoDecoration))
         {
             selectionList.DrawSelected();
         }
@@ -53,7 +53,7 @@ public abstract class SelectionWindow : Window, IDrawable
         
         ImGui.SetCursorPos(bottomLeftChildPosition);
         
-        if(ImGui.BeginChild($"###{KamiLib.PluginName}BottomLeftSide", new Vector2(leftSideWidth, verticalHeight), ShowBorders, ImGuiWindowFlags.NoDecoration))
+        if(ImGui.BeginChild($"###{KamiCommon.PluginName}BottomLeftSide", new Vector2(leftSideWidth, verticalHeight), ShowBorders, ImGuiWindowFlags.NoDecoration))
         {
             DrawExtras();
         }

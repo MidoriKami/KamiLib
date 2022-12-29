@@ -33,13 +33,13 @@ public static class BlacklistDraw
                 if (EntriesToRemove.Count == 0)
                 {
                     blacklistedAreas.Value.Clear();
-                    KamiLib.SaveConfiguration();
+                    KamiCommon.SaveConfiguration();
                 }
                 else
                 {
                     blacklistedAreas.Value.RemoveAll(entry => EntriesToRemove.Contains(entry));
                     EntriesToRemove.Clear();
-                    KamiLib.SaveConfiguration();
+                    KamiCommon.SaveConfiguration();
                 }
             }, !ImGui.GetIO().KeyShift, "Hold 'Shift' to enable button", innerWidth)
             .Draw();
@@ -49,7 +49,7 @@ public static class BlacklistDraw
     {
         InfoBox.Instance
             .AddTitle("Add or Remove Current Zone", 1.0f)
-            .AddAction(() => TerritoryTypeCache.Instance.GetRow(Service.ClientState.TerritoryType)?.DrawLabel())
+            .AddAction(() => LuminaCache<TerritoryType>.Instance.GetRow(Service.ClientState.TerritoryType)?.DrawLabel())
             .BeginTable()
             .BeginRow()
             .AddDisabledButton("Add", () =>
@@ -83,7 +83,7 @@ public static class BlacklistDraw
             {
                 blacklistedZones.Value.AddRange(EntriesToAdd);
                 EntriesToAdd.Clear();
-                KamiLib.SaveConfiguration();
+                KamiCommon.SaveConfiguration();
                 
             }, !EntriesToAdd.Any(), "Select zones to add to blacklist", innerWidth)
             .Draw();
@@ -131,7 +131,7 @@ public static class BlacklistDraw
                 }
                     
                 ImGui.SameLine();
-                TerritoryTypeCache.Instance.GetRow(result.TerritoryID)?.DrawLabel();
+                LuminaCache<TerritoryType>.Instance.GetRow(result.TerritoryID)?.DrawLabel();
             }
         }
         ImGui.EndChild();
@@ -165,7 +165,7 @@ public static class BlacklistDraw
     {
         foreach (var territory in blacklistedAreas.Value)
         {
-            var territoryType = TerritoryTypeCache.Instance.GetRow(territory);
+            var territoryType = LuminaCache<TerritoryType>.Instance.GetRow(territory);
 
             ImGui.PushItemWidth(InfoBox.Instance.InnerWidth);
             if (ImGui.Selectable($"###{territory}", EntriesToRemove.Contains(territory)))
@@ -190,7 +190,7 @@ public static class BlacklistDraw
         if (!zones.Value.Contains(id))
         {
             zones.Value.Add(id);
-            KamiLib.SaveConfiguration();
+            KamiCommon.SaveConfiguration();
         }
     }
 
@@ -199,7 +199,7 @@ public static class BlacklistDraw
         if (zones.Value.Contains(id))
         {
             zones.Value.Remove(id);
-            KamiLib.SaveConfiguration();
+            KamiCommon.SaveConfiguration();
         }
     }
 }

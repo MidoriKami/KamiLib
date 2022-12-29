@@ -29,7 +29,7 @@ public static class Chat
     private static SeStringBuilder GetBaseString(string tag, string message)
     {
         return new SeStringBuilder()
-            .AddUiForeground($"[{KamiLib.PluginName}] ", 45)
+            .AddUiForeground($"[{KamiCommon.PluginName}] ", 45)
             .AddUiForeground($"[{tag}] ", 62)
             .AddText(message);
     }
