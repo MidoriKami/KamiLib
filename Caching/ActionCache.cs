@@ -11,5 +11,4 @@ public class ActionCache : LuminaCache<Action>
     {
         // Initialize Inherited Type
     }
-
 }
