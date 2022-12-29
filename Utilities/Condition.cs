@@ -65,4 +65,10 @@ public static class Condition
     {
         return Service.Condition[flag];
     }
+    
+    public static bool IsGathering()
+    {
+        return Service.Condition[ConditionFlag.Gathering] ||
+               Service.Condition[ConditionFlag.Gathering42];
+    }
 }
