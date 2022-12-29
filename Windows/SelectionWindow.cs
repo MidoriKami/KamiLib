@@ -16,6 +16,7 @@ public abstract class SelectionWindow : Window, IDrawable
     private readonly SelectionList selectionList = new();
 
     protected abstract IEnumerable<ISelectable> GetSelectables();
+    protected bool ShowScrollBar = true;
 
     protected SelectionWindow(string windowName, float xPercent, float yPercent) : base(windowName)
     {
@@ -46,7 +47,7 @@ public abstract class SelectionWindow : Window, IDrawable
 
         var rightSideWidth = region.X * (1.0f - horizontalWeight) - itemSpacing.X / 2.0f;
         
-        if(ImGui.BeginChild($"###{KamiLib.PluginName}RightSide", new Vector2(rightSideWidth, 0), ShowBorders))
+        if(ImGui.BeginChild($"###{KamiLib.PluginName}RightSide", new Vector2(rightSideWidth, 0), ShowBorders, ShowScrollBar ? ImGuiWindowFlags.AlwaysVerticalScrollbar : ImGuiWindowFlags.None))
         {
             selectionList.DrawSelected();
         }
