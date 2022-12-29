@@ -111,7 +111,7 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
         DrawList.AddLine(new Vector2(StartPosition.X + CurveRadius + textStartPadding + textSize.X + textEndPadding, StartPosition.Y - 0.5f), new Vector2(StartPosition.X + Size.X - CurveRadius - 0.5f, StartPosition.Y - 0.5f), color, BorderThickness);
     }
     
-    public InfoBox AddTitle(string title, float percentFill = 0.80f)
+    public InfoBox AddTitle(string title, float percentFill = 1.00f)
     {
         Label = title;
         WidthPercentage = percentFill;
@@ -119,7 +119,7 @@ public class InfoBox : DrawList<InfoBox>, IDrawable
         return DrawListOwner;
     }
 
-    public InfoBox AddTitle(string title, out float innerWidth, float percentFill = 0.80f)
+    public InfoBox AddTitle(string title, out float innerWidth, float percentFill = 1.00f)
     {
         Label = title;
         WidthPercentage = percentFill;
