@@ -13,7 +13,7 @@ public class WindowManager : IDisposable
 
     public WindowManager()
     {
-        windowSystem = new Dalamud.Interface.Windowing.WindowSystem(KamiLib.PluginName);
+        windowSystem = new WindowSystem(KamiLib.PluginName);
         
         windows.ForEach(window => windowSystem.AddWindow(window));
         
