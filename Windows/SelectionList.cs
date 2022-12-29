@@ -7,16 +7,17 @@ namespace KamiLib.Windows;
 
 public class SelectionList
 {
-    public ISelectable? Selected { get; private set; }
+    private ISelectable? Selected { get; set; }
     
     public void Draw(IEnumerable<ISelectable> selectables)
     {
         var frameBgColor = ImGui.GetStyle().Colors[(int)ImGuiCol.FrameBg];
+        
         ImGui.PushStyleColor(ImGuiCol.FrameBg, frameBgColor with { W = 0.05f });
-
         ImGui.PushStyleVar(ImGuiStyleVar.ScrollbarSize, 0.0f);
         var listBoxValid = ImGui.BeginListBox("", new Vector2(-1, -1));
         ImGui.PopStyleVar();
+        ImGui.PopStyleColor();
 
         if (listBoxValid)
         {
