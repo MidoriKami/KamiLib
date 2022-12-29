@@ -10,7 +10,7 @@ namespace KamiLib.Windows;
 public abstract class SelectionWindow : Window, IDrawable
 {
     private readonly float horizontalWeight;
-    private readonly float verticalWeight;
+    private readonly float verticalHeight;
     private const bool ShowBorders = false;
 
     private readonly SelectionList selectionList = new();
@@ -18,10 +18,10 @@ public abstract class SelectionWindow : Window, IDrawable
     protected abstract IEnumerable<ISelectable> GetSelectables();
     protected bool ShowScrollBar = true;
 
-    protected SelectionWindow(string windowName, float xPercent, float yPercent) : base(windowName)
+    protected SelectionWindow(string windowName, float xPercent, float height) : base(windowName)
     {
         horizontalWeight = xPercent;
-        verticalWeight = yPercent;
+        verticalHeight = height;
     }
 
     public override void Draw()
@@ -30,7 +30,7 @@ public abstract class SelectionWindow : Window, IDrawable
         var itemSpacing = ImGui.GetStyle().ItemSpacing;
 
         var leftSideWidth = region.X * horizontalWeight - itemSpacing.X / 2.0f;
-        var topLeftSideHeight = region.Y * verticalWeight - itemSpacing.Y / 2.0f;
+        var topLeftSideHeight = region.Y - verticalHeight - itemSpacing.Y / 2.0f;
 
         ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, Vector2.Zero);
         
@@ -53,10 +53,9 @@ public abstract class SelectionWindow : Window, IDrawable
         }
         ImGui.EndChild();
         
-        var bottomLeftSideHeight = region.Y * (1.0f - verticalWeight) - itemSpacing.Y / 2.0f;
         ImGui.SetCursorPos(bottomLeftChildPosition);
         
-        if(ImGui.BeginChild($"###{KamiLib.PluginName}BottomLeftSide", new Vector2(leftSideWidth, bottomLeftSideHeight + 1), ShowBorders))
+        if(ImGui.BeginChild($"###{KamiLib.PluginName}BottomLeftSide", new Vector2(leftSideWidth, verticalHeight), ShowBorders))
         {
             DrawExtras();
         }
