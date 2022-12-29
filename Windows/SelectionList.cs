@@ -21,18 +21,14 @@ public class SelectionList
 
         if (listBoxValid)
         {
-            var itemIndex = 0;
-            
             foreach (var item in selectables)
             {
-                ImGui.PushID(itemIndex++);
-                
                 var headerHoveredColor = ImGui.GetStyle().Colors[(int)ImGuiCol.HeaderHovered];
                 var textSelectedColor = ImGui.GetStyle().Colors[(int)ImGuiCol.Header];
                 ImGui.PushStyleColor(ImGuiCol.HeaderHovered, headerHoveredColor with { W = 0.1f });
                 ImGui.PushStyleColor(ImGuiCol.Header, textSelectedColor with { W = 0.1f });
 
-                if (ImGui.Selectable("", Selected == item))
+                if (ImGui.Selectable($"##SelectableID{item.ID}", Selected?.ID == item.ID))
                 {
                     Selected = Selected == item ? null : item;
                 }
@@ -45,8 +41,6 @@ public class SelectionList
                 item.DrawLabel();
 
                 ImGui.Spacing();
-                
-                ImGui.PopID();
             }
 
             ImGui.EndListBox();
