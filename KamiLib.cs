@@ -35,6 +35,8 @@ public static class KamiLib
         WindowManager.Dispose();
         IconCache.Instance.Dispose();
         GameUserInterface.Instance.Dispose();
+        DutyState.Instance.Dispose();
+        LocalizationManager.Instance.Dispose();
     }
 
     public static void SaveConfiguration() => _saveConfigFunction();
