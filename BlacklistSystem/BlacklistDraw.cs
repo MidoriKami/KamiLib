@@ -118,7 +118,6 @@ public static class BlacklistDraw
         {
             foreach (var result in results)
             {
-                ImGui.SetNextItemWidth(InfoBox.Instance.InnerWidth);
                 if (ImGui.Selectable($"###SearchResult{result.TerritoryID}", EntriesToAdd.Contains(result.TerritoryID)))
                 {
                     if (!EntriesToAdd.Contains(result.TerritoryID))
@@ -132,10 +131,7 @@ public static class BlacklistDraw
                 }
                     
                 ImGui.SameLine();
-                var startPosition = ImGui.GetCursorPos();
-                ImGui.TextColored(Colors.Grey, result.TerritoryID.ToString());
-                ImGui.SameLine(startPosition.X + 50.0f * ImGuiHelpers.GlobalScale);
-                ImGui.Text(result.TerritoryName);
+                TerritoryTypeCache.Instance.GetRow(result.TerritoryID)?.DrawLabel();
             }
         }
         ImGui.EndChild();
