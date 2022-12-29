@@ -1,6 +1,7 @@
 ﻿using System;
 using Dalamud.Game.ClientState.Conditions;
 using KamiLib.Caching;
+using Lumina.Excel.GeneratedSheets;
 
 namespace KamiLib.Utilities;
 
@@ -42,7 +43,7 @@ public static class Condition
 
     public static bool IsInIslandSanctuary()
     {
-        var territoryInfo = TerritoryTypeCache.Instance.GetRow(Service.ClientState.TerritoryType);
+        var territoryInfo = LuminaCache<TerritoryType>.Instance.GetRow(Service.ClientState.TerritoryType);
         if (territoryInfo is null) return false;
         
         // Island Sanctuary

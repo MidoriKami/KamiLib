@@ -22,7 +22,7 @@ public static class TerritoryTypeExtensions
     public static string GetLabel(this TerritoryType data)
     {
         var placeNameRow = data.PlaceName.Row;
-        var placeName = PlaceNameCache.Instance.GetRow(placeNameRow);
+        var placeName = LuminaCache<PlaceName>.Instance.GetRow(placeNameRow);
         var placeString = placeName?.Name.ToDalamudString().TextValue ?? "Unknown PlaceName";
 
         return placeString;
