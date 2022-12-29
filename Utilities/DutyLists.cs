@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Dalamud;
+using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
 
 namespace KamiLib.Utilities;
@@ -29,31 +30,31 @@ public class DutyLists
     public DutyLists()
     {
         // ContentType.Row 5 == Raids
-        Savage = Service.DataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)!
+        Savage = LuminaCache<ContentFinderCondition>.Instance.GetAll(ClientLanguage.English)!
             .Where(t => t.ContentType.Row == 5)
             .Where(t => t.Name.RawString.Contains("Savage"))
             .Select(r => r.TerritoryType.Row)
             .ToList();
         
         // ContentType.Row 28 == Ultimate Raids
-        Ultimate = Service.DataManager.GetExcelSheet<ContentFinderCondition>()!
+        Ultimate = LuminaCache<ContentFinderCondition>.Instance.GetAll()
             .Where(t => t.ContentType.Row == 28)
             .Select(t => t.TerritoryType.Row)
             .ToList();
         
         // ContentType.Row 4 == Trials
-        ExtremeUnreal = Service.DataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)!
+        ExtremeUnreal = LuminaCache<ContentFinderCondition>.Instance.GetAll(ClientLanguage.English)
             .Where(t => t.ContentType.Row == 4)
             .Where(t => t.Name.RawString.Contains("Extreme") || t.Name.RawString.Contains("Unreal") || t.Name.RawString.Contains("The Minstrel"))
             .Select(t => t.TerritoryType.Row)
             .ToList();
 
-        Criterion = Service.DataManager.GetExcelSheet<ContentFinderCondition>()!
+        Criterion = LuminaCache<ContentFinderCondition>.Instance.GetAll()
             .Where(row => row.ContentType.Row is 30)
             .Select(row => row.RowId)
             .ToList();
         
-        Alliance = Service.DataManager.GetExcelSheet<TerritoryType>()
+        Alliance = LuminaCache<TerritoryType>.Instance.GetAll()
             !.Where(r => r.TerritoryIntendedUse is 8)
             .Select(r => r.RowId)
             .ToList();

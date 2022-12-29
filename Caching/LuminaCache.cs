@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dalamud;
 using Lumina.Excel;
 
 namespace KamiLib.Caching;
@@ -18,9 +19,14 @@ public class LuminaCache<T> where T : ExcelRow
 
     private readonly Dictionary<uint, T> cache = new();
 
-    public IEnumerable<T> GetAll()
+    public ExcelSheet<T> GetAll()
     {
         return Service.DataManager.GetExcelSheet<T>()!;
+    }
+
+    public ExcelSheet<T> GetAll(ClientLanguage language)
+    {
+        return Service.DataManager.GetExcelSheet<T>(language)!;
     }
 
     public T? GetRow(uint id)
