@@ -1,9 +1,9 @@
 ﻿using System;
-using Dalamud.Logging;
 using Dalamud.Plugin;
 using KamiLib.BlacklistSystem;
 using KamiLib.Caching;
 using KamiLib.CommandSystem;
+using KamiLib.Utilities;
 using KamiLib.Windows;
 
 namespace KamiLib;
@@ -18,8 +18,6 @@ public static class KamiLib
 
     public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName, Action saveConfig)
     {
-        PluginLog.Debug("Initializing");
-
         pluginInterface.Create<Service>();
 
         PluginName = pluginName;
@@ -36,6 +34,7 @@ public static class KamiLib
         CommandManager.Dispose();
         WindowManager.Dispose();
         IconCache.Instance.Dispose();
+        GameUserInterface.Instance.Dispose();
     }
 
     public static void SaveConfiguration() => _saveConfigFunction();
