@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Interface.Windowing;
 
-namespace KamiLib.WindowSystem;
+namespace KamiLib.Windows;
 
 public class WindowManager : IDisposable
 {
-    private readonly Dalamud.Interface.Windowing.WindowSystem windowSystem;
+    private readonly WindowSystem windowSystem;
 
     private readonly List<Window> windows = new();
 

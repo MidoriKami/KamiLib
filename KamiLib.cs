@@ -4,7 +4,7 @@ using Dalamud.Plugin;
 using KamiLib.BlacklistSystem;
 using KamiLib.Caching;
 using KamiLib.CommandSystem;
-using KamiLib.WindowSystem;
+using KamiLib.Windows;
 
 namespace KamiLib;
 
