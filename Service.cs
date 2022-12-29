@@ -1,8 +1,10 @@
 ﻿using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Aetherytes;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Gui;
+using Dalamud.Game.Gui.Toast;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using DalamudCommandManager = Dalamud.Game.Command.CommandManager;
@@ -21,4 +23,6 @@ internal class Service
     [PluginService] public static DataManager DataManager { get; private set; } = null!;
     [PluginService] public static ObjectTable ObjectTable { get; private set; } = null!;
     [PluginService] public static Framework Framework { get; private set; } = null!;
+    [PluginService] public static ToastGui Toast { get; private set;} = null!;
+    [PluginService] public static AetheryteList AetheryteList { get; private set;} = null!;
 }

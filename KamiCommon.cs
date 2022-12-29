@@ -37,6 +37,7 @@ public static class KamiCommon
         GameUserInterface.Cleanup();
         DutyState.Cleanup();
         ChatPayloadManager.Cleanup();
+        TeleportManager.Cleanup();
     }
 
     public static void SaveConfiguration() => _saveConfigFunction();
