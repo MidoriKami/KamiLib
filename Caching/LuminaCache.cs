@@ -15,6 +15,11 @@ public class LuminaCache<T> where T : ExcelRow
 
     private readonly Dictionary<uint, T> cache = new();
 
+    public IEnumerable<T> GetAll()
+    {
+        return Service.DataManager.GetExcelSheet<T>()!;
+    }
+
     public T? GetRow(uint id)
     {
         if (cache.TryGetValue(id, out var value))
