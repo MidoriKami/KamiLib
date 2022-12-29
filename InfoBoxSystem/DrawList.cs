@@ -82,6 +82,28 @@ public abstract class DrawList<T>
         return DrawListOwner;
     }
 
+    public T AddStringCentered(string message, Vector4? color = null)
+    {
+        if (color == null)
+        {
+            DrawActions.Add(() =>
+            {
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with {X = ImGui.GetContentRegionAvail().X / 2.0f - ImGui.CalcTextSize(message).X / 2.0f});
+                ImGui.Text(message);
+            });
+        }
+        else
+        {
+            DrawActions.Add(() =>
+            {
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with {X = ImGui.GetContentRegionAvail().X / 2.0f - ImGui.CalcTextSize(message).X / 2.0f});
+                ImGui.TextColored(color.Value, message);
+            });
+        }
+
+        return DrawListOwner;
+    }
+
     public T Indent(int indent)
     {
         DrawActions.Add( () => ImGui.Indent(indent) );
