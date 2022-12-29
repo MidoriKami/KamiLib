@@ -13,7 +13,6 @@ public static class KamiLib
     public static string PluginName { get; private set; } = string.Empty;
     public static CommandManager CommandManager { get; private set; } = null!;
     public static WindowManager WindowManager { get; private set; } = null!;
-    public static IconCache IconCache { get; set; } = null!;
     
     private static Action _saveConfigFunction = null!;
 
@@ -30,14 +29,13 @@ public static class KamiLib
 
         CommandManager = new CommandManager();
         WindowManager = new WindowManager();
-        IconCache = new IconCache();
     }
 
     public static void Dispose()
     {
         CommandManager.Dispose();
         WindowManager.Dispose();
-        IconCache.Dispose();
+        IconCache.Instance.Dispose();
     }
 
     public static void SaveConfiguration() => _saveConfigFunction();

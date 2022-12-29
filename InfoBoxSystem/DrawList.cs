@@ -4,6 +4,7 @@ using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using ImGuiNET;
+using KamiLib.Caching;
 using KamiLib.Configuration;
 using KamiLib.Utilities;
 using Action = System.Action;
@@ -39,7 +40,7 @@ public abstract class DrawList<T>
     
     public T AddIcon(uint iconID, Vector2 size, Vector4 color)
     {
-        var icon = KamiLib.IconCache.GetIcon(iconID);
+        var icon = IconCache.Instance.GetIcon(iconID);
 
         if (icon != null)
         {
@@ -54,7 +55,7 @@ public abstract class DrawList<T>
     
     public T AddIcon(uint iconID, Vector2 size, float transparency)
     {
-        var icon = KamiLib.IconCache.GetIcon(iconID);
+        var icon = IconCache.Instance.GetIcon(iconID);
 
         if (icon != null)
         {

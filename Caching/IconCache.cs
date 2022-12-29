@@ -13,6 +13,9 @@ public class IconCache : IDisposable
 
     private const string IconFilePath = "ui/icon/{0:D3}000/{1:D6}_hr1.tex";
     
+    private static IconCache? _instance;
+    public static IconCache Instance => _instance ??= new IconCache();
+    
     public void Dispose() 
     {
         foreach (var texture in iconTextures.Values) 
