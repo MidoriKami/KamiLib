@@ -58,9 +58,16 @@ public abstract class SelectionWindow : Window, IDrawable
             DrawExtras();
         }
         ImGui.EndChild();
+        
+        DrawSpecial();
     }
 
     protected virtual void DrawExtras()
+    {
+        
+    }
+    
+    protected virtual void DrawSpecial()
     {
         
     }
