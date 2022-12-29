@@ -29,11 +29,22 @@ public class WindowManager : IDisposable
         windowSystem.RemoveAllWindows();
     }
 
-    public void AddWindow(Window window)
+    public void AddWindow(Window newWindow)
     {
-        windows.Add(window);
-        windowSystem.AddWindow(window);
+        if (windowSystem.Windows.All(w => w.WindowName != newWindow.WindowName))
+        {
+            windows.Add(newWindow);
+            windowSystem.AddWindow(newWindow);
+        }
     }
+
+    public void RemoveWindow(Window window)
+    {
+        windows.Remove(window);
+        windowSystem.RemoveWindow(window);
+    }
+
+    public IReadOnlyCollection<Window> GetWindows() => windows;
 
     public T? GetWindowOfType<T>() => windows.OfType<T>().FirstOrDefault();
     private void DrawUI() => windowSystem.Draw();
