@@ -23,6 +23,11 @@ public unsafe class GameUserInterface : IDisposable
         Service.Framework.Update += FrameworkUpdate;
     }
         
+    public static void Cleanup()
+    {
+        _instance?.Dispose();
+    }
+
     public void Dispose()
     {
         Service.Framework.Update -= FrameworkUpdate;

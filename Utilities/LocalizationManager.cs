@@ -15,12 +15,12 @@ public class LocalizationManager : IDisposable
     
     private LocalizationManager()
     {
-        KamiLib.CommandManager.AddCommand(new LocalizationCommand());
+        KamiCommon.CommandManager.AddCommand(new LocalizationCommand());
         
         var assemblyLocation = Service.PluginInterface.AssemblyLocation.DirectoryName!;
         var filePath = Path.Combine(assemblyLocation, @"translations");
 
-        Localization = new Localization(filePath, $"{KamiLib.PluginName}_");
+        Localization = new Localization(filePath, $"{KamiCommon.PluginName}_");
         Localization.SetupWithLangCode(Service.PluginInterface.UiLanguage);
 
         Service.PluginInterface.LanguageChanged += OnLanguageChange;
@@ -36,6 +36,11 @@ public class LocalizationManager : IDisposable
         {
             PluginLog.Error(ex, "Error exporting localization files");
         }
+    }
+
+    public static void Cleanup()
+    {
+        _instance?.Dispose();
     }
 
     public void Dispose()

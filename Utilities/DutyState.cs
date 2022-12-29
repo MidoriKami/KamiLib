@@ -39,6 +39,11 @@ public unsafe class DutyState : IDisposable
         Service.ClientState.TerritoryChanged += TerritoryChanged;
     }
 
+    public static void Cleanup()
+    {
+        _instance?.Dispose();
+    }
+
     public void Dispose()
     {
         DutyEventHook?.Dispose();

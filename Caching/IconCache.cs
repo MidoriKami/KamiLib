@@ -16,6 +16,11 @@ public class IconCache : IDisposable
     private static IconCache? _instance;
     public static IconCache Instance => _instance ??= new IconCache();
     
+    public static void Cleanup()
+    {
+        _instance?.Dispose();
+    }
+    
     public void Dispose() 
     {
         foreach (var texture in iconTextures.Values) 
