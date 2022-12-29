@@ -36,7 +36,6 @@ public static class KamiCommon
         IconCache.Cleanup();
         GameUserInterface.Cleanup();
         DutyState.Cleanup();
-        LocalizationManager.Cleanup();
     }
 
     public static void SaveConfiguration() => _saveConfigFunction();
