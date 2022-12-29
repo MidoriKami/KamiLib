@@ -54,4 +54,14 @@ public static class Condition
         return Service.Condition[ConditionFlag.Crafting] ||
                Service.Condition[ConditionFlag.Crafting40];
     }
+
+    public static bool IsCrossWorld()
+    {
+        return Service.Condition[ConditionFlag.ParticipatingInCrossWorldPartyOrAlliance];
+    }
+
+    public static bool CheckFlag(ConditionFlag flag)
+    {
+        return Service.Condition[flag];
+    }
 }
