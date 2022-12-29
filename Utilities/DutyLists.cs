@@ -11,15 +11,17 @@ public enum DutyType
     Ultimate,
     ExtremeUnreal,
     Criterion,
+    Alliance,
     None,
 }
 
 public class DutyLists
 {
-    private List<uint> Savage { get; init; }
-    private List<uint> Ultimate { get; init; }
-    private List<uint> ExtremeUnreal { get; init; }
-    private List<uint> Criterion { get; init; }
+    private List<uint> Savage { get; }
+    private List<uint> Ultimate { get; }
+    private List<uint> ExtremeUnreal { get; }
+    private List<uint> Criterion { get; }
+    private List<uint> Alliance { get; }
 
     private static DutyLists? _instance;
     public static DutyLists Instance => _instance ??= new DutyLists();
@@ -50,6 +52,11 @@ public class DutyLists
             .Where(row => row.ContentType.Row is 30)
             .Select(row => row.RowId)
             .ToList();
+        
+        Alliance = Service.DataManager.GetExcelSheet<TerritoryType>()
+            !.Where(r => r.TerritoryIntendedUse is 8)
+            .Select(r => r.RowId)
+            .ToList();
     }
 
     public DutyType GetDutyType(uint dutyId)
@@ -58,7 +65,10 @@ public class DutyLists
         if (Ultimate.Contains(dutyId)) return DutyType.Ultimate;
         if (ExtremeUnreal.Contains(dutyId)) return DutyType.ExtremeUnreal;
         if (Criterion.Contains(dutyId)) return DutyType.Criterion;
+        if (Alliance.Contains(dutyId)) return DutyType.Alliance;
 
         return DutyType.None;
     }
+
+    public bool IsType(uint dutyId, DutyType type) => GetDutyType(dutyId) == type;
 }
