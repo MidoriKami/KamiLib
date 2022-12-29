@@ -1,27 +1,26 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Dalamud;
 using Dalamud.Logging;
 using KamiLib.CommandSystem;
+using KamiLib.Interfaces;
 
 namespace KamiLib.Utilities;
 
 public class LocalizationManager : IDisposable
 {
-    private readonly Localization? Localization;
+    private readonly Localization? localization;
 
-    private static LocalizationManager? _instance;
-    public static LocalizationManager Instance => _instance ??= new LocalizationManager();
-    
-    private LocalizationManager()
+    public LocalizationManager()
     {
-        KamiCommon.CommandManager.AddCommand(new LocalizationCommand());
+        KamiCommon.CommandManager.AddCommand(new LocalizationCommand(this));
         
         var assemblyLocation = Service.PluginInterface.AssemblyLocation.DirectoryName!;
         var filePath = Path.Combine(assemblyLocation, @"translations");
 
-        Localization = new Localization(filePath, $"{KamiCommon.PluginName}_");
-        Localization.SetupWithLangCode(Service.PluginInterface.UiLanguage);
+        localization = new Localization(filePath, $"{KamiCommon.PluginName}_");
+        localization.SetupWithLangCode(Service.PluginInterface.UiLanguage);
 
         Service.PluginInterface.LanguageChanged += OnLanguageChange;
     }
@@ -30,17 +29,12 @@ public class LocalizationManager : IDisposable
     {
         try
         {
-            Localization?.ExportLocalizable();
+            localization?.ExportLocalizable();
         }
         catch (Exception ex)
         {
             PluginLog.Error(ex, "Error exporting localization files");
         }
-    }
-
-    public static void Cleanup()
-    {
-        _instance?.Dispose();
     }
 
     public void Dispose()
@@ -53,11 +47,37 @@ public class LocalizationManager : IDisposable
         try
         {
             PluginLog.Information($"Loading Localization for {languageCode}");
-            Localization?.SetupWithLangCode(languageCode);
+            localization?.SetupWithLangCode(languageCode);
         }
         catch (Exception ex)
         {
             PluginLog.Error(ex, "Unable to Load Localization");
         }
+    }
+    
+    private class LocalizationCommand : IPluginCommand
+    {
+        private static LocalizationManager? _localization;
+        
+        public LocalizationCommand(LocalizationManager manager)
+        {
+            _localization = manager;
+        }
+        
+        public string CommandArgument => "loc";
+
+        public IEnumerable<ISubCommand> SubCommands { get; } = new List<ISubCommand>
+        {
+            new SubCommand
+            {
+                CommandKeyword = "generate",
+                CommandAction = () =>
+                {
+                    _localization?.ExportLocalization();
+                    Chat.Print("Command", "Generating Localization File");
+                },
+                Hidden = true,
+            },
+        };
     }
 }
