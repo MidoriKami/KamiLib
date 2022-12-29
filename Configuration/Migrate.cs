@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
-using KamiLib.Configuration;
 using Newtonsoft.Json.Linq;
 
-namespace KamiLib.ConfigMigration;
+namespace KamiLib.Configuration;
 
 public static class Migrate
 {
