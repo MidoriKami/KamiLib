@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Dalamud.Interface.Windowing;
+using Dalamud.Logging;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
 
@@ -25,7 +26,7 @@ public class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
             {
                 if ( KamiCommon.WindowManager.GetWindowOfType<T>() is {} mainWindow )
                 {
-                    Chat.Print("Command",!mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
+                    PluginLog.Debug(!mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
 
                     mainWindow.IsOpen = !mainWindow.IsOpen;
                 }
