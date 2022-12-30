@@ -48,5 +48,5 @@ public class WindowManager : IDisposable
 
     public T? GetWindowOfType<T>() => windows.OfType<T>().FirstOrDefault();
     private void DrawUI() => windowSystem.Draw();
-    private void DrawConfigUI() => KamiCommon.CommandManager.OnCommand($"{KamiCommon.PluginName}", "");
+    private void DrawConfigUI() => KamiCommon.CommandManager.OnCommand($"{KamiCommon.PluginName}", "silent");
 }
