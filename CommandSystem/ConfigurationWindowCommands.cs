@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Dalamud.Interface.Windowing;
-using Dalamud.Logging;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
 
@@ -8,6 +7,11 @@ namespace KamiLib.CommandSystem;
 
 public class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
 {
+    public ConfigurationWindowCommands()
+    {
+        KamiCommon.CommandManager.AddCommand(new SilentConfigurationWindowCommand<T>());
+    }
+
     public string? CommandArgument => null;
 
     public IEnumerable<ISubCommand> SubCommands { get; } = new List<ISubCommand>
@@ -26,7 +30,7 @@ public class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
             {
                 if ( KamiCommon.WindowManager.GetWindowOfType<T>() is {} mainWindow )
                 {
-                    PluginLog.Debug(!mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
+                    Chat.Print("Command", !mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
 
                     mainWindow.IsOpen = !mainWindow.IsOpen;
                 }
@@ -37,6 +41,41 @@ public class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
             },
             CanExecute = () => !Service.ClientState.IsPvP,
             GetHelpText = () => "Open Configuration Window"
+        },
+    };
+}
+
+public class SilentConfigurationWindowCommand<T> : IPluginCommand where T : Window
+{
+    public string CommandArgument => "silent";
+
+    public IEnumerable<ISubCommand> SubCommands { get; } = new List<ISubCommand>
+    {
+        new SubCommand
+        {
+            CommandKeyword = null,
+            CommandAction = () => Chat.PrintError("The configuration window cannot be opened while in a PvP area"),
+            CanExecute = () => Service.ClientState.IsPvP,
+            GetHelpText = () => "Open Configuration Window",
+            Hidden = true
+        },
+        new SubCommand
+        {
+            CommandKeyword = null,
+            CommandAction = () =>
+            {
+                if (KamiCommon.WindowManager.GetWindowOfType<T>() is { } mainWindow)
+                {
+                    mainWindow.IsOpen = !mainWindow.IsOpen;
+                }
+                else
+                {
+                    Chat.PrintError("Something went wrong trying to open Configuration Window");
+                }
+            },
+            CanExecute = () => !Service.ClientState.IsPvP,
+            GetHelpText = () => "Open Configuration Window",
+            Hidden = true
         },
     };
 }
