@@ -10,16 +10,18 @@ public unsafe class DutyState : IDisposable
 {
     private delegate byte DutyEventDelegate(void* a1, void* a2, ushort* a3);
     [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B D9 49 8B F8 41 0F B7 08", DetourName = nameof(DutyEventFunction))]
-    private readonly Hook<DutyEventDelegate>? DutyEventHook = null;
+    private readonly Hook<DutyEventDelegate>? dutyEventHook = null;
 
     public bool IsDutyStarted { get; private set; }
 
-    public event EventHandler? DutyStarted;
-    public event EventHandler? DutyWiped;
-    public event EventHandler? DutyRecommenced;
-    public event EventHandler? DutyCompleted;
+    public delegate void DutyStateEvent(uint duty);
     
-    private bool CompletedThisTerritory;
+    public event DutyStateEvent? DutyStarted;
+    public event DutyStateEvent? DutyWiped;
+    public event DutyStateEvent? DutyRecommenced;
+    public event DutyStateEvent? DutyCompleted;
+    
+    private bool completedThisTerritory;
 
     private static DutyState? _instance;
     public static DutyState Instance => _instance ??= new DutyState();
@@ -28,7 +30,7 @@ public unsafe class DutyState : IDisposable
     {
         SignatureHelper.Initialise(this);
 
-        DutyEventHook?.Enable();
+        dutyEventHook?.Enable();
 
         if (Condition.IsBoundByDuty())
         {
@@ -46,7 +48,7 @@ public unsafe class DutyState : IDisposable
 
     public void Dispose()
     {
-        DutyEventHook?.Dispose();
+        dutyEventHook?.Dispose();
 
         Service.Framework.Update -= FrameworkUpdate;
         Service.ClientState.TerritoryChanged -= TerritoryChanged;
@@ -54,7 +56,7 @@ public unsafe class DutyState : IDisposable
 
     private void FrameworkUpdate(Framework framework)
     {
-        if (!IsDutyStarted && !CompletedThisTerritory)
+        if (!IsDutyStarted && !completedThisTerritory)
         {
             if (Condition.IsBoundByDuty() && Condition.IsInCombat())
             {
@@ -74,7 +76,7 @@ public unsafe class DutyState : IDisposable
             IsDutyStarted = false;
         }
             
-        CompletedThisTerritory = false;
+        completedThisTerritory = false;
     }
 
     private byte DutyEventFunction(void* a1, void* a2, ushort* a3)
@@ -92,26 +94,26 @@ public unsafe class DutyState : IDisposable
                     // Duty Commenced
                     case 0x40000001:
                         IsDutyStarted = true;
-                        DutyStarted?.Invoke(this, EventArgs.Empty);
+                        DutyStarted?.Invoke(Service.ClientState.TerritoryType);
                         break;
 
                     // Party Wipe
                     case 0x40000005:
                         IsDutyStarted = false;
-                        DutyWiped?.Invoke(this, EventArgs.Empty);
+                        DutyWiped?.Invoke(Service.ClientState.TerritoryType);
                         break;
 
                     // Duty Recommence
                     case 0x40000006:
                         IsDutyStarted = true;
-                        DutyRecommenced?.Invoke(this, EventArgs.Empty);
+                        DutyRecommenced?.Invoke(Service.ClientState.TerritoryType);
                         break;
 
                     // Duty Completed
                     case 0x40000003:
                         IsDutyStarted = false;
-                        CompletedThisTerritory = true;
-                        DutyCompleted?.Invoke(this, EventArgs.Empty);
+                        completedThisTerritory = true;
+                        DutyCompleted?.Invoke(Service.ClientState.TerritoryType);
                         break;
                 }
             }
@@ -121,6 +123,6 @@ public unsafe class DutyState : IDisposable
             PluginLog.Error(ex, "Failed to get Duty Started Status");
         }
 
-        return DutyEventHook!.Original(a1, a2, a3);
+        return dutyEventHook!.Original(a1, a2, a3);
     }
 }
