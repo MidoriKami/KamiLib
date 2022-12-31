@@ -26,7 +26,7 @@ public unsafe class DutyState : IDisposable
     private static DutyState? _instance;
     public static DutyState Instance => _instance ??= new DutyState();
 
-    public DutyState()
+    private DutyState()
     {
         SignatureHelper.Initialise(this);
 
