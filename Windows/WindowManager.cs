@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Interface.Windowing;
+using KamiLib.CommandSystem;
 
 namespace KamiLib.Windows;
 
@@ -36,6 +37,15 @@ public class WindowManager : IDisposable
             windows.Add(newWindow);
             windowSystem.AddWindow(newWindow);
         }
+    }
+
+    public void AddConfigurationWindow<T>(T configWindow) where T : Window
+    {
+        windows.Add(configWindow);
+        windowSystem.AddWindow(configWindow);
+        
+        KamiCommon.CommandManager.AddCommand(new ConfigurationWindowCommands<T>());
+        KamiCommon.CommandManager.AddCommand(new SilentConfigurationWindowCommand<T>());
     }
 
     public void RemoveWindow(Window window)

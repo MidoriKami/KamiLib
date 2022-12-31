@@ -5,9 +5,9 @@ using KamiLib.Utilities;
 
 namespace KamiLib.CommandSystem;
 
-internal class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
+internal class SilentConfigurationWindowCommand<T> : IPluginCommand where T : Window
 {
-    public string? CommandArgument => null;
+    public string CommandArgument => "silent";
 
     public IEnumerable<ISubCommand> SubCommands { get; } = new List<ISubCommand>
     {
@@ -16,17 +16,16 @@ internal class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
             CommandKeyword = null,
             CommandAction = () => Chat.PrintError("The configuration window cannot be opened while in a PvP area"),
             CanExecute = () => Service.ClientState.IsPvP,
-            GetHelpText = () => "Open Configuration Window"
+            GetHelpText = () => "Open Configuration Window",
+            Hidden = true
         },
         new SubCommand
         {
             CommandKeyword = null,
             CommandAction = () =>
             {
-                if ( KamiCommon.WindowManager.GetWindowOfType<T>() is {} mainWindow )
+                if (KamiCommon.WindowManager.GetWindowOfType<T>() is { } mainWindow)
                 {
-                    Chat.Print("Command", !mainWindow.IsOpen ? "Opening Configuration Window" : "Closing Configuration Window");
-
                     mainWindow.IsOpen = !mainWindow.IsOpen;
                 }
                 else
@@ -35,7 +34,8 @@ internal class ConfigurationWindowCommands<T> : IPluginCommand where T : Window
                 }
             },
             CanExecute = () => !Service.ClientState.IsPvP,
-            GetHelpText = () => "Open Configuration Window"
+            GetHelpText = () => "Open Configuration Window",
+            Hidden = true
         },
     };
 }
