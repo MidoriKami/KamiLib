@@ -23,13 +23,9 @@ public static class Colors
     public static Vector4 FateDarkPink = new(0.58f, 0.388f, 0.827f, 1.0f);
     public static Vector4 MapTextBrown = new(0.655f, 0.396f, 0.149f, 1.0f);
     public static Vector4 BabyBlue = new(0.537f, 0.812f, 0.941f, 1.0f);
-    public static Vector4 Epic = Vector4.One;
 }
 
 public static class ColorExtensions
 {
-    public static uint ToU32(this Vector4 color)
-    {
-        return ImGui.GetColorU32(color);
-    }
+    public static uint ToU32(this Vector4 color) => ImGui.GetColorU32(color);
 }
