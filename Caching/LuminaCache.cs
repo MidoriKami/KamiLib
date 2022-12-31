@@ -13,13 +13,14 @@ public class LuminaCache<T> : IEnumerable<T> where T : ExcelRow
     private static LuminaCache<T>? _instance;
     public static LuminaCache<T> Instance => _instance ??= new LuminaCache<T>();
 
-    protected LuminaCache(Func<uint, T?>? action = null)
+    private LuminaCache(Func<uint, T?>? action = null)
     {
         searchAction = action ?? (row => Service.DataManager.GetExcelSheet<T>()!.GetRow(row));
     }
 
     private readonly Dictionary<uint, T> cache = new();
-    
+    private readonly Dictionary<Tuple<uint, uint>, T> subRowCache = new ();
+
     public ExcelSheet<T> OfLanguage(ClientLanguage language)
     {
         return Service.DataManager.GetExcelSheet<T>(language)!;
@@ -36,6 +37,22 @@ public class LuminaCache<T> : IEnumerable<T> where T : ExcelRow
             if (searchAction(id) is not { } result) return null;
             
             return cache[id] = result;
+        }
+    }
+
+    public T? GetRow(uint row, uint subRow)
+    {
+        var targetRow = new Tuple<uint, uint>(row, subRow);
+        
+        if (subRowCache.TryGetValue(targetRow, out var value))
+        {
+            return value;
+        }
+        else
+        {
+            if (Service.DataManager.GetExcelSheet<T>()!.GetRow(row, subRow) is not { } result) return null;
+            
+            return subRowCache[targetRow] = result;
         }
     }
     
