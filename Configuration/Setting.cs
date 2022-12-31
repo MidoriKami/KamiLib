@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace KamiLib.Configuration;
 
-public record Setting<T>(T Value) : IEquatable<T> where T : notnull 
+public sealed record Setting<T>(T Value) : IEquatable<T> where T : notnull 
 {
     public T Value = Value;
 
     public override string ToString() => Value.ToString() ?? "Null";
     
-    public virtual bool Equals(T? other)
+    public bool Equals(T? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
