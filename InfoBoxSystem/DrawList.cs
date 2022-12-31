@@ -204,7 +204,7 @@ public abstract class DrawList<T>
             }
             
             ImGui.SameLine();
-            ImGui.BeginDisabled(setting.Value == defaultValue);
+            ImGui.BeginDisabled(setting == defaultValue);
             if (ImGui.Button(defaultLabel))
             {
                 setting.Value = defaultValue;
