@@ -1,8 +1,8 @@
 ﻿using System;
 using Dalamud.Game;
 using Dalamud.Hooking;
-using Dalamud.Logging;
 using Dalamud.Utility.Signatures;
+using KamiLib.ExceptionSafety;
 
 namespace KamiLib.Utilities;
 
@@ -81,7 +81,7 @@ public unsafe class DutyState : IDisposable
 
     private byte DutyEventFunction(void* a1, void* a2, ushort* a3)
     {
-        try
+        Safety.ExecuteSafe(() =>
         {
             var category = *(a3);
             var type = *(uint*)(a3 + 4);
@@ -116,13 +116,9 @@ public unsafe class DutyState : IDisposable
                         DutyCompleted?.Invoke(Service.ClientState.TerritoryType);
                         break;
                 }
-            }
-        }
-        catch (Exception ex)
-        {
-            PluginLog.Error(ex, "Failed to get Duty Started Status");
-        }
-
+            } 
+        });
+        
         return dutyEventHook!.Original(a1, a2, a3);
     }
 }
