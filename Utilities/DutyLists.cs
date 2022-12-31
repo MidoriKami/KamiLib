@@ -55,12 +55,12 @@ public class DutyLists
             .ToList();
         
         Alliance = LuminaCache<TerritoryType>.Instance.GetAll()
-            !.Where(r => r.TerritoryIntendedUse is 8)
+            .Where(r => r.TerritoryIntendedUse is 8)
             .Select(r => r.RowId)
             .ToList();
     }
 
-    public DutyType GetDutyType(uint dutyId)
+    private DutyType GetDutyType(uint dutyId)
     {
         if (Savage.Contains(dutyId)) return DutyType.Savage;
         if (Ultimate.Contains(dutyId)) return DutyType.Ultimate;
@@ -72,4 +72,5 @@ public class DutyLists
     }
 
     public bool IsType(uint dutyId, DutyType type) => GetDutyType(dutyId) == type;
+    public bool IsType(uint dutyId, IEnumerable<DutyType> types) => types.Any(type => IsType(dutyId, type));
 }
