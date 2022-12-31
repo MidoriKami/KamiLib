@@ -26,22 +26,12 @@ public record Setting<T>(T Value) : IEquatable<T> where T : notnull
     {
         return !leftSide.Equals(rightSide);
     }
-
-    public static bool operator true(Setting<T> setting)
+    
+    public static implicit operator bool(Setting<T> obj)
     {
-        if (setting.Value is bool value)
+        if (obj.Value is bool value)
         {
             return value;
-        }
-
-        return false;
-    }
-    
-    public static bool operator false(Setting<T> setting)
-    {
-        if (setting.Value is bool value)
-        {
-            return !value;
         }
 
         return false;
