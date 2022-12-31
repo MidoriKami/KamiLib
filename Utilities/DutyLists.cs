@@ -30,7 +30,7 @@ public class DutyLists
     private DutyLists()
     {
         // ContentType.Row 5 == Raids
-        Savage = LuminaCache<ContentFinderCondition>.Instance.GetAll(ClientLanguage.English)
+        Savage = LuminaCache<ContentFinderCondition>.Instance.OfLanguage(ClientLanguage.English)
             .Where(t => t.ContentType.Row == 5)
             .Where(t => t.Name.RawString.Contains("Savage"))
             .Select(r => r.TerritoryType.Row)
@@ -43,7 +43,7 @@ public class DutyLists
             .ToList();
         
         // ContentType.Row 4 == Trials
-        ExtremeUnreal = LuminaCache<ContentFinderCondition>.Instance.GetAll(ClientLanguage.English)
+        ExtremeUnreal = LuminaCache<ContentFinderCondition>.Instance.OfLanguage(ClientLanguage.English)
             .Where(t => t.ContentType.Row == 4)
             .Where(t => t.Name.RawString.Contains("Extreme") || t.Name.RawString.Contains("Unreal") || t.Name.RawString.Contains("The Minstrel"))
             .Select(t => t.TerritoryType.Row)

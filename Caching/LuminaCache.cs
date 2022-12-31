@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Dalamud;
 using Lumina.Excel;
 
 namespace KamiLib.Caching;
 
-public class LuminaCache<T> where T : ExcelRow
+public class LuminaCache<T> : IEnumerable<T> where T : ExcelRow
 {
     private readonly Func<uint, T?> searchAction;
 
@@ -24,7 +25,7 @@ public class LuminaCache<T> where T : ExcelRow
         return Service.DataManager.GetExcelSheet<T>()!;
     }
 
-    public ExcelSheet<T> GetAll(ClientLanguage language)
+    public ExcelSheet<T> OfLanguage(ClientLanguage language)
     {
         return Service.DataManager.GetExcelSheet<T>(language)!;
     }
@@ -42,4 +43,7 @@ public class LuminaCache<T> where T : ExcelRow
             return cache[id] = result;
         }
     }
+    
+    public IEnumerator<T> GetEnumerator() => Service.DataManager.GetExcelSheet<T>()!.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
