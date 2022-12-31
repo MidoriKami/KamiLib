@@ -50,12 +50,10 @@ public unsafe class GameUserInterface : IDisposable
             if (shouldHideUi)
             {
                 UiHidden?.Invoke(this, EventArgs.Empty);
-                PluginLog.Debug("Ui Hidden");
             }
             else
             {
                 UiShown?.Invoke(this, EventArgs.Empty);
-                PluginLog.Debug("Ui Shown");
             }
         }
 
