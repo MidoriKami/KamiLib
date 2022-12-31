@@ -19,12 +19,7 @@ public class LuminaCache<T> : IEnumerable<T> where T : ExcelRow
     }
 
     private readonly Dictionary<uint, T> cache = new();
-
-    public ExcelSheet<T> GetAll()
-    {
-        return Service.DataManager.GetExcelSheet<T>()!;
-    }
-
+    
     public ExcelSheet<T> OfLanguage(ClientLanguage language)
     {
         return Service.DataManager.GetExcelSheet<T>(language)!;

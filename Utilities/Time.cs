@@ -108,7 +108,7 @@ public static class Time
     {
         if (playerDatacenterID == null) return 0;
 
-        return LuminaCache<WorldDCGroupType>.Instance.GetAll()
+        return LuminaCache<WorldDCGroupType>.Instance
             .Where(world => world.RowId == playerDatacenterID.Value)
             .Select(dc => dc.Region)
             .FirstOrDefault();

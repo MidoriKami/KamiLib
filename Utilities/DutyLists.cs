@@ -37,7 +37,7 @@ public class DutyLists
             .ToList();
         
         // ContentType.Row 28 == Ultimate Raids
-        Ultimate = LuminaCache<ContentFinderCondition>.Instance.GetAll()
+        Ultimate = LuminaCache<ContentFinderCondition>.Instance
             .Where(t => t.ContentType.Row == 28)
             .Select(t => t.TerritoryType.Row)
             .ToList();
@@ -49,12 +49,12 @@ public class DutyLists
             .Select(t => t.TerritoryType.Row)
             .ToList();
 
-        Criterion = LuminaCache<ContentFinderCondition>.Instance.GetAll()
+        Criterion = LuminaCache<ContentFinderCondition>.Instance
             .Where(row => row.ContentType.Row is 30)
             .Select(row => row.TerritoryType.Row)
             .ToList();
         
-        Alliance = LuminaCache<TerritoryType>.Instance.GetAll()
+        Alliance = LuminaCache<TerritoryType>.Instance
             .Where(r => r.TerritoryIntendedUse is 8)
             .Select(r => r.RowId)
             .ToList();
