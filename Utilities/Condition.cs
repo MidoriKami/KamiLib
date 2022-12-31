@@ -1,5 +1,6 @@
 ﻿using System;
 using Dalamud.Game.ClientState.Conditions;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
 
@@ -59,6 +60,11 @@ public static class Condition
     public static bool IsCrossWorld()
     {
         return Service.Condition[ConditionFlag.ParticipatingInCrossWorldPartyOrAlliance];
+    }
+
+    public static bool IsInSanctuary()
+    {
+        return GameMain.IsInSanctuary();
     }
 
     public static bool CheckFlag(ConditionFlag flag)
