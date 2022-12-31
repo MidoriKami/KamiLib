@@ -33,8 +33,8 @@ public record Setting<T>(T Value) : IEquatable<T> where T : notnull
         {
             return value;
         }
-
-        return false;
+        
+        throw new Exception("Invalid implicit conversion to bool");
     }
 
     public override int GetHashCode()
