@@ -26,11 +26,11 @@ public class DutyLists
 
     private static DutyLists? _instance;
     public static DutyLists Instance => _instance ??= new DutyLists();
-    
-    public DutyLists()
+
+    private DutyLists()
     {
         // ContentType.Row 5 == Raids
-        Savage = LuminaCache<ContentFinderCondition>.Instance.GetAll(ClientLanguage.English)!
+        Savage = LuminaCache<ContentFinderCondition>.Instance.GetAll(ClientLanguage.English)
             .Where(t => t.ContentType.Row == 5)
             .Where(t => t.Name.RawString.Contains("Savage"))
             .Select(r => r.TerritoryType.Row)
@@ -51,7 +51,7 @@ public class DutyLists
 
         Criterion = LuminaCache<ContentFinderCondition>.Instance.GetAll()
             .Where(row => row.ContentType.Row is 30)
-            .Select(row => row.RowId)
+            .Select(row => row.TerritoryType.Row)
             .ToList();
         
         Alliance = LuminaCache<TerritoryType>.Instance.GetAll()
