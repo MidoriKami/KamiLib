@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace KamiLib.Utilities;
@@ -92,14 +93,14 @@ public static unsafe class Node
 {
     public static T* GetNodeByID<T>(AtkUldManager uldManager, uint nodeId) where T : unmanaged 
     {
-        for (var i = 0; i < uldManager.NodeListCount; i++) 
+        foreach (var index in Enumerable.Range(0, uldManager.NodeListCount))
         {
-            var currentNode = uldManager.NodeList[i];
+            var currentNode = uldManager.NodeList[index];
             if (currentNode->NodeID != nodeId) continue;
 
             return (T*) currentNode;
         }
-
+        
         return null;
     }
 }
