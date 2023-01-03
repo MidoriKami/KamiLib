@@ -104,6 +104,6 @@
         <value>To use the teleport function, you must install the "Teleporter" plugin</value>
     </data>
   <data name="Selection_NoItemSelected" xml:space="preserve">
-        <value>Select deez nuts</value>
+        <value>Select an item</value>
     </data>
 </root>
