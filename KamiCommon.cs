@@ -23,10 +23,13 @@ public static class KamiCommon
         PluginName = pluginName;
         _saveConfigFunction = saveConfig;
 
+        LocalizationManager.Instance.Initialize();
+        
         BlacklistDraw.PrimeSearch();
 
         CommandManager = new CommandManager();
         WindowManager = new WindowManager();
+        
     }
 
     public static void Dispose()
@@ -38,6 +41,7 @@ public static class KamiCommon
         DutyState.Cleanup();
         ChatPayloadManager.Cleanup();
         TeleportManager.Cleanup();
+        LocalizationManager.Cleanup();
     }
 
     public static void SaveConfiguration() => _saveConfigFunction();

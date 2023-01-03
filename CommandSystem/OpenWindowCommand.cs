@@ -10,20 +10,23 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
 {
     public string? CommandArgument { get; }
 
-    public OpenWindowCommand(string commandArgument, string? windowName = null)
+    public OpenWindowCommand( string? commandArgument = null, bool silent = false, string? windowName = null)
     {
-        CommandArgument = commandArgument.ToLower();
+        CommandArgument = commandArgument?.ToLower();
 
-        windowName ??= CultureInfo.CurrentCulture.TextInfo.ToTitleCase(commandArgument);
+        if (commandArgument is not null)
+        {
+            windowName ??= CultureInfo.CurrentCulture.TextInfo.ToTitleCase(commandArgument);
+        }
         
         SubCommands = new List<ISubCommand>
         {
             new SubCommand
             {
                 CommandKeyword = null,
-                CommandAction = () => Chat.PrintError($"The {windowName} Window cannot be opened while in a PvP area"),
+                CommandAction = () => Chat.PrintError(string.Format(Strings.Command_PvPError, windowName)),
                 CanExecute = () => Service.ClientState.IsPvP,
-                GetHelpText = () => $"Open {windowName} Window"
+                GetHelpText = () => string.Format(Strings.Command_OpenWindow, windowName)
             },
             new SubCommand
             {
@@ -32,7 +35,13 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
                 {
                     if ( KamiCommon.WindowManager.GetWindowOfType<T>() is {} mainWindow )
                     {
-                        Chat.Print("Command",!mainWindow.IsOpen ? $"Opening {windowName} Window" : $"Closing {windowName} Window");
+                        if (!silent)
+                        {
+                            Chat.Print(Strings.Command_Label,
+                                !mainWindow.IsOpen ? 
+                                    string.Format(Strings.Command_OpeningWindow, windowName) : 
+                                    string.Format(Strings.Command_ClosingWindow, windowName));
+                        }
 
                         mainWindow.IsOpen = !mainWindow.IsOpen;
                     }
@@ -42,7 +51,7 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
                     }
                 },
                 CanExecute = () => !Service.ClientState.IsPvP,
-                GetHelpText = () => $"Open {windowName} Window"
+                GetHelpText = () => string.Format(Strings.Command_OpenWindow, windowName)
             },
         };
     }

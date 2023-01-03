@@ -19,16 +19,16 @@ public static class BlacklistDraw
 {
     private static readonly List<uint> EntriesToRemove = new();
     private static readonly List<uint> EntriesToAdd = new();
-    private static string _searchString = "Search . . . ";
+    private static string _searchString = Strings.Blacklist_Search;
     private static List<SearchResult>? _searchResults = new();
     
     public static void DrawBlacklist(Setting<List<uint>> blacklistedAreas)
     {
         InfoBox.Instance
-            .AddTitle("Currently Blacklisted Areas", out var innerWidth, 1.0f)
+            .AddTitle(Strings.Blacklist_CurrentlyBlacklisted, out var innerWidth, 1.0f)
             .AddDummy(5.0f)
             .AddAction(() => BlacklistedAreasList(blacklistedAreas))
-            .AddDisabledButton(EntriesToRemove.Count == 0 ? "Clear Blacklist" : $"Remove {EntriesToRemove.Count} Selected Areas", () =>
+            .AddDisabledButton(EntriesToRemove.Count == 0 ? Strings.Blacklist_ClearBlacklist : Strings.Blacklist_RemoveSelectedAreas.Format(EntriesToRemove.Count), () =>
             {
                 if (EntriesToRemove.Count == 0)
                 {
@@ -41,22 +41,22 @@ public static class BlacklistDraw
                     EntriesToRemove.Clear();
                     KamiCommon.SaveConfiguration();
                 }
-            }, !ImGui.GetIO().KeyShift, "Hold 'Shift' to enable button", innerWidth)
+            }, !ImGui.GetIO().KeyShift, Strings.DisabledButton_HoldShift, innerWidth)
             .Draw();
     }
 
     public static void DrawAddRemoveHere(Setting<List<uint>> blacklistedZones)
     {
         InfoBox.Instance
-            .AddTitle("Add or Remove Current Zone", 1.0f)
+            .AddTitle(Strings.Blacklist_AddRemoveZone, 1.0f)
             .AddAction(() => LuminaCache<TerritoryType>.Instance.GetRow(Service.ClientState.TerritoryType)?.DrawLabel())
             .BeginTable()
             .BeginRow()
-            .AddDisabledButton("Add", () =>
+            .AddDisabledButton(Strings.Common_Add, () =>
                 { 
                     Add(blacklistedZones, Service.ClientState.TerritoryType);
                 }, blacklistedZones.Value.Contains(Service.ClientState.TerritoryType), buttonSize: InfoBox.Instance.InnerWidth / 2.0f - 5.0f * ImGuiHelpers.GlobalScale)
-            .AddDisabledButton("Remove", () =>
+            .AddDisabledButton(Strings.Common_Remove, () =>
                 {
                     Remove(blacklistedZones, Service.ClientState.TerritoryType);
                 }, !blacklistedZones.Value.Contains(Service.ClientState.TerritoryType), buttonSize: InfoBox.Instance.InnerWidth / 2.0f - 5.0f * ImGuiHelpers.GlobalScale)
@@ -68,7 +68,7 @@ public static class BlacklistDraw
     public static void DrawTerritorySearch(Setting<List<uint>> blacklistedZones)
     {
         InfoBox.Instance
-            .AddTitle("Zone Search", out var innerWidth, 1.0f)
+            .AddTitle(Strings.Blacklist_ZoneSearch, out var innerWidth, 1.0f)
             .AddAction(() =>
             {
                 ImGui.PushItemWidth(InfoBox.Instance.InnerWidth);
@@ -79,13 +79,13 @@ public static class BlacklistDraw
                 }
             })
             .AddAction(() => DisplayResults(_searchResults))
-            .AddDisabledButton($"Add {EntriesToAdd.Count} Selected Areas", () =>
+            .AddDisabledButton(Strings.Blacklist_AddSelectedAreas.Format(EntriesToAdd.Count), () =>
             {
                 blacklistedZones.Value.AddRange(EntriesToAdd);
                 EntriesToAdd.Clear();
                 KamiCommon.SaveConfiguration();
                 
-            }, !EntriesToAdd.Any(), "Select zones to add to blacklist", innerWidth)
+            }, !EntriesToAdd.Any(), Strings.Blacklist_SelectZones, innerWidth)
             .Draw();
     }
 
@@ -149,9 +149,8 @@ public static class BlacklistDraw
         {
             if (!blacklistedAreas.Value.Any())
             {
-                const string text = "Blacklist is Empty";
-                ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = ImGui.GetContentRegionAvail().X / 2 - ImGui.CalcTextSize(text).X / 2.0f});
-                ImGui.TextColored(Colors.Orange, text);
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = ImGui.GetContentRegionAvail().X / 2 - ImGui.CalcTextSize(Strings.Blacklist_Empty).X / 2.0f});
+                ImGui.TextColored(Colors.Orange, Strings.Blacklist_Empty);
             }
             else
             {

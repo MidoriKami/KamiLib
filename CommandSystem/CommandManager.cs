@@ -21,12 +21,12 @@ public class CommandManager : IDisposable
         
         Service.Commands.AddHandler(SettingsCommand, new CommandInfo(OnCommand)
         {
-            HelpMessage = "open configuration window"
+            HelpMessage = Strings.Command_OpenConfigWindow
         });
 
         Service.Commands.AddHandler(HelpCommand, new CommandInfo(OnCommand)
         {
-            HelpMessage = "display a list of all available sub-commands"
+            HelpMessage = Strings.Command_DisplayHelpText
         });
     }
     

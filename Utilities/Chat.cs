@@ -9,7 +9,7 @@ public static class Chat
 
     public static void PrintHelp(string command, string? helpText = null)
     {
-        var message = GetBaseString("Command", command);
+        var message = GetBaseString(Strings.Command_Label, command);
 
         if (helpText is not null)
         {
@@ -30,7 +30,7 @@ public static class Chat
         Service.Chat.Print(GetBaseString(tag, message, payload).BuiltString);
     }
 
-    public static void PrintError(string message) => Service.Chat.PrintError(GetBaseString("Error", message).BuiltString);
+    public static void PrintError(string message) => Service.Chat.PrintError(GetBaseString(Strings.Common_Error, message).BuiltString);
     
     private static SeStringBuilder GetBaseString(string tag, string message, DalamudLinkPayload? payload = null)
     {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Dalamud.Utility;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
 
@@ -22,7 +23,7 @@ public static class Command
         }
         else
         {
-            Chat.PrintError($"The command '{data.BaseCommand} {data.Command}' does not exist.");
+            Chat.PrintError(Strings.Command_DoesntExist.Format(data.BaseCommand ?? string.Empty, data.Command ?? string.Empty));
         }
     }
 }

@@ -51,13 +51,12 @@ public class SelectionList
     {
         if (Selected is null)
         {
-            const string text = "Select an item in the left pane";
             var available = ImGui.GetContentRegionAvail() / 2.0f;
-            var textSize = ImGui.CalcTextSize(text) / 2.0f;
+            var textSize = ImGui.CalcTextSize(Strings.Selection_NoItemSelected) / 2.0f;
             var center = new Vector2(available.X - textSize.X, available.Y - textSize.Y);
 
             ImGui.SetCursorPos(center);
-            ImGui.TextWrapped(text);
+            ImGui.TextWrapped(Strings.Selection_NoItemSelected);
         }
         else
         {

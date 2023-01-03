@@ -26,7 +26,7 @@ public interface IPluginCommand
         }
         else
         {
-            Chat.PrintError($"The command '{data.BaseCommand} {data.Command} {data.SubCommand}' does not exist.");
+            Chat.PrintError(string.Format(Strings.Command_DoesntExistExtended, data.BaseCommand, data.Command, data.SubCommand));
         }
     }
 

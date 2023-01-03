@@ -82,13 +82,15 @@ public abstract class DrawList<T>
         return DrawListOwner;
     }
 
-    public T AddStringCentered(string message, Vector4? color = null)
+    public T AddStringCentered(string message, float? availableArea = null, Vector4? color = null)
     {
         if (color == null)
         {
             DrawActions.Add(() =>
             {
-                ImGui.SetCursorPos(ImGui.GetCursorPos() with {X = ImGui.GetContentRegionAvail().X / 2.0f - ImGui.CalcTextSize(message).X / 2.0f});
+                var area = availableArea / 2.0f ?? ImGui.GetContentRegionAvail().X / 2.0f;
+                
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with {X = ImGui.GetCursorPos().X + area - ImGui.CalcTextSize(message).X / 2.0f});
                 ImGui.Text(message);
             });
         }
@@ -96,7 +98,9 @@ public abstract class DrawList<T>
         {
             DrawActions.Add(() =>
             {
-                ImGui.SetCursorPos(ImGui.GetCursorPos() with {X = ImGui.GetContentRegionAvail().X / 2.0f - ImGui.CalcTextSize(message).X / 2.0f});
+                var area = availableArea / 2.0f ?? ImGui.GetContentRegionAvail().X / 2.0f;
+                
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with {X = ImGui.GetCursorPos().X + area - ImGui.CalcTextSize(message).X / 2.0f});
                 ImGui.TextColored(color.Value, message);
             });
         }

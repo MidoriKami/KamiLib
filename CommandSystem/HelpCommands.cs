@@ -21,7 +21,7 @@ public class HelpCommands: IPluginCommand
                     PrintSubCommands(command);
                 }
             },
-            GetHelpText = () => "Show this message"
+            GetHelpText = () => Strings.Command_ShowThisMessage
         }
     };
 
@@ -62,7 +62,7 @@ public class HelpCommands: IPluginCommand
 
         if (subCommand.HasParameterAction)
         {
-            commandString += "[value] ";
+            commandString += $"[{Strings.Common_Value}] ";
         }
         
         Chat.PrintHelp(commandString, subCommand.GetHelpText());
@@ -84,7 +84,7 @@ public class HelpCommands: IPluginCommand
         
         if (subCommand.HasParameterAction)
         {
-            commandString += "[value] ";
+            commandString += $"[{Strings.Common_Value}] ";
         }
         
         Chat.PrintHelp(commandString, subCommand.GetHelpText());

@@ -45,7 +45,7 @@ public class TeleportManager : IDisposable
 
     private TeleportManager()
     {
-        teleportIpc = Service.PluginInterface.GetIpcSubscriber<uint, byte, bool>("Teleport");
+        teleportIpc = Service.PluginInterface.GetIpcSubscriber<uint, byte, bool>(Strings.Teleport_Label);
         showChatMessageIpc = Service.PluginInterface.GetIpcSubscriber<bool>("Teleport.ChatMessage");
     }
 
@@ -87,7 +87,7 @@ public class TeleportManager : IDisposable
         else
         {
             PluginLog.Error("User attempted to teleport to an aetheryte that is not unlocked");
-            UserError("Destination Aetheryte is not unlocked, teleport cancelled");
+            UserError(Strings.Teleport_NotUnlocked);
         }
     }
 
@@ -105,17 +105,17 @@ public class TeleportManager : IDisposable
 
             if (!didTeleport)
             {
-                UserError("Cannot teleport in this situation");
+                UserError(Strings.Teleport_BadSituation);
             }
             else if (showMessage)
             {
-                Chat.Print("Teleport", $"Teleporting to '{GetAetheryteName(aetheryte)}'");
+                Chat.Print(Strings.Teleport_Label, string.Format(Strings.Teleport_TeleportingTo, GetAetheryteName(aetheryte)));
             }
         }
         catch (IpcNotReadyError)
         {
             PluginLog.Error("Teleport IPC not found");
-            UserError("To use the teleport function, you must install the \"Teleporter\" plugin");
+            UserError(Strings.Teleport_InstallTeleporter);
         }
     }
 
@@ -132,7 +132,6 @@ public class TeleportManager : IDisposable
 
         return placeName == null ? "[Name Lookup Failed]" : placeName.Name;
     }
-
 
     private bool AetheryteUnlocked(ExcelRow aetheryte, out AetheryteEntry? entry)
     {
