@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:element name="root" msdata:IsDataSet="true">
+        </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Blacklist_CurrentlyBlacklisted" xml:space="preserve">
+        <value>Currently Blacklisted Areas</value>
+    </data>
+  <data name="Blacklist_ClearBlacklist" xml:space="preserve">
+        <value>Clear Blacklist</value>
+    </data>
+  <data name="Blacklist_RemoveSelectedAreas" xml:space="preserve">
+        <value>Remove {0} Selected Areas</value>
+    </data>
+  <data name="DisabledButton_HoldShift" xml:space="preserve">
+        <value>Hold 'Shift' to enable button</value>
+    </data>
+  <data name="Blacklist_AddRemoveZone" xml:space="preserve">
+        <value>Add or Remove Current Zone</value>
+    </data>
+  <data name="Common_Add" xml:space="preserve">
+        <value>Add</value>
+    </data>
+  <data name="Common_Remove" xml:space="preserve">
+        <value>Remove</value>
+    </data>
+  <data name="Blacklist_ZoneSearch" xml:space="preserve">
+        <value>Zone Search</value>
+    </data>
+  <data name="Blacklist_AddSelectedAreas" xml:space="preserve">
+        <value>Add {0} Selected Areas</value>
+    </data>
+  <data name="Blacklist_SelectZones" xml:space="preserve">
+        <value>Select zones to add to blacklist</value>
+    </data>
+  <data name="Blacklist_Empty" xml:space="preserve">
+        <value>Blacklist is Empty</value>
+    </data>
+  <data name="Command_DoesntExist" xml:space="preserve">
+        <value>The command '{0} {1}' does not exist.</value>
+    </data>
+  <data name="Command_OpenConfigWindow" xml:space="preserve">
+        <value>Open Configuration Window</value>
+    </data>
+  <data name="Command_DisplayHelpText" xml:space="preserve">
+        <value>display a list of all available sub-commands</value>
+    </data>
+  <data name="Command_Label" xml:space="preserve">
+        <value>Command</value>
+    </data>
+  <data name="Blacklist_Search" xml:space="preserve">
+        <value>Die Suche . . . </value>
+    </data>
+  <data name="Command_ShowThisMessage" xml:space="preserve">
+        <value>Show this message</value>
+    </data>
+  <data name="Common_Value" xml:space="preserve">
+        <value>value</value>
+    </data>
+  <data name="Command_PvPError" xml:space="preserve">
+        <value>The {0} Window cannot be opened while in a PvP area</value>
+    </data>
+  <data name="Command_OpenWindow" xml:space="preserve">
+        <value>Open {0} Window</value>
+    </data>
+  <data name="Command_OpeningWindow" xml:space="preserve">
+        <value>Opening {0} Window</value>
+    </data>
+  <data name="Command_ClosingWindow" xml:space="preserve">
+        <value>Closing {0} Window</value>
+    </data>
+  <data name="Command_DoesntExistExtended" xml:space="preserve">
+        <value>The command '{0} {1} {2}' does not exist.</value>
+    </data>
+  <data name="Common_Error" xml:space="preserve">
+        <value>Error</value>
+    </data>
+  <data name="Teleport_NotUnlocked" xml:space="preserve">
+        <value>Destination Aetheryte is not unlocked, teleport cancelled</value>
+    </data>
+  <data name="Teleport_BadSituation" xml:space="preserve">
+        <value>Cannot teleport in this situation</value>
+    </data>
+  <data name="Teleport_TeleportingTo" xml:space="preserve">
+        <value>Teleporting to '{0}'</value>
+    </data>
+  <data name="Teleport_Label" xml:space="preserve">
+        <value>Teleport</value>
+    </data>
+  <data name="Teleport_InstallTeleporter" xml:space="preserve">
+        <value>To use the teleport function, you must install the "Teleporter" plugin</value>
+    </data>
+  <data name="Selection_NoItemSelected" xml:space="preserve">
+        <value>Select deez nuts</value>
+    </data>
+</root>
