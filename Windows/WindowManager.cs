@@ -44,8 +44,8 @@ public class WindowManager : IDisposable
         windows.Add(configWindow);
         windowSystem.AddWindow(configWindow);
         
-        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>(null, false, "Configuration Window"));
-        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>("silent", true, "Configuration Window"));
+        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>(null, false, "Configuration"));
+        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>("silent", true, "Configuration"));
     }
 
     public void RemoveWindow(Window window)
