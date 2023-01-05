@@ -84,7 +84,7 @@ public class InfoBoxTable
         return wrapPosition;
     }
 
-    public InfoBoxTable AddRows(IEnumerable<IInfoBoxTableConfigurationRow> configurableRows, string? emptyEnumerableString = null)
+    public InfoBoxTable AddConfigurationRows(IEnumerable<IInfoBoxTableConfigurationRow> configurableRows, string? emptyEnumerableString = null)
     {
         if(emptyEnumerableString is not null)
         {
@@ -99,7 +99,7 @@ public class InfoBoxTable
         return this;
     }
 
-    public InfoBoxTable AddRows(IEnumerable<IInfoBoxTableDataRow> dataRows, string? emptyEnumerableString = null)
+    public InfoBoxTable AddDataRows(IEnumerable<IInfoBoxTableDataRow> dataRows, string? emptyEnumerableString = null)
     {
         if(emptyEnumerableString is not null)
         {
