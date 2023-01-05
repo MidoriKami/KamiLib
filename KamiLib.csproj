@@ -15,6 +15,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="LICENSE" />
+        <None Remove=".gitignore" />
+    </ItemGroup>
+    
+    <ItemGroup>
         <Reference Include="FFXIVClientStructs">
             <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
             <Private>false</Private>
