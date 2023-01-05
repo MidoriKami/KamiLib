@@ -162,25 +162,28 @@ public static class BlacklistDraw
 
     private static void DrawBlacklistedAreas(Setting<List<uint>> blacklistedAreas)
     {
-        foreach (var territory in blacklistedAreas.Value)
+        var territories = blacklistedAreas.Value
+            .Select(area => LuminaCache<TerritoryType>.Instance.GetRow(area))
+            .OfType<TerritoryType>()
+            .OrderBy(territory => territory.GetPlaceNameString());
+        
+        foreach (var territory in territories)
         {
-            var territoryType = LuminaCache<TerritoryType>.Instance.GetRow(territory);
-
             ImGui.PushItemWidth(InfoBox.Instance.InnerWidth);
-            if (ImGui.Selectable($"###{territory}", EntriesToRemove.Contains(territory)))
+            if (ImGui.Selectable($"###{territory}", EntriesToRemove.Contains(territory.RowId)))
             {
-                if (!EntriesToRemove.Contains(territory))
+                if (!EntriesToRemove.Contains(territory.RowId))
                 {
-                    EntriesToRemove.Add(territory);
+                    EntriesToRemove.Add(territory.RowId);
                 }
                 else
                 {
-                    EntriesToRemove.Remove(territory);
+                    EntriesToRemove.Remove(territory.RowId);
                 }
             }
             
             ImGui.SameLine();
-            territoryType?.DrawLabel();
+            territory.DrawLabel();
         }
     }
     
