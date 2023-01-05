@@ -27,7 +27,7 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
                 CommandAction = () => Chat.PrintError(string.Format(Strings.Command_PvPError, windowName)),
                 CanExecute = () => Service.ClientState.IsPvP,
                 GetHelpText = () => string.Format(Strings.Command_OpenWindow, windowName),
-                Hidden = !silent,
+                Hidden = silent,
             },
             new SubCommand
             {
@@ -53,7 +53,7 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
                 },
                 CanExecute = () => !Service.ClientState.IsPvP,
                 GetHelpText = () => string.Format(Strings.Command_OpenWindow, windowName),
-                Hidden = !silent,
+                Hidden = silent,
             },
         };
     }
