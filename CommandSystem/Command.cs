@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Dalamud.Utility;
 using KamiLib.Interfaces;
 using KamiLib.Utilities;
 
@@ -16,14 +15,21 @@ public static class Command
 
         if (matchingCommands.Any())
         {
-            foreach (var cmd in matchingCommands)
+            var anyExecuted = false;
+
+            foreach (var cmd in matchingCommands.Where(cmd => cmd.Execute(data)))
             {
-                cmd.Execute(data);
+                anyExecuted = true;
+            }
+
+            if (!anyExecuted)
+            {
+                Chat.PrintError(string.Format(Strings.Command_DoesntExistExtended, data.BaseCommand, data.Command, data.SubCommand));
             }
         }
         else
         {
-            Chat.PrintError(Strings.Command_DoesntExist.Format(data.BaseCommand ?? string.Empty, data.Command ?? string.Empty));
+            Chat.PrintError(string.Format(Strings.Command_DoesntExist, data.BaseCommand, data.Command));
         }
     }
 }

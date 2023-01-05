@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using KamiLib.CommandSystem;
-using KamiLib.Utilities;
 
 namespace KamiLib.Interfaces;
 
@@ -11,7 +10,7 @@ public interface IPluginCommand
     
     IEnumerable<ISubCommand> SubCommands { get; }
     
-    public void Execute(CommandData data)
+    public bool Execute(CommandData data)
     {
         var matchingSubCommands = SubCommands
             .Where(subCommand => MatchingSubCommand(subCommand, data.SubCommand))
@@ -23,11 +22,11 @@ public interface IPluginCommand
             {
                 subCommand.Execute(data);
             }
+
+            return true;
         }
-        else
-        {
-            Chat.PrintError(string.Format(Strings.Command_DoesntExistExtended, data.BaseCommand, data.Command, data.SubCommand));
-        }
+        
+        return false;
     }
 
     private static bool MatchingSubCommand(ISubCommand subCommand, string? targetCommand)

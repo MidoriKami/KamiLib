@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Game;
-using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 
