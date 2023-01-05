@@ -17,7 +17,7 @@ public static class Command
         {
             var anyExecuted = false;
 
-            foreach (var cmd in matchingCommands.Where(cmd => cmd.Execute(data)))
+            foreach (var _ in matchingCommands.Where(cmd => cmd.Execute(data)))
             {
                 anyExecuted = true;
             }
