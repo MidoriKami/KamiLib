@@ -11,7 +11,7 @@ public static class TerritoryTypeExtensions
 {
     public static void DrawLabel(this TerritoryType data)
     {
-        var placeString = data.GetLabel();
+        var placeString = data.GetPlaceNameString();
         
         var startPosition = ImGui.GetCursorPos();
         ImGui.TextColored(Colors.Grey, data.RowId.ToString());
@@ -19,7 +19,7 @@ public static class TerritoryTypeExtensions
         ImGui.Text(placeString);
     }
 
-    public static string GetLabel(this TerritoryType data)
+    public static string GetPlaceNameString(this TerritoryType data)
     {
         var placeNameRow = data.PlaceName.Row;
         var placeName = LuminaCache<PlaceName>.Instance.GetRow(placeNameRow);
