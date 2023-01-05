@@ -15,14 +15,7 @@ public static class Command
 
         if (matchingCommands.Any())
         {
-            var anyExecuted = false;
-
-            foreach (var _ in matchingCommands.Where(cmd => cmd.Execute(data)))
-            {
-                anyExecuted = true;
-            }
-
-            if (!anyExecuted)
+            if (!matchingCommands.Any(command => command.Execute(data)))
             {
                 Chat.PrintError(string.Format(Strings.Command_DoesntExistExtended, data.BaseCommand, data.Command, data.SubCommand));
             }
