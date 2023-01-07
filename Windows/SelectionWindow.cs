@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using KamiLib.Interfaces;
@@ -30,7 +31,7 @@ public abstract class SelectionWindow : Window, IDrawable
         var itemSpacing = ImGui.GetStyle().ItemSpacing;
 
         var leftSideWidth = region.X * horizontalWeight - itemSpacing.X / 2.0f;
-        var topLeftSideHeight = region.Y - verticalHeight - itemSpacing.Y / 2.0f;
+        var topLeftSideHeight = region.Y - verticalHeight * ImGuiHelpers.GlobalScale - itemSpacing.Y / 2.0f;
 
         if(ImGui.BeginChild($"###{KamiCommon.PluginName}LeftSide", new Vector2( leftSideWidth, topLeftSideHeight), ShowBorders, ImGuiWindowFlags.NoDecoration))
         {
@@ -53,7 +54,7 @@ public abstract class SelectionWindow : Window, IDrawable
         
         ImGui.SetCursorPos(bottomLeftChildPosition);
         
-        if(ImGui.BeginChild($"###{KamiCommon.PluginName}BottomLeftSide", new Vector2(leftSideWidth, verticalHeight), ShowBorders, ImGuiWindowFlags.NoDecoration))
+        if(ImGui.BeginChild($"###{KamiCommon.PluginName}BottomLeftSide", new Vector2(leftSideWidth, verticalHeight * ImGuiHelpers.GlobalScale), ShowBorders, ImGuiWindowFlags.NoDecoration))
         {
             DrawExtras();
         }
