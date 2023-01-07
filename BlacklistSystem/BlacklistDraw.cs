@@ -19,7 +19,7 @@ public static class BlacklistDraw
 {
     private static readonly List<uint> EntriesToRemove = new();
     private static readonly List<uint> EntriesToAdd = new();
-    private static string _searchString = Strings.Blacklist_Search;
+    private static string _searchString = string.Empty;
     private static List<SearchResult>? _searchResults = new();
     
     public static void DrawBlacklist(Setting<List<uint>> blacklistedAreas)
@@ -72,7 +72,7 @@ public static class BlacklistDraw
             .AddAction(() =>
             {
                 ImGui.PushItemWidth(InfoBox.Instance.InnerWidth);
-                if (ImGui.InputText("###TerritorySearch", ref _searchString, 60, ImGuiInputTextFlags.AutoSelectAll))
+                if (ImGui.InputTextWithHint("###TerritorySearch", Strings.Blacklist_Search, ref _searchString, 60, ImGuiInputTextFlags.AutoSelectAll))
                 {
                     _searchResults = Search(_searchString, 5);
                     PluginLog.Debug("Updating TerritorySearch Results");
