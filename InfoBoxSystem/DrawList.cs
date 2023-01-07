@@ -158,7 +158,7 @@ public abstract class DrawList<T>
         {
             if (width != 0.0f)
             {
-                ImGui.SetNextItemWidth(width * ImGuiHelpers.GlobalScale);
+                ImGui.SetNextItemWidth(width);
             }
             else
             {
@@ -261,7 +261,7 @@ public abstract class DrawList<T>
         {
             if (width != 0.0f)
             {
-                ImGui.SetNextItemWidth(width * ImGuiHelpers.GlobalScale);
+                ImGui.SetNextItemWidth(width);
             }
             else
             {
@@ -305,7 +305,7 @@ public abstract class DrawList<T>
         {
             if (width != 0.0f)
             {
-                ImGui.SetNextItemWidth(width * ImGuiHelpers.GlobalScale);
+                ImGui.SetNextItemWidth(width);
             }
 
             ImGui.InputText("", ref settingsCustomName.Value, 24);
@@ -325,7 +325,7 @@ public abstract class DrawList<T>
         {
             if (width != 0.0f)
             {
-                ImGui.SetNextItemWidth(width * ImGuiHelpers.GlobalScale);
+                ImGui.SetNextItemWidth(width);
             }
             else
             {
