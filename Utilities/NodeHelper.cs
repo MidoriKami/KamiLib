@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace KamiLib.Utilities;
@@ -17,7 +16,7 @@ public unsafe class BaseNode
 
     public BaseNode Print()
     {
-        Chat.Print("AtkUnitBase", $"{new IntPtr(node):X8}");
+        Chat.Print("AtkUnitBase", $"{new nint(node):X8}");
         return this;
     }
 
@@ -71,7 +70,7 @@ public unsafe class ComponentNode
 
     public ComponentNode Print()
     {
-        Chat.Print("AtkComponentNode", $"{new IntPtr(node):X8}");
+        Chat.Print("AtkComponentNode", $"{new nint(node):X8}");
         return this;
     }
 

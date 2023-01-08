@@ -40,7 +40,7 @@ public class IconCache : IDisposable
                 var path = IconFilePath.Format(iconId / 1000, iconId);
                 var tex = Service.DataManager.GetImGuiTexture(path);
 
-                if (tex is not null && tex.ImGuiHandle != IntPtr.Zero) 
+                if (tex is not null && tex.ImGuiHandle != nint.Zero) 
                 {
                     iconTextures[iconId] = tex;
                 } 
@@ -58,7 +58,7 @@ public class IconCache : IDisposable
     
     public TextureWrap? GetIcon(uint iconId) 
     {
-        if (iconTextures.ContainsKey(iconId)) return iconTextures[iconId];
+        if (iconTextures.TryGetValue(iconId, out var value)) return value;
 
         iconTextures.Add(iconId, null);
         LoadIconTexture(iconId);

@@ -25,16 +25,16 @@ public static class AtkValueHelper
                 PluginLog.Debug($"[{index:D3}] [{"float", 7}]: {value.Float}");
                 break;
             case ValueType.String:
-                PluginLog.Debug($"[{index:D3}] [{"string", 7}]: {Marshal.PtrToStringUTF8(new IntPtr(value.String))}");
+                PluginLog.Debug($"[{index:D3}] [{"string", 7}]: {Marshal.PtrToStringUTF8(new nint(value.String))}");
                 break;
             case ValueType.String8:
-                PluginLog.Debug($"[{index:D3}] [{"string8", 7}]: {Marshal.PtrToStringUTF8(new IntPtr(value.String))}");
+                PluginLog.Debug($"[{index:D3}] [{"string8", 7}]: {Marshal.PtrToStringUTF8(new nint(value.String))}");
                 break;
             case ValueType.Vector:
                 PluginLog.Debug($"[{index:D3}] [{"vector", 7}]: No Representation Implemented");
                 break;
             case ValueType.AllocatedString:
-                PluginLog.Debug($"[{index:D3}] [{"aString", 7}]: {Marshal.PtrToStringUTF8(new IntPtr(value.String))}");
+                PluginLog.Debug($"[{index:D3}] [{"aString", 7}]: {Marshal.PtrToStringUTF8(new nint(value.String))}");
                 break;
             case ValueType.AllocatedVector:
                 PluginLog.Debug($"[{index:D3}] [{"aVector", 7}]: No Representation Implemented");
@@ -50,6 +50,6 @@ public static class AtkValueExtensions
 {
     public static unsafe string GetString(this AtkValue value)
     {
-        return Marshal.PtrToStringUTF8(new IntPtr(value.String)) ?? "Unable to Allocate String";
+        return Marshal.PtrToStringUTF8(new nint(value.String)) ?? "Unable to Allocate String";
     }
 }
