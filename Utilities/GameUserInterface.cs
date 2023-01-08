@@ -7,15 +7,14 @@ namespace KamiLib.Utilities;
 
 public unsafe class GameUserInterface : IDisposable
 {
-    private bool LastState;
-    
     public event EventHandler? UiHidden;
     public event EventHandler? UiShown;
 
     private static GameUserInterface? _instance;
     public static GameUserInterface Instance => _instance ??= new GameUserInterface();
 
-    public bool IsVisible => !LastState;
+    public bool IsVisible => !lastState;
+    private bool lastState;
     
     private GameUserInterface()
     {
@@ -44,7 +43,7 @@ public unsafe class GameUserInterface : IDisposable
 
         var shouldHideUi = !partyListVisible && !todoListVisible && !enemyListVisible;
 
-        if (LastState != shouldHideUi)
+        if (lastState != shouldHideUi)
         {
             if (shouldHideUi)
             {
@@ -56,6 +55,6 @@ public unsafe class GameUserInterface : IDisposable
             }
         }
 
-        LastState = shouldHideUi;
+        lastState = shouldHideUi;
     }
 }
