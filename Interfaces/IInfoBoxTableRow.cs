@@ -1,4 +1,4 @@
-﻿using KamiLib.InfoBoxSystem;
+﻿using KamiLib.Drawing;
 
 namespace KamiLib.Interfaces;
 

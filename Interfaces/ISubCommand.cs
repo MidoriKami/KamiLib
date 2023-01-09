@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using KamiLib.CommandSystem;
+using KamiLib.ChatCommands;
 
 namespace KamiLib.Interfaces;
 

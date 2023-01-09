@@ -2,6 +2,7 @@
 using System.Numerics;
 using ImGuiNET;
 using KamiLib.Interfaces;
+using KamiLib.Localization;
 
 namespace KamiLib.Windows;
 

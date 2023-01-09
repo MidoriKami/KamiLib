@@ -1,9 +1,12 @@
 ﻿using System;
 using Dalamud.Plugin;
-using KamiLib.BlacklistSystem;
+using KamiLib.Blacklist;
 using KamiLib.Caching;
-using KamiLib.CommandSystem;
-using KamiLib.Utilities;
+using KamiLib.ChatCommands;
+using KamiLib.GameState;
+using KamiLib.Localization;
+using KamiLib.Teleporter;
+using KamiLib.UserInterface;
 using KamiLib.Windows;
 
 namespace KamiLib;
