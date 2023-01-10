@@ -12,7 +12,7 @@ public unsafe class BaseNode
     
     public BaseNode(string addon)
     {
-        node = (AtkUnitBase*) Service.GameGui.GetAddonByName(addon, 1);
+        node = (AtkUnitBase*) Service.GameGui.GetAddonByName(addon);
     }
 
     public BaseNode Print()
