@@ -19,7 +19,7 @@ public static class Condition
     public static bool IsInCombat() => Service.Condition[ConditionFlag.InCombat];
     public static bool IsInCutsceneOrQuestEvent() => IsInCutscene() || IsInQuestEvent();
     public static bool IsDutyRecorderPlayback() => Service.Condition[ConditionFlag.DutyRecorderPlayback];
-    public static bool IsIslandDoingSomethingMode() => Service.GameGui.GetAddonByName("MJIPadGuide", 1) != nint.Zero;
+    public static bool IsIslandDoingSomethingMode() => Service.GameGui.GetAddonByName("MJIPadGuide") != nint.Zero;
 
     public static bool IsInCutscene()
     {

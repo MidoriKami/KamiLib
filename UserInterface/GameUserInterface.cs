@@ -33,9 +33,9 @@ public unsafe class GameUserInterface : IDisposable
 
     private void FrameworkUpdate(Framework framework)
     {
-        var partyList = (AtkUnitBase*) Service.GameGui.GetAddonByName("_PartyList", 1);
-        var todoList = (AtkUnitBase*) Service.GameGui.GetAddonByName("_ToDoList", 1);
-        var enemyList = (AtkUnitBase*) Service.GameGui.GetAddonByName("_EnemyList", 1);
+        var partyList = (AtkUnitBase*) Service.GameGui.GetAddonByName("_PartyList");
+        var todoList = (AtkUnitBase*) Service.GameGui.GetAddonByName("_ToDoList");
+        var enemyList = (AtkUnitBase*) Service.GameGui.GetAddonByName("_EnemyList");
 
         var partyListVisible = partyList != null && partyList->IsVisible;
         var todoListVisible = todoList != null && todoList->IsVisible;
