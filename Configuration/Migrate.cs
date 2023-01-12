@@ -9,19 +9,21 @@ namespace KamiLib.Configuration;
 public static class Migrate
 {
     private static JObject? _parsedJson;
-    
-    public static void LoadFile(FileInfo configFilePath)
-    {
-        var reader = new StreamReader(configFilePath.FullName);
-        var fileText = reader.ReadToEnd();
-        reader.Dispose();
-        
-        _parsedJson = JObject.Parse(fileText);
-    }
 
-    public static int GetFileVersion()
+    public static int GetFileVersion(FileInfo configFileInfo)
     {
-        return _parsedJson?.GetValue("Version")?.Value<int>() ?? 0;
+        if (configFileInfo.Exists)
+        {
+            var reader = new StreamReader(configFileInfo.FullName);
+            var fileText = reader.ReadToEnd();
+            reader.Dispose();
+        
+            _parsedJson = JObject.Parse(fileText);
+            
+            return _parsedJson.GetValue("Version")?.Value<int>() ?? 0;
+        }
+
+        return 0;
     }
     
     public static Setting<T> GetSettingValue<T>(string key) where T : struct
