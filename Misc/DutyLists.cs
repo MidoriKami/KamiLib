@@ -18,12 +18,14 @@ public enum DutyType
 
 public class DutyLists
 {
-    private List<uint> Savage { get; }
-    private List<uint> Ultimate { get; }
-    private List<uint> ExtremeUnreal { get; }
-    private List<uint> Criterion { get; }
-    private List<uint> Alliance { get; }
-
+    public List<uint> Savage { get; }
+    public List<uint> Ultimate { get; }
+    public List<uint> ExtremeUnreal { get; }
+    public List<uint> Criterion { get; }
+    public List<uint> Alliance { get; }
+    public List<uint> LimitedAlliance { get; }
+    public List<uint> LimitedSavage { get; }
+    
     private static DutyLists? _instance;
     public static DutyLists Instance => _instance ??= new DutyLists();
 
@@ -58,6 +60,23 @@ public class DutyLists
             .Where(r => r.TerritoryIntendedUse is 8)
             .Select(r => r.RowId)
             .ToList();
+        
+        var instanceContents = LuminaCache<InstanceContent>.Instance
+            .Where(instance => instance.WeekRestriction == 1)
+            .Select(instance => instance.RowId);
+        
+        LimitedAlliance = LuminaCache<ContentFinderCondition>.Instance
+            .Where(cfc => instanceContents.Contains(cfc.Content))
+            .Where(cfc => cfc.TerritoryType.Value?.TerritoryIntendedUse is 8)
+            .Select(cfc => cfc.TerritoryType.Row)
+            .ToList();
+        
+        LimitedSavage = LuminaCache<ContentFinderCondition>.Instance
+            .Where(cfc => instanceContents.Contains(cfc.Content))
+            .Where(cfc => cfc.TerritoryType.Value?.TerritoryIntendedUse is 17)
+            .OrderByDescending(cfc => cfc.SortKey)
+            .Select(cfc => cfc.TerritoryType.Row)
+            .ToList();
     }
 
     private DutyType GetDutyType(uint dutyId)
@@ -70,7 +89,7 @@ public class DutyLists
 
         return DutyType.None;
     }
-
+    
     public bool IsType(uint dutyId, DutyType type) => GetDutyType(dutyId) == type;
     public bool IsType(uint dutyId, IEnumerable<DutyType> types) => types.Any(type => IsType(dutyId, type));
 }
