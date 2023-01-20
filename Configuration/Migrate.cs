@@ -14,7 +14,7 @@ public static class Migrate
     {
         if (configFileInfo.Exists)
         {
-            var reader = new StreamReader(configFileInfo.FullName);
+            var reader = new StreamReader(new FileStream(configFileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
             var fileText = reader.ReadToEnd();
             reader.Dispose();
         
