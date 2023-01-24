@@ -76,4 +76,9 @@ public static class Condition
         return Service.Condition[ConditionFlag.Gathering] ||
                Service.Condition[ConditionFlag.Gathering42];
     }
+
+    public static bool IsInBardPerformance()
+    {
+        return Service.Condition[ConditionFlag.Performing];
+    }
 }
