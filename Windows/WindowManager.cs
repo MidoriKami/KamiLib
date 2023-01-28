@@ -39,13 +39,13 @@ public class WindowManager : IDisposable
         }
     }
 
-    public void AddConfigurationWindow<T>(T configWindow) where T : Window
+    public void AddConfigurationWindow<T>(T configWindow, bool allowInDen = false) where T : Window
     {
         windows.Add(configWindow);
         windowSystem.AddWindow(configWindow);
         
-        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>(null, false, "Configuration"));
-        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>("silent", true, "Configuration"));
+        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>(null, false, "Configuration", allowInDen));
+        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>("silent", true, "Configuration", allowInDen));
     }
 
     public void RemoveWindow(Window window)
