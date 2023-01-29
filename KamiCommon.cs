@@ -32,7 +32,6 @@ public static class KamiCommon
 
         CommandManager = new CommandManager();
         WindowManager = new WindowManager();
-        
     }
 
     public static void Dispose()

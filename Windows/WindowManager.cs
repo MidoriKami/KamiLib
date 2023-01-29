@@ -19,7 +19,6 @@ public class WindowManager : IDisposable
         windows.ForEach(window => windowSystem.AddWindow(window));
         
         Service.PluginInterface.UiBuilder.Draw += DrawUI;
-        Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
     }
     
     public void Dispose()
@@ -46,6 +45,8 @@ public class WindowManager : IDisposable
         
         KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>(null, false, "Configuration"));
         KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>("silent", true, "Configuration"));
+        
+        Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
     }
 
     public void RemoveWindow(Window window)
