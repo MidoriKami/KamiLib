@@ -19,7 +19,6 @@ public class WindowManager : IDisposable
         windows.ForEach(window => windowSystem.AddWindow(window));
         
         Service.PluginInterface.UiBuilder.Draw += DrawUI;
-        Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
     }
     
     public void Dispose()
