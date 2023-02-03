@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using Newtonsoft.Json.Linq;
 
@@ -10,20 +9,14 @@ public static class Migrate
 {
     private static JObject? _parsedJson;
 
-    public static int GetFileVersion(FileInfo configFileInfo)
+    public static void ParseJObject(string fileText)
     {
-        if (configFileInfo.Exists)
-        {
-            var reader = new StreamReader(new FileStream(configFileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
-            var fileText = reader.ReadToEnd();
-            reader.Dispose();
-        
-            _parsedJson = JObject.Parse(fileText);
-            
-            return _parsedJson.GetValue("Version")?.Value<int>() ?? 0;
-        }
-
-        return 0;
+        _parsedJson = JObject.Parse(fileText);
+    }
+    
+    public static int GetFileVersion()
+    {
+        return _parsedJson?.GetValue("Version")?.Value<int>() ?? 0;
     }
     
     public static Setting<T> GetSettingValue<T>(string key) where T : struct

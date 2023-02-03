@@ -71,9 +71,10 @@ public class DutyLists
             .Select(cfc => cfc.TerritoryType.Row)
             .ToList();
         
-        LimitedSavage = LuminaCache<ContentFinderCondition>.Instance
+        LimitedSavage = LuminaCache<ContentFinderCondition>.Instance.OfLanguage(ClientLanguage.English)
             .Where(cfc => instanceContents.Contains(cfc.Content))
             .Where(cfc => cfc.TerritoryType.Value?.TerritoryIntendedUse is 17)
+            .Where(cfc => !cfc.Name.RawString.Contains("Ultimate"))
             .OrderByDescending(cfc => cfc.SortKey)
             .Select(cfc => cfc.TerritoryType.Row)
             .ToList();

@@ -10,7 +10,7 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
 {
     public string? CommandArgument { get; }
 
-    public OpenWindowCommand( string? commandArgument = null, bool silent = false, string? windowName = null)
+    public OpenWindowCommand(string? commandArgument = null, bool silent = false, string? windowName = null, bool enableInDen = false)
     {
         CommandArgument = commandArgument?.ToLower();
 
@@ -25,7 +25,7 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
             {
                 CommandKeyword = null,
                 CommandAction = () => Chat.PrintError(string.Format(Strings.Command_PvPError, windowName)),
-                CanExecute = () => Service.ClientState.IsPvP,
+                CanExecute = () => enableInDen ? Service.ClientState.IsPvPExcludingDen : Service.ClientState.IsPvP,
                 GetHelpText = () => string.Format(Strings.Command_OpenWindow, windowName),
                 Hidden = silent,
             },
@@ -51,7 +51,7 @@ public class OpenWindowCommand<T> : IPluginCommand where T : Window
                         Chat.PrintError($"Something went wrong trying to open {windowName} Window");
                     }
                 },
-                CanExecute = () => !Service.ClientState.IsPvP,
+                CanExecute = () => enableInDen ? !Service.ClientState.IsPvPExcludingDen : !Service.ClientState.IsPvP,
                 GetHelpText = () => string.Format(Strings.Command_OpenWindow, windowName),
                 Hidden = silent,
             },
