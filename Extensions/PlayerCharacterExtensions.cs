@@ -30,7 +30,7 @@ public static class PlayerCharacterExtensions
 
     public static bool IsValidObject(this PlayerCharacter? character)
     {
-        return character?.ObjectId is not 0 or 0xE000_0000;
+        return character?.ObjectId is not null and not 0 and not 0xE000_0000;
     }
 
     public static bool HasPet(this PlayerCharacter character)
