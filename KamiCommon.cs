@@ -3,7 +3,6 @@ using Dalamud.Plugin;
 using KamiLib.Blacklist;
 using KamiLib.Caching;
 using KamiLib.ChatCommands;
-using KamiLib.GameState;
 using KamiLib.Localization;
 using KamiLib.Teleporter;
 using KamiLib.UserInterface;
@@ -40,7 +39,6 @@ public static class KamiCommon
         WindowManager.Dispose();
         IconCache.Cleanup();
         GameUserInterface.Cleanup();
-        DutyState.Cleanup();
         ChatPayloadManager.Cleanup();
         TeleportManager.Cleanup();
         LocalizationManager.Cleanup();
