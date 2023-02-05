@@ -28,6 +28,11 @@ public static class PlayerCharacterExtensions
         return character.StatusList.Count(status => statusList.Contains(status.StatusId));
     }
 
+    public static bool IsValidObject(this PlayerCharacter? character)
+    {
+        return character?.ObjectId is not null and not 0 and not 0xE000_0000;
+    }
+
     public static bool HasPet(this PlayerCharacter character)
     {
         var ownedObjects = Service.ObjectTable.Where(obj => obj.OwnerId == character.ObjectId);
