@@ -115,7 +115,7 @@ public static unsafe class ImageNode
     {
         if (asset is not null)
         {
-            asset->AtkTexture.Destroy(true);
+            asset->AtkTexture.Destroy(false);
             IMemorySpace.Free(asset, (ulong) sizeof(AtkUldAsset));
         }
     }
@@ -142,7 +142,7 @@ public static unsafe class ImageNode
                 FreePartsList(partsList);
             }
             
-            imageNode->AtkResNode.Destroy(true);
+            imageNode->AtkResNode.Destroy(false);
             IMemorySpace.Free(imageNode, (ulong) sizeof(AtkImageNode));
         }
     }
