@@ -10,7 +10,7 @@ using Action = System.Action;
 
 namespace KamiLib.Drawing;
 
-public abstract class DrawList<T>
+public abstract class DrawList<T> where T: DrawList<T>
 {
     protected T DrawListOwner { get; init; } = default!;
     protected List<Action> DrawActions { get; } = new();
@@ -357,6 +357,26 @@ public abstract class DrawList<T>
         return DrawListOwner;
     }
 
+    public T AddInputString(
+        string label, Setting<string> setting, uint maxLength, ImGuiInputTextFlags flags = ImGuiInputTextFlags.None
+    )
+    {
+        DrawActions.Add(() =>
+        {
+            if (ImGui.InputText(label, ref setting.Value, maxLength, flags))
+            {
+                KamiCommon.SaveConfiguration();
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip($"Max. {maxLength} characters.");
+            }
+        });
+
+        return DrawListOwner;
+    }
+
     public T AddHelpMarker(string helpText)
     {
         DrawActions.Add(() =>
@@ -487,5 +507,54 @@ public abstract class DrawList<T>
         }
 
         return DrawListOwner;
+    }
+
+    public T AddIconButton(int buttonID, FontAwesomeIcon icon, Action action, string? hoverTooltip = null)
+    {
+        DrawActions.Add(() =>
+        {
+            if (ImGuiComponents.IconButton(buttonID, icon))
+            {
+                action.Invoke();
+            }
+
+            if (hoverTooltip is not null && ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip(hoverTooltip);
+            }
+        });
+        return DrawListOwner;
+    }
+
+    public ConditionalDrawList<T> StartConditional(bool condition)
+    {
+        return new ConditionalDrawList<T>(DrawListOwner, condition);
+    }
+}
+
+public class ConditionalDrawList<T>: DrawList<ConditionalDrawList<T>> where T: DrawList<T>
+{
+    private readonly T owner;
+    private readonly bool condition;
+
+    internal ConditionalDrawList(T owner, bool condition)
+    {
+        this.owner = owner;
+        this.condition = condition;
+        DrawListOwner = this;
+    }
+    
+    
+
+    public T EndConditional()
+    {
+        if (condition)
+        {
+            foreach (var action in DrawActions)
+            {
+                owner.AddAction(action);
+            }
+        }
+        return owner;
     }
 }
