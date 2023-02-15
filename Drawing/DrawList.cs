@@ -509,11 +509,11 @@ public abstract class DrawList<T> where T: DrawList<T>
         return DrawListOwner;
     }
 
-    public T AddIconButton(FontAwesomeIcon icon, Action action, string? hoverTooltip = null)
+    public T AddIconButton(int buttonID, FontAwesomeIcon icon, Action action, string? hoverTooltip = null)
     {
         DrawActions.Add(() =>
         {
-            if (ImGuiComponents.IconButton(icon))
+            if (ImGuiComponents.IconButton(buttonID, icon))
             {
                 action.Invoke();
             }
