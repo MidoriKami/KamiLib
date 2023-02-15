@@ -357,9 +357,7 @@ public abstract class DrawList<T> where T: DrawList<T>
         return DrawListOwner;
     }
 
-    public T AddInputString(
-        string label, Setting<string> setting, uint maxLength, ImGuiInputTextFlags flags = ImGuiInputTextFlags.None
-    )
+    public T AddInputString(string label, Setting<string> setting, uint maxLength, ImGuiInputTextFlags flags = ImGuiInputTextFlags.None)
     {
         DrawActions.Add(() =>
         {
@@ -509,7 +507,7 @@ public abstract class DrawList<T> where T: DrawList<T>
         return DrawListOwner;
     }
 
-    public T AddIconButton(int buttonID, FontAwesomeIcon icon, Action action, string? hoverTooltip = null)
+    public T AddIconButton(string buttonID, FontAwesomeIcon icon, Action action, string? hoverTooltip = null)
     {
         DrawActions.Add(() =>
         {
@@ -532,7 +530,7 @@ public abstract class DrawList<T> where T: DrawList<T>
     }
 }
 
-public class ConditionalDrawList<T>: DrawList<ConditionalDrawList<T>> where T: DrawList<T>
+public class ConditionalDrawList<T> : DrawList<ConditionalDrawList<T>> where T: DrawList<T>
 {
     private readonly T owner;
     private readonly bool condition;
@@ -543,8 +541,6 @@ public class ConditionalDrawList<T>: DrawList<ConditionalDrawList<T>> where T: D
         this.condition = condition;
         DrawListOwner = this;
     }
-    
-    
 
     public T EndConditional()
     {
