@@ -60,4 +60,11 @@ public class WindowManager : IDisposable
     public T? GetWindowOfType<T>() => windows.OfType<T>().FirstOrDefault();
     private void DrawUI() => windowSystem.Draw();
     private void DrawConfigUI() => KamiCommon.CommandManager.OnCommand($"{KamiCommon.PluginName}", "silent");
+    public void ToggleWindowOfType<T>() where T : Window
+    {
+        if (GetWindowOfType<T>() is { } window)
+        {
+            window.IsOpen = !window.IsOpen;
+        }
+    }
 }
