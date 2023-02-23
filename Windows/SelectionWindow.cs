@@ -10,6 +10,7 @@ namespace KamiLib.Windows;
 public abstract class SelectionWindow : Window, IDrawable
 {
     private readonly float verticalHeight;
+    private readonly float initialSelectionWidth;
     private const bool ShowBorders = false;
 
     private readonly SelectionList selectionList = new();
@@ -17,9 +18,10 @@ public abstract class SelectionWindow : Window, IDrawable
     protected abstract IEnumerable<ISelectable> GetSelectables();
     protected bool ShowScrollBar = true;
 
-    protected SelectionWindow(string windowName, float height = 0.0f) : base(windowName)
+    protected SelectionWindow(string windowName, float height = 0.0f, float initialSelectionWidth = 250.0f) : base(windowName)
     {
         verticalHeight = height;
+        this.initialSelectionWidth = initialSelectionWidth;
     }
 
     public override void Draw()
@@ -31,8 +33,7 @@ public abstract class SelectionWindow : Window, IDrawable
 
         if (ImGui.BeginTable($"{KamiCommon.PluginName}TableContainer", 2, ImGuiTableFlags.Resizable))
         {
-            ImGui.TableSetupColumn("##LeftColumn", ImGuiTableColumnFlags.None, 2);
-            ImGui.TableSetupColumn("##RightColumn", ImGuiTableColumnFlags.None, 4);
+            ImGui.TableSetupColumn("##LeftColumn", ImGuiTableColumnFlags.WidthFixed, initialSelectionWidth);
             
             ImGui.TableNextColumn();
 
