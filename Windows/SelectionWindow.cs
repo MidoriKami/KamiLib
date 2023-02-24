@@ -18,6 +18,12 @@ public abstract class SelectionWindow : Window, IDrawable
     protected abstract IEnumerable<ISelectable> GetSelectables();
     protected bool ShowScrollBar = true;
 
+    internal ISelectable? CurrentSelection
+    {
+        get => selectionList.Selected;
+        set => selectionList.Selected = value;
+    }
+
     protected SelectionWindow(string windowName, float height = 0.0f, float initialSelectionWidth = 250.0f) : base(windowName)
     {
         verticalHeight = height;
