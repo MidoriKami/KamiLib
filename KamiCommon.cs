@@ -1,6 +1,6 @@
 ﻿using System;
 using Dalamud.Plugin;
-using KamiLib.Blacklist;
+using KamiLib.ZoneFilterList;
 using KamiLib.Caching;
 using KamiLib.ChatCommands;
 using KamiLib.Localization;
@@ -27,7 +27,7 @@ public static class KamiCommon
 
         LocalizationManager.Instance.Initialize();
         
-        BlacklistDraw.PrimeSearch();
+        ZoneFilterListDraw.PrimeSearch();
 
         CommandManager = new CommandManager();
         WindowManager = new WindowManager();

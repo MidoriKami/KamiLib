@@ -13,31 +13,42 @@ using KamiLib.Extensions;
 using KamiLib.Localization;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Blacklist;
+namespace KamiLib.ZoneFilterList;
 
-public static class BlacklistDraw
+public static class ZoneFilterListDraw
 {
     private static readonly List<uint> EntriesToRemove = new();
     private static readonly List<uint> EntriesToAdd = new();
     private static string _searchString = string.Empty;
     private static List<SearchResult>? _searchResults = new();
+
+    public static void DrawFilterTypeRadio(Setting<ZoneFilterTypeId> currentType)
+    {
+        PluginLog.LogDebug(currentType.Value.ToString());
+        InfoBox.Instance
+               .AddTitle(Strings.ZoneFilterList_Type_Section, percentFill: 1.0f)
+               .AddConfigRadio(Strings.ZoneFilterList_Type_AllowLabel, currentType, ZoneFilterType.WhiteList.Id, Strings.ZoneFilterList_Type_AllowTooltip)
+               .SameLine()
+               .AddConfigRadio(Strings.ZoneFilterList_Type_BlockLabel, currentType, ZoneFilterType.BlackList.Id, Strings.ZoneFilterList_Type_BlockTooltip)
+               .Draw();
+    }
     
-    public static void DrawBlacklist(Setting<List<uint>> blacklistedAreas)
+    public static void DrawZoneList(Setting<List<uint>> currentZones, ZoneFilterType zoneFilterType)
     {
         InfoBox.Instance
-            .AddTitle(Strings.Blacklist_CurrentlyBlacklisted, out var innerWidth, 1.0f)
+            .AddTitle(zoneFilterType.CurrentLabel, out var innerWidth, 1.0f)
             .AddDummy(5.0f)
-            .AddAction(() => BlacklistedAreasList(blacklistedAreas))
-            .AddDisabledButton(EntriesToRemove.Count == 0 ? Strings.Blacklist_ClearBlacklist : Strings.Blacklist_RemoveSelectedAreas.Format(EntriesToRemove.Count), () =>
+            .AddAction(() => SelectedZonesList(currentZones, zoneFilterType))
+            .AddDisabledButton(EntriesToRemove.Count == 0 ? zoneFilterType.ClearButton : Strings.ZoneFilterList_RemoveSelectedZones.Format(EntriesToRemove.Count), () =>
             {
                 if (EntriesToRemove.Count == 0)
                 {
-                    blacklistedAreas.Value.Clear();
+                    currentZones.Value.Clear();
                     KamiCommon.SaveConfiguration();
                 }
                 else
                 {
-                    blacklistedAreas.Value.RemoveAll(entry => EntriesToRemove.Contains(entry));
+                    currentZones.Value.RemoveAll(entry => EntriesToRemove.Contains(entry));
                     EntriesToRemove.Clear();
                     KamiCommon.SaveConfiguration();
                 }
@@ -45,47 +56,47 @@ public static class BlacklistDraw
             .Draw();
     }
 
-    public static void DrawAddRemoveHere(Setting<List<uint>> blacklistedZones)
+    public static void DrawAddRemoveHere(Setting<List<uint>> selectedZones)
     {
         InfoBox.Instance
-            .AddTitle(Strings.Blacklist_AddRemoveZone, 1.0f)
+            .AddTitle(Strings.ZoneFilterList_AddRemoveZone, 1.0f)
             .AddAction(() => LuminaCache<TerritoryType>.Instance.GetRow(Service.ClientState.TerritoryType)?.DrawLabel())
             .BeginTable()
             .BeginRow()
             .AddDisabledButton(Strings.Common_Add, () =>
                 { 
-                    Add(blacklistedZones, Service.ClientState.TerritoryType);
-                }, blacklistedZones.Value.Contains(Service.ClientState.TerritoryType), buttonSize: InfoBox.Instance.InnerWidth / 2.0f - 5.0f * ImGuiHelpers.GlobalScale)
+                    Add(selectedZones, Service.ClientState.TerritoryType);
+                }, selectedZones.Value.Contains(Service.ClientState.TerritoryType), buttonSize: InfoBox.Instance.InnerWidth / 2.0f - 5.0f * ImGuiHelpers.GlobalScale)
             .AddDisabledButton(Strings.Common_Remove, () =>
                 {
-                    Remove(blacklistedZones, Service.ClientState.TerritoryType);
-                }, !blacklistedZones.Value.Contains(Service.ClientState.TerritoryType), buttonSize: InfoBox.Instance.InnerWidth / 2.0f - 5.0f * ImGuiHelpers.GlobalScale)
+                    Remove(selectedZones, Service.ClientState.TerritoryType);
+                }, !selectedZones.Value.Contains(Service.ClientState.TerritoryType), buttonSize: InfoBox.Instance.InnerWidth / 2.0f - 5.0f * ImGuiHelpers.GlobalScale)
             .EndRow()
             .EndTable()
             .Draw();
     }
 
-    public static void DrawTerritorySearch(Setting<List<uint>> blacklistedZones)
+    public static void DrawTerritorySearch(Setting<List<uint>> selectedZones, ZoneFilterType zoneFilterType)
     {
         InfoBox.Instance
-            .AddTitle(Strings.Blacklist_ZoneSearch, out var innerWidth, 1.0f)
+            .AddTitle(Strings.ZoneFilterList_ZoneSearch, out var innerWidth, 1.0f)
             .AddAction(() =>
             {
                 ImGui.PushItemWidth(InfoBox.Instance.InnerWidth);
-                if (ImGui.InputTextWithHint("###TerritorySearch", Strings.Blacklist_Search, ref _searchString, 60, ImGuiInputTextFlags.AutoSelectAll))
+                if (ImGui.InputTextWithHint("###TerritorySearch", Strings.ZoneFilterList_Search, ref _searchString, 60, ImGuiInputTextFlags.AutoSelectAll))
                 {
                     _searchResults = Search(_searchString, 5);
                     PluginLog.Debug("Updating TerritorySearch Results");
                 }
             })
             .AddAction(() => DisplayResults(_searchResults))
-            .AddDisabledButton(Strings.Blacklist_AddSelectedAreas.Format(EntriesToAdd.Count), () =>
+            .AddDisabledButton(Strings.ZoneFilterList_AddSelectedZones.Format(EntriesToAdd.Count), () =>
             {
-                blacklistedZones.Value.AddRange(EntriesToAdd);
+                selectedZones.Value.AddRange(EntriesToAdd);
                 EntriesToAdd.Clear();
                 KamiCommon.SaveConfiguration();
                 
-            }, !EntriesToAdd.Any(), Strings.Blacklist_SelectZones, innerWidth)
+            }, !EntriesToAdd.Any(), zoneFilterType.SelectZonesLabel, innerWidth)
             .Draw();
     }
 
@@ -137,33 +148,33 @@ public static class BlacklistDraw
         ImGui.EndChild();
     }
 
-    private static void BlacklistedAreasList(Setting<List<uint>> blacklistedAreas)
+    private static void SelectedZonesList(Setting<List<uint>> selectedZones, ZoneFilterType zoneFilterType)
     {
-        var itemCount = Math.Min(blacklistedAreas.Value.Count, 10);
+        var itemCount = Math.Min(selectedZones.Value.Count, 10);
         var listHeight = itemCount * ImGuiHelpers.GlobalScale * 21.0f;
         var minHeight = 21.0f * ImGuiHelpers.GlobalScale;
 
         var size = new Vector2(InfoBox.Instance.InnerWidth, MathF.Max(listHeight, minHeight));
         
-        if(ImGui.BeginChild("###BlacklistFrame", size, false))
+        if(ImGui.BeginChild("###ZoneFilterListFrame", size, false))
         {
-            if (!blacklistedAreas.Value.Any())
+            if (!selectedZones.Value.Any())
             {
-                ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = ImGui.GetContentRegionAvail().X / 2 - ImGui.CalcTextSize(Strings.Blacklist_Empty).X / 2.0f});
-                ImGui.TextColored(Colors.Orange, Strings.Blacklist_Empty);
+                ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = ImGui.GetContentRegionAvail().X / 2 - ImGui.CalcTextSize(zoneFilterType.IsEmptyLabel).X / 2.0f});
+                ImGui.TextColored(Colors.Orange, zoneFilterType.IsEmptyLabel);
             }
             else
             {
-                DrawBlacklistedAreas(blacklistedAreas);
+                DrawSelectedZones(selectedZones);
             }
         }
         ImGui.EndChild();
     }
 
-    private static void DrawBlacklistedAreas(Setting<List<uint>> blacklistedAreas)
+    private static void DrawSelectedZones(Setting<List<uint>> selectedZones)
     {
-        var territories = blacklistedAreas.Value
-            .Select(area => LuminaCache<TerritoryType>.Instance.GetRow(area))
+        var territories = selectedZones.Value
+            .Select(zone => LuminaCache<TerritoryType>.Instance.GetRow(zone))
             .OfType<TerritoryType>()
             .OrderBy(territory => territory.GetPlaceNameString());
         

@@ -2,7 +2,7 @@
 using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Blacklist;
+namespace KamiLib.ZoneFilterList;
 
 public class SearchResult
 {

@@ -8,8 +8,9 @@
 //------------------------------------------------------------------------------
 
 namespace KamiLib.Localization {
-
-
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -55,87 +56,6 @@ namespace KamiLib.Localization {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add or Remove Current Zone.
-        /// </summary>
-        internal static string Blacklist_AddRemoveZone {
-            get {
-                return ResourceManager.GetString("Blacklist_AddRemoveZone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add {0} Selected Areas.
-        /// </summary>
-        internal static string Blacklist_AddSelectedAreas {
-            get {
-                return ResourceManager.GetString("Blacklist_AddSelectedAreas", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Clear Blacklist.
-        /// </summary>
-        internal static string Blacklist_ClearBlacklist {
-            get {
-                return ResourceManager.GetString("Blacklist_ClearBlacklist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Currently Blacklisted Areas.
-        /// </summary>
-        internal static string Blacklist_CurrentlyBlacklisted {
-            get {
-                return ResourceManager.GetString("Blacklist_CurrentlyBlacklisted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Blacklist is Empty.
-        /// </summary>
-        internal static string Blacklist_Empty {
-            get {
-                return ResourceManager.GetString("Blacklist_Empty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Remove {0} Selected Areas.
-        /// </summary>
-        internal static string Blacklist_RemoveSelectedAreas {
-            get {
-                return ResourceManager.GetString("Blacklist_RemoveSelectedAreas", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search . . . .
-        /// </summary>
-        internal static string Blacklist_Search {
-            get {
-                return ResourceManager.GetString("Blacklist_Search", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Select zones to add to blacklist.
-        /// </summary>
-        internal static string Blacklist_SelectZones {
-            get {
-                return ResourceManager.GetString("Blacklist_SelectZones", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Zone Search.
-        /// </summary>
-        internal static string Blacklist_ZoneSearch {
-            get {
-                return ResourceManager.GetString("Blacklist_ZoneSearch", resourceCulture);
             }
         }
         
@@ -212,7 +132,7 @@ namespace KamiLib.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The {0} Window cannot be opened while in a PvP area.
+        ///   Looks up a localized string similar to The {0} Window cannot be opened while in a PvP zone.
         /// </summary>
         internal static string Command_PvPError {
             get {
@@ -325,6 +245,168 @@ namespace KamiLib.Localization {
         internal static string Teleport_TeleportingTo {
             get {
                 return ResourceManager.GetString("Teleport_TeleportingTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add or Remove Current Zone.
+        /// </summary>
+        internal static string ZoneFilterList_AddRemoveZone {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_AddRemoveZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add {0} Selected Zones.
+        /// </summary>
+        internal static string ZoneFilterList_AddSelectedZones {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_AddSelectedZones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Blacklist.
+        /// </summary>
+        internal static string ZoneFilterList_ClearBlacklist {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_ClearBlacklist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear Whitelist.
+        /// </summary>
+        internal static string ZoneFilterList_ClearWhitelist {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_ClearWhitelist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currently Blacklisted Zones.
+        /// </summary>
+        internal static string ZoneFilterList_CurrentlyBlacklisted {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_CurrentlyBlacklisted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Currently Whitelisted Zones.
+        /// </summary>
+        internal static string ZoneFilterList_CurrentlyWhitelisted {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_CurrentlyWhitelisted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blacklist is Empty.
+        /// </summary>
+        internal static string ZoneFilterList_EmptyBlacklist {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_EmptyBlacklist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whitelist is Empty.
+        /// </summary>
+        internal static string ZoneFilterList_EmptyWhitelist {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_EmptyWhitelist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove {0} Selected Zones.
+        /// </summary>
+        internal static string ZoneFilterList_RemoveSelectedZones {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_RemoveSelectedZones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search . . . .
+        /// </summary>
+        internal static string ZoneFilterList_Search {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select zones to add to blacklist.
+        /// </summary>
+        internal static string ZoneFilterList_SelectZonesToBlacklist {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_SelectZonesToBlacklist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select zones to add to whitelist.
+        /// </summary>
+        internal static string ZoneFilterList_SelectZonesToWhitelist {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_SelectZonesToWhitelist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow selected.
+        /// </summary>
+        internal static string ZoneFilterList_Type_AllowLabel {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_Type_AllowLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The configuration will apply only to the selected zones..
+        /// </summary>
+        internal static string ZoneFilterList_Type_AllowTooltip {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_Type_AllowTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Block selected.
+        /// </summary>
+        internal static string ZoneFilterList_Type_BlockLabel {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_Type_BlockLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The configuration will apply everywhere EXCEPT the selected zones..
+        /// </summary>
+        internal static string ZoneFilterList_Type_BlockTooltip {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_Type_BlockTooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter type.
+        /// </summary>
+        internal static string ZoneFilterList_Type_Section {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_Type_Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zone Search.
+        /// </summary>
+        internal static string ZoneFilterList_ZoneSearch {
+            get {
+                return ResourceManager.GetString("ZoneFilterList_ZoneSearch", resourceCulture);
             }
         }
     }
