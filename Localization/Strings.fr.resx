@@ -106,4 +106,31 @@
   <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>Sélectionnez un élément dans le panneau à gauche</value>
     </data>
+    <data name="ZoneFilterList_ClearWhitelist" xml:space="preserve">
+        <value>Clear Whitelist</value>
+    </data>
+    <data name="ZoneFilterList_CurrentlyWhitelisted" xml:space="preserve">
+        <value>Currently Whitelisted Zones</value>
+    </data>
+    <data name="ZoneFilterList_EmptyWhitelist" xml:space="preserve">
+        <value>Whitelist is Empty</value>
+    </data>
+    <data name="ZoneFilterList_SelectZonesToWhitelist" xml:space="preserve">
+        <value>Select zones to add to whitelist</value>
+    </data>
+    <data name="ZoneFilterList_Type_AllowLabel" xml:space="preserve">
+        <value>Allow selected</value>
+    </data>
+    <data name="ZoneFilterList_Type_AllowTooltip" xml:space="preserve">
+        <value>The configuration will apply only to the selected zones.</value>
+    </data>
+    <data name="ZoneFilterList_Type_Section" xml:space="preserve">
+        <value>Filter type</value>
+    </data>
+    <data name="ZoneFilterList_Type_BlockLabel" xml:space="preserve">
+        <value>Block selected</value>
+    </data>
+    <data name="ZoneFilterList_Type_BlockTooltip" xml:space="preserve">
+        <value>The configuration will apply everywhere EXCEPT the selected zones.</value>
+    </data>
 </root>
