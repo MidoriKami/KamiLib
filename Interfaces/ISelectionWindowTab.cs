@@ -9,7 +9,5 @@ public interface ISelectionWindowTab
     ISelectable? LastSelection { get; set; }
     
     IEnumerable<ISelectable> GetTabSelectables();
-
-    void DrawTabExtras();
-
+    void DrawTabExtras() { }
 }
