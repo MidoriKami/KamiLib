@@ -18,19 +18,19 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Blacklist_CurrentlyBlacklisted" xml:space="preserve">
-        <value>Currently Blacklisted Areas</value>
+    <data name="ZoneFilterList_CurrentlyBlacklisted" xml:space="preserve">
+        <value>Currently Blacklisted Zones</value>
     </data>
-    <data name="Blacklist_ClearBlacklist" xml:space="preserve">
+    <data name="ZoneFilterList_ClearBlacklist" xml:space="preserve">
         <value>Clear Blacklist</value>
     </data>
-    <data name="Blacklist_RemoveSelectedAreas" xml:space="preserve">
-        <value>Remove {0} Selected Areas</value>
+    <data name="ZoneFilterList_RemoveSelectedZones" xml:space="preserve">
+        <value>Remove {0} Selected Zones</value>
     </data>
     <data name="DisabledButton_HoldShift" xml:space="preserve">
         <value>Hold 'Shift' to enable button</value>
     </data>
-    <data name="Blacklist_AddRemoveZone" xml:space="preserve">
+    <data name="ZoneFilterList_AddRemoveZone" xml:space="preserve">
         <value>Add or Remove Current Zone</value>
     </data>
     <data name="Common_Add" xml:space="preserve">
@@ -39,16 +39,16 @@
     <data name="Common_Remove" xml:space="preserve">
         <value>Remove</value>
     </data>
-    <data name="Blacklist_ZoneSearch" xml:space="preserve">
+    <data name="ZoneFilterList_ZoneSearch" xml:space="preserve">
         <value>Zone Search</value>
     </data>
-    <data name="Blacklist_AddSelectedAreas" xml:space="preserve">
-        <value>Add {0} Selected Areas</value>
+    <data name="ZoneFilterList_AddSelectedZones" xml:space="preserve">
+        <value>Add {0} Selected Zones</value>
     </data>
-    <data name="Blacklist_SelectZones" xml:space="preserve">
+    <data name="ZoneFilterList_SelectZonesToBlacklist" xml:space="preserve">
         <value>Select zones to add to blacklist</value>
     </data>
-    <data name="Blacklist_Empty" xml:space="preserve">
+    <data name="ZoneFilterList_EmptyBlacklist" xml:space="preserve">
         <value>Blacklist is Empty</value>
     </data>
     <data name="Command_DoesntExist" xml:space="preserve">
@@ -63,7 +63,7 @@
     <data name="Command_Label" xml:space="preserve">
         <value>Command</value>
     </data>
-    <data name="Blacklist_Search" xml:space="preserve">
+    <data name="ZoneFilterList_Search" xml:space="preserve">
         <value>Search . . . </value>
     </data>
     <data name="Command_ShowThisMessage" xml:space="preserve">
@@ -73,7 +73,7 @@
         <value>value</value>
     </data>
     <data name="Command_PvPError" xml:space="preserve">
-        <value>The {0} Window cannot be opened while in a PvP area</value>
+        <value>The {0} Window cannot be opened while in a PvP zone</value>
     </data>
     <data name="Command_OpenWindow" xml:space="preserve">
         <value>Open {0} Window</value>
@@ -107,5 +107,32 @@
     </data>
     <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>Select an item in the left pane</value>
+    </data>
+    <data name="ZoneFilterList_ClearWhitelist" xml:space="preserve">
+        <value>Clear Whitelist</value>
+    </data>
+    <data name="ZoneFilterList_CurrentlyWhitelisted" xml:space="preserve">
+        <value>Currently Whitelisted Zones</value>
+    </data>
+    <data name="ZoneFilterList_EmptyWhitelist" xml:space="preserve">
+        <value>Whitelist is Empty</value>
+    </data>
+    <data name="ZoneFilterList_SelectZonesToWhitelist" xml:space="preserve">
+        <value>Select zones to add to whitelist</value>
+    </data>
+    <data name="ZoneFilterList_Type_AllowLabel" xml:space="preserve">
+        <value>Allow selected</value>
+    </data>
+    <data name="ZoneFilterList_Type_AllowTooltip" xml:space="preserve">
+        <value>The configuration will apply only to the selected zones.</value>
+    </data>
+    <data name="ZoneFilterList_Type_Section" xml:space="preserve">
+        <value>Filter type</value>
+    </data>
+    <data name="ZoneFilterList_Type_BlockLabel" xml:space="preserve">
+        <value>Block selected</value>
+    </data>
+    <data name="ZoneFilterList_Type_BlockTooltip" xml:space="preserve">
+        <value>The configuration will apply everywhere EXCEPT the selected zones.</value>
     </data>
 </root>

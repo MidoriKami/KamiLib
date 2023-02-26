@@ -16,19 +16,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Blacklist_CurrentlyBlacklisted" xml:space="preserve">
+  <data name="ZoneFilterList_CurrentlyBlacklisted" xml:space="preserve">
         <value>Bereiche aktuell auf der Schwarzen Liste</value>
     </data>
-  <data name="Blacklist_ClearBlacklist" xml:space="preserve">
+  <data name="ZoneFilterList_ClearBlacklist" xml:space="preserve">
         <value>Schwarze Liste leeren</value>
     </data>
-  <data name="Blacklist_RemoveSelectedAreas" xml:space="preserve">
+  <data name="ZoneFilterList_RemoveSelectedZones" xml:space="preserve">
         <value>Löschen der {0} ausgewählten Zonen</value>
     </data>
   <data name="DisabledButton_HoldShift" xml:space="preserve">
         <value>Halten Sie 'Umschalt' gedrückt, um den Knopf zu aktivieren</value>
     </data>
-  <data name="Blacklist_AddRemoveZone" xml:space="preserve">
+  <data name="ZoneFilterList_AddRemoveZone" xml:space="preserve">
         <value>Aktuelle Zone hinzufügen oder entfernen</value>
     </data>
   <data name="Common_Add" xml:space="preserve">
@@ -37,16 +37,16 @@
   <data name="Common_Remove" xml:space="preserve">
         <value>Entfernen</value>
     </data>
-  <data name="Blacklist_ZoneSearch" xml:space="preserve">
+  <data name="ZoneFilterList_ZoneSearch" xml:space="preserve">
         <value>Zonen Suche</value>
     </data>
-  <data name="Blacklist_AddSelectedAreas" xml:space="preserve">
+  <data name="ZoneFilterList_AddSelectedZones" xml:space="preserve">
         <value>Hinzufügen der {0} ausgewählten Zonen</value>
     </data>
-  <data name="Blacklist_SelectZones" xml:space="preserve">
+  <data name="ZoneFilterList_SelectZonesToBlacklist" xml:space="preserve">
         <value>Wählen sie Zonen aus um sie der Schwarzen Liste hinzuzufügen</value>
     </data>
-  <data name="Blacklist_Empty" xml:space="preserve">
+  <data name="ZoneFilterList_EmptyBlacklist" xml:space="preserve">
         <value>Die Schwarze Liste ist leer</value>
     </data>
   <data name="Command_DoesntExist" xml:space="preserve">
@@ -61,7 +61,7 @@
   <data name="Command_Label" xml:space="preserve">
         <value>Befehl</value>
     </data>
-  <data name="Blacklist_Search" xml:space="preserve">
+  <data name="ZoneFilterList_Search" xml:space="preserve">
         <value>Die Suche . . . </value>
     </data>
   <data name="Command_ShowThisMessage" xml:space="preserve">

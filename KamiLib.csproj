@@ -68,5 +68,9 @@
         <DependentUpon>Strings.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Blacklist" />
+    </ItemGroup>
     
 </Project>

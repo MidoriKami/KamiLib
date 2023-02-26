@@ -8,7 +8,7 @@ namespace KamiLib.Windows;
 
 public class SelectionList
 {
-    private ISelectable? Selected { get; set; }
+    internal ISelectable? Selected { get; set; }
     
     public void Draw(IEnumerable<ISelectable> selectables)
     {
