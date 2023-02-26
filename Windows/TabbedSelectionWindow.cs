@@ -50,7 +50,18 @@ public abstract class TabbedSelectionWindow : SelectionWindow
 
     protected override void DrawExtras()
     {
-        selectedTab?.DrawTabExtras();
-        DrawWindowExtras();
+        var region = ImGui.GetContentRegionAvail();
+        
+        if (ImGui.BeginChild("###TabbedWindowTabExtras", region with { Y = region.Y / 2.0f }))
+        {
+            selectedTab?.DrawTabExtras();
+        }
+        ImGui.EndChild();
+
+        if (ImGui.BeginChild("###TabbedWindowWindowExtras", region with { Y = region.Y / 2.0f }))
+        {
+            DrawWindowExtras();
+        }
+        ImGui.EndChild();
     }
 }
