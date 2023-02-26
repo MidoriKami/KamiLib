@@ -43,7 +43,10 @@ public abstract class TabbedSelectionWindow : SelectionWindow
         return selectedTab?.GetTabSelectables() ?? ImmutableList<ISelectable>.Empty;
     }
 
-    protected abstract void DrawWindowExtras();
+    protected virtual void DrawWindowExtras()
+    {
+        
+    }
 
     protected override void DrawExtras()
     {
