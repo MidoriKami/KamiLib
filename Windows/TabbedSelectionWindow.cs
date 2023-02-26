@@ -14,11 +14,12 @@ public abstract class TabbedSelectionWindow : SelectionWindow
 
     protected abstract IEnumerable<ISelectionWindowTab> GetTabs();
 
+    protected bool Reorderable { get; set; } = true;
 
     public override void Draw()
     {
         selectedTab ??= GetTabs().First();
-        if (ImGui.BeginTabBar("TabBar"))
+        if (ImGui.BeginTabBar("TabBar", Reorderable ? ImGuiTabBarFlags.Reorderable : ImGuiTabBarFlags.None))
         {
             foreach (var tab in GetTabs())
             {
