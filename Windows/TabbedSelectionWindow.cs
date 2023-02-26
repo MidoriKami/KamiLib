@@ -25,7 +25,7 @@ public abstract class TabbedSelectionWindow : SelectionWindow
             {
                 if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    if (selectedTab.Id != tab.Id)
+                    if (selectedTab.TabName != tab.TabName)
                     {
                         selectedTab.LastSelection = CurrentSelection;
                         selectedTab = tab;
