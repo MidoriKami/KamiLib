@@ -8,7 +8,7 @@ namespace KamiLib.Windows;
 
 public abstract class TabbedSelectionWindow : SelectionWindow
 {
-    protected TabbedSelectionWindow(string windowName, float height = 0, float initialSelectionWidth = 250) : base(windowName, height, initialSelectionWidth) { }
+    protected TabbedSelectionWindow(string windowName, float height = 0, float initialSelectionWidth = 250.0f) : base(windowName, height, initialSelectionWidth) { }
     
     private ISelectionWindowTab? selectedTab;
 
