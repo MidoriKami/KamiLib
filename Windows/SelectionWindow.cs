@@ -28,6 +28,9 @@ public abstract class SelectionWindow : Window, IDrawable
     {
         verticalHeight = height;
         this.initialSelectionWidth = initialSelectionWidth;
+
+        Flags |= ImGuiWindowFlags.NoScrollbar;
+        Flags |= ImGuiWindowFlags.NoScrollWithMouse;
     }
 
     public override void Draw()
