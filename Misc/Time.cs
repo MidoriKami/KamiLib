@@ -28,7 +28,7 @@ public static class Time
 
     public static DateTime NextFashionReportReset()
     {
-        return NextWeeklyReset().AddDays(-4);
+        return NextWeeklyReset().AddDays(3);
     }
 
     public static DateTime NextGrandCompanyReset()
