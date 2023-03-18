@@ -530,6 +530,25 @@ public abstract class DrawList<T> where T: DrawList<T>
     }
 }
 
+/// <summary>
+/// SimpleDrawList is the most simple implementation of DrawList.
+/// <p>For those that <b>despise</b> nesting conditionals with ImGui.</p>
+/// </summary>
+///
+public class SimpleDrawList : DrawList<SimpleDrawList>
+{
+    public SimpleDrawList()
+    {
+        DrawListOwner = this;
+    }
+
+    public void Draw()
+    {
+        DrawListContents();
+    }
+    
+}
+
 public class ConditionalDrawList<T> : DrawList<ConditionalDrawList<T>> where T: DrawList<T>
 {
     private readonly T owner;
