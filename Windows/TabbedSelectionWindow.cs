@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Numerics;
 using ImGuiNET;
 using KamiLib.Interfaces;
 
@@ -44,7 +45,12 @@ public abstract class TabbedSelectionWindow : SelectionWindow
 
                 if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    tab.Draw();
+                    if (ImGui.BeginChild("##TabChild", -Vector2.One))
+                    {
+                        tab.Draw();
+                    }
+                    ImGui.EndChild();
+                    
                     suppressSelectionSystem = true;
                     ImGui.EndTabItem();
                 }
