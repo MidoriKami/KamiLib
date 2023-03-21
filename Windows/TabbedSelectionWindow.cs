@@ -13,11 +13,14 @@ public abstract class TabbedSelectionWindow : SelectionWindow
     private ISelectionWindowTab? selectedTab;
 
     protected abstract IEnumerable<ISelectionWindowTab> GetTabs();
+    protected virtual IEnumerable<ITabItem> GetRegularTabs() => new List<ITabItem>();
 
     protected bool Reorderable { get; set; } = true;
+    private bool suppressSelectionSystem;
 
     public override void Draw()
     {
+        suppressSelectionSystem = false;
         selectedTab ??= GetTabs().First();
         if (ImGui.BeginTabBar("TabBar", Reorderable ? ImGuiTabBarFlags.Reorderable : ImGuiTabBarFlags.None))
         {
@@ -34,9 +37,22 @@ public abstract class TabbedSelectionWindow : SelectionWindow
                     ImGui.EndTabItem();
                 }
             }
+
+            foreach (var tab in GetRegularTabs())
+            {
+                if (!tab.Enabled) continue;
+
+                if (ImGui.BeginTabItem(tab.TabName))
+                {
+                    tab.Draw();
+                    suppressSelectionSystem = true;
+                    ImGui.EndTabItem();
+                }
+            }
             ImGui.EndTabBar();
         }
-        base.Draw();
+        
+        if(!suppressSelectionSystem) base.Draw();
     }
 
     protected override IEnumerable<ISelectable> GetSelectables()
