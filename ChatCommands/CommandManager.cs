@@ -51,11 +51,10 @@ public class CommandManager : IDisposable
         });
     }
 
-    public void AddCommand(IPluginCommand command)
-    {
-        Commands.Add(command);
-    }
-    
+    public void AddCommand(IPluginCommand command) => Commands.Add(command);
+
+    public void RemoveCommand(IPluginCommand command) => Commands.Remove(command);
+
     public void OnCommand(string command, string arguments)
     {
         var commandData = Command.GetCommandData(command.ToLower(), arguments.ToLower());

@@ -45,7 +45,7 @@ public abstract class TabbedSelectionWindow : SelectionWindow
 
                 if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    if (ImGui.BeginChild("##TabChild", -Vector2.One))
+                    if (ImGui.BeginChild("##TabChild", -Vector2.One, false, ImGuiWindowFlags.AlwaysVerticalScrollbar))
                     {
                         tab.Draw();
                     }
