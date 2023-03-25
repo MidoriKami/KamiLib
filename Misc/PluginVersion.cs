@@ -19,13 +19,16 @@ public class PluginVersion
     
     private static string GetVersionText()
     {
-        var callingAssembly = new StackTrace().GetFrame(3)?.GetMethod()?.DeclaringType?.Assembly;
-
-        if (callingAssembly is not null)
+        foreach (var frame in new StackTrace().GetFrames())
         {
-            var assemblyInformation = callingAssembly.FullName!.Split(',');
+            var assembly = frame.GetMethod()?.DeclaringType?.Assembly;
 
-            return assemblyInformation[1].Replace('=', ' ');
+            if (assembly?.GetName().Name == KamiCommon.PluginName)
+            {
+                var assemblyInformation = assembly.FullName!.Split(',');
+
+                return assemblyInformation[1].Replace('=', ' ');
+            }
         }
 
         return "Unable to Read Assembly";
