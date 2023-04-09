@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -6,9 +7,17 @@ using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace KamiLib.Atk;
 
-public static class AtkValueHelper
+public class AtkValueHelper
 {
-    public static unsafe void PrintAtkValue(AtkValue value, int index)
+    public static unsafe void PrintAtkArray(AtkValue* values, int count)
+    {
+        foreach (var index in Enumerable.Range(0, count))
+        {
+            PrintAtkValue(values[index], index);
+        }
+    }
+    
+    private static unsafe void PrintAtkValue(AtkValue value, int index)
     {
         switch (value.Type)
         {
