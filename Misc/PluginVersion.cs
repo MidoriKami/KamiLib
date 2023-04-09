@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using ImGuiNET;
-using KamiLib.Drawing;
 
 namespace KamiLib.Misc;
 
@@ -43,6 +43,6 @@ public class PluginVersion
         cursorStart.X += region.X / 2.0f - versionTextSize.X;
 
         ImGui.SetCursorPos(cursorStart);
-        ImGui.TextColored(Colors.Grey, versionText);
+        ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), versionText);
     }
 }

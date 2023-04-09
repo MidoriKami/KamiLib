@@ -1,11 +1,7 @@
-﻿using System;
-using Dalamud.Plugin;
-using KamiLib.ZoneFilterList;
+﻿using Dalamud.Plugin;
 using KamiLib.Caching;
 using KamiLib.ChatCommands;
 using KamiLib.Localization;
-using KamiLib.Teleporter;
-using KamiLib.UserInterface;
 using KamiLib.Windows;
 
 namespace KamiLib;
@@ -16,19 +12,14 @@ public static class KamiCommon
     public static CommandManager CommandManager { get; private set; } = null!;
     public static WindowManager WindowManager { get; private set; } = null!;
     
-    private static Action _saveConfigFunction = null!;
-
-    public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName, Action saveConfig)
+    public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName)
     {
         pluginInterface.Create<Service>();
 
         PluginName = pluginName;
-        _saveConfigFunction = saveConfig;
 
         LocalizationManager.Instance.Initialize();
         
-        ZoneFilterListDraw.PrimeSearch();
-
         CommandManager = new CommandManager();
         WindowManager = new WindowManager();
     }
@@ -38,11 +29,6 @@ public static class KamiCommon
         CommandManager.Dispose();
         WindowManager.Dispose();
         IconCache.Cleanup();
-        GameUserInterface.Cleanup();
-        ChatPayloadManager.Cleanup();
-        TeleportManager.Cleanup();
         LocalizationManager.Cleanup();
     }
-
-    public static void SaveConfiguration() => _saveConfigFunction();
 }
