@@ -16,40 +16,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ZoneFilterList_CurrentlyBlacklisted" xml:space="preserve">
-        <value>ブラックリストに登録されているエリア</value>
-    </data>
-  <data name="ZoneFilterList_ClearBlacklist" xml:space="preserve">
-        <value>ブラックリストをクリア</value>
-    </data>
-  <data name="ZoneFilterList_RemoveSelectedZones" xml:space="preserve">
-        <value>{0} 個の選択された領域を削除</value>
-    </data>
-  <data name="DisabledButton_HoldShift" xml:space="preserve">
-        <value>Shiftキーを押しながらボタンを有効にします</value>
-    </data>
-  <data name="ZoneFilterList_AddRemoveZone" xml:space="preserve">
-        <value>現在のゾーンを追加または削除</value>
-    </data>
-  <data name="Common_Add" xml:space="preserve">
-        <value>追加</value>
-    </data>
-  <data name="Common_Remove" xml:space="preserve">
-        <value>削除</value>
-    </data>
-  <data name="ZoneFilterList_ZoneSearch" xml:space="preserve">
-        <value>ゾーン検索</value>
-    </data>
-  <data name="ZoneFilterList_AddSelectedZones" xml:space="preserve">
-        <value>{0} 個の選択されたエリアを削除</value>
-    </data>
-  <data name="ZoneFilterList_SelectZonesToBlacklist" xml:space="preserve">
-        <value>ブラックリストに追加するゾーンを選択</value>
-    </data>
-  <data name="ZoneFilterList_EmptyBlacklist" xml:space="preserve">
-        <value>ブラックリストは空です。</value>
-    </data>
-  <data name="Command_DoesntExist" xml:space="preserve">
+    <data name="Command_DoesntExist" xml:space="preserve">
         <value>コマンド '{0} {1}' は存在しません。</value>
     </data>
   <data name="Command_OpenConfigWindow" xml:space="preserve">
@@ -61,10 +28,7 @@
   <data name="Command_Label" xml:space="preserve">
         <value>コマンド</value>
     </data>
-  <data name="ZoneFilterList_Search" xml:space="preserve">
-        <value>検索 ... </value>
-    </data>
-  <data name="Command_ShowThisMessage" xml:space="preserve">
+    <data name="Command_ShowThisMessage" xml:space="preserve">
         <value>このメッセージを表示</value>
     </data>
   <data name="Common_Value" xml:space="preserve">
@@ -88,49 +52,7 @@
   <data name="Common_Error" xml:space="preserve">
         <value>エラー</value>
     </data>
-  <data name="Teleport_NotUnlocked" xml:space="preserve">
-        <value>宛先のエーテライトが未解放のため、テレポートはキャンセルされました。</value>
-    </data>
-  <data name="Teleport_BadSituation" xml:space="preserve">
-        <value>この状況ではテレポートできません</value>
-    </data>
-  <data name="Teleport_TeleportingTo" xml:space="preserve">
-        <value>'{0} ' にテレポート中</value>
-    </data>
-  <data name="Teleport_Label" xml:space="preserve">
-        <value>テレポート</value>
-    </data>
-  <data name="Teleport_InstallTeleporter" xml:space="preserve">
-        <value>テレポート機能を使用するには、"Teleporter" プラグインをインストールする必要があります</value>
-    </data>
-  <data name="Selection_NoItemSelected" xml:space="preserve">
+    <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>左から設定する項目を選択してください</value>
-    </data>
-    <data name="ZoneFilterList_ClearWhitelist" xml:space="preserve">
-        <value>Clear Whitelist</value>
-    </data>
-    <data name="ZoneFilterList_CurrentlyWhitelisted" xml:space="preserve">
-        <value>Currently Whitelisted Zones</value>
-    </data>
-    <data name="ZoneFilterList_EmptyWhitelist" xml:space="preserve">
-        <value>Whitelist is Empty</value>
-    </data>
-    <data name="ZoneFilterList_SelectZonesToWhitelist" xml:space="preserve">
-        <value>Select zones to add to whitelist</value>
-    </data>
-    <data name="ZoneFilterList_Type_AllowLabel" xml:space="preserve">
-        <value>Allow selected</value>
-    </data>
-    <data name="ZoneFilterList_Type_AllowTooltip" xml:space="preserve">
-        <value>The configuration will apply only to the selected zones.</value>
-    </data>
-    <data name="ZoneFilterList_Type_Section" xml:space="preserve">
-        <value>Filter type</value>
-    </data>
-    <data name="ZoneFilterList_Type_BlockLabel" xml:space="preserve">
-        <value>Block selected</value>
-    </data>
-    <data name="ZoneFilterList_Type_BlockTooltip" xml:space="preserve">
-        <value>The configuration will apply everywhere EXCEPT the selected zones.</value>
     </data>
 </root>
