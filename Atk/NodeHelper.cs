@@ -17,4 +17,16 @@ public static unsafe class Node
         
         return null;
     }
+    
+    public static void LinkNodeAtEnd(AtkResNode* resNode, AtkUnitBase* parent)
+    {
+        var node = parent->RootNode->ChildNode;
+        while (node->PrevSiblingNode != null) node = node->PrevSiblingNode;
+
+        node->PrevSiblingNode = resNode;
+        resNode->NextSiblingNode = node;
+        resNode->ParentNode = node->ParentNode;
+        
+        parent->UldManager.UpdateDrawNodeList();
+    }
 }
