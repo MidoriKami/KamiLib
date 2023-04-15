@@ -26,7 +26,56 @@ public static unsafe class Node
         node->PrevSiblingNode = resNode;
         resNode->NextSiblingNode = node;
         resNode->ParentNode = node->ParentNode;
+
+        node->ChildCount++;
         
+        parent->UldManager.UpdateDrawNodeList();
+    }
+
+    public static void UnlinkNodeAtEnd(AtkResNode* resNode, AtkUnitBase* parent)
+    {
+        if (resNode->PrevSiblingNode is not null)
+        {
+            resNode->PrevSiblingNode->NextSiblingNode = resNode->NextSiblingNode;
+        }
+
+        if (resNode->NextSiblingNode is not null)
+        {
+            resNode->NextSiblingNode->PrevSiblingNode = resNode->PrevSiblingNode;
+        }
+        
+        parent->UldManager.UpdateDrawNodeList();
+    }
+
+    public static void LinkNodeAtStart(AtkResNode* resNode, AtkUnitBase* parent)
+    {
+        var rootNode = parent->RootNode;
+
+        resNode->ParentNode = rootNode;
+        resNode->PrevSiblingNode = rootNode->ChildNode;
+        resNode->NextSiblingNode = null;
+
+        if (rootNode->ChildNode->NextSiblingNode is not null)
+        {
+            rootNode->ChildNode->NextSiblingNode = resNode;
+        }
+        
+        rootNode->ChildNode = resNode;
+
+        parent->UldManager.UpdateDrawNodeList();
+    }
+
+    public static void UnlinkNodeAtStart(AtkResNode* resNode, AtkUnitBase* parent)
+    {
+        var rootNode = parent->RootNode;
+
+        if (resNode->PrevSiblingNode is not null)
+        {
+            resNode->PrevSiblingNode->NextSiblingNode = null;
+        }
+        
+        rootNode->ChildNode = resNode->PrevSiblingNode;
+
         parent->UldManager.UpdateDrawNodeList();
     }
 }

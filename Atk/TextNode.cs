@@ -3,75 +3,62 @@ using System.Numerics;
 using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiLib.Interfaces;
 
 namespace KamiLib.Atk;
 
 public class TextNodeOptions
 {
     public NodeType Type { get; set; } = NodeType.Text;
-    public required uint Id { get; set; }
+    public uint Id { get; set; }
+
+    public Vector4 TextColor { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
+    public Vector4 EdgeColor { get; set; } = new(0.0f, 0.0f, 0.0f, 1.0f);
+    public Vector4 BackgroundColor { get; set; } = new(1.0f, 1.0f, 1.0f, 1.0f);
+
+    public AlignmentType Alignment { get; set; } = AlignmentType.Left;
+    public byte FontSize { get; set; } = 12;
+    public TextFlags Flags { get; set; } = TextFlags.AutoAdjustNodeSize | TextFlags.Bold | TextFlags.Edge;
     
-    public required Vector4 TextColor { get; set; }
-    public required Vector4 EdgeColor { get; set; }
-    public required Vector4 BackgroundColor { get; set; }
-    
-    public required byte LineSpacing { get; set; }
-    public required AlignmentType Alignment { get; set; }
-    public required byte FontSize { get; set; }
-    public byte TextFlags { get; set; } = 0x88;
-    
-    public required Vector2 Position { get; set; }
-    public required Vector2 Size { get; set; }
 }
 
-public unsafe class TextNode : IDisposable
+public unsafe class TextNode : IDisposable, IAtkNode
 {
     private readonly AtkTextNode* node;
-    private readonly AtkUnitBase* addonAtkUnitBase;
     
-    public TextNode(TextNodeOptions options, AtkUnitBase* parentAddon)
+    public TextNode(TextNodeOptions options)
     {
-        addonAtkUnitBase = parentAddon;
-        
         node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
         
         node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft);
         UpdateOptions(options);
-
-        Node.LinkNodeAtEnd((AtkResNode*) node, parentAddon);
     }
 
     public void Dispose()
     {
-        if (node->AtkResNode.PrevSiblingNode is not null)
-            node->AtkResNode.PrevSiblingNode->NextSiblingNode = node->AtkResNode.NextSiblingNode;
-            
-        if (node->AtkResNode.NextSiblingNode is not null)
-            node->AtkResNode.NextSiblingNode->PrevSiblingNode = node->AtkResNode.PrevSiblingNode;
-            
-        addonAtkUnitBase->UldManager.UpdateDrawNodeList();
-        
         node->AtkResNode.Destroy(false);
         IMemorySpace.Free(node, (ulong)sizeof(AtkTextNode));
     }
 
+    public void SetText(string text) => node->SetText(text);
     public void SetText(byte[] text) => node->SetText(text);
-    public void ToggleVisibility(bool visible) => node->AtkResNode.ToggleVisibility(visible);
+    public void SetVisible(bool visible) => node->AtkResNode.ToggleVisibility(visible);
 
     public void UpdateOptions(TextNodeOptions options)
     {
         node->AtkResNode.Type = options.Type;
         node->AtkResNode.NodeID = options.Id;
-        node->AtkResNode.SetWidth((ushort) options.Size.X);
-        node->AtkResNode.SetHeight((ushort) options.Size.Y);
-        node->AtkResNode.SetPositionFloat(options.Position.X, options.Position.Y);
+        // node->AtkResNode.SetWidth((ushort) options.Size.X); // Width should be automatic
+        node->AtkResNode.SetHeight(options.FontSize);
+        // node->AtkResNode.SetPositionFloat(options.Position.X, options.Position.Y);
 
         node->TextColor = options.TextColor.ToByteColor();
         node->EdgeColor = options.EdgeColor.ToByteColor();
         node->BackgroundColor = options.BackgroundColor.ToByteColor();
-        node->LineSpacing = options.LineSpacing;
         node->AlignmentFontType = (byte) options.Alignment;
         node->FontSize = options.FontSize;
-        node->TextFlags = options.TextFlags;
+        node->TextFlags = (byte) options.Flags;
     }
+    
+    public AtkResNode* GetResourceNode() => (AtkResNode*) node;
 }
