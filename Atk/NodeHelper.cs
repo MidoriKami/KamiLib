@@ -67,8 +67,11 @@ public static unsafe class Node
 
     public static void UnlinkNodeAtStart(AtkResNode* resNode, AtkUnitBase* parent)
     {
+        if (!IsAddonReady(parent)) return;
+        if (parent->RootNode->ChildNode->NodeID != resNode->NodeID) return;
+        
         var rootNode = parent->RootNode;
-
+        
         if (resNode->PrevSiblingNode is not null)
         {
             resNode->PrevSiblingNode->NextSiblingNode = null;
