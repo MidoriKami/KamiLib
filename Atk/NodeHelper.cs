@@ -78,4 +78,13 @@ public static unsafe class Node
 
         parent->UldManager.UpdateDrawNodeList();
     }
+
+    public static bool IsAddonReady(AtkUnitBase* addon)
+    {
+        if (addon is null) return false;
+        if (addon->RootNode is null) return false;
+        if (addon->RootNode->ChildNode is null) return false;
+
+        return true;
+    }
 }
