@@ -4,5 +4,5 @@ namespace KamiLib.Interfaces;
 
 public unsafe interface IAtkNode
 {
-    AtkResNode* GetResourceNode();
+    AtkResNode* ResourceNode { get; }
 }

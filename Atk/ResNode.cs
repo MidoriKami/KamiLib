@@ -39,7 +39,7 @@ public unsafe class ResNode : IDisposable, IAtkNode
 
     public void AddResourceNode(IAtkNode newNode, AtkUnitBase* container)
     {
-        var newResNode = newNode.GetResourceNode();
+        var newResNode = newNode.ResourceNode;
 
         // If the child list is empty
         if (node->ChildNode is null && node->ChildCount is 0)
@@ -70,5 +70,5 @@ public unsafe class ResNode : IDisposable, IAtkNode
         
         container->UldManager.UpdateDrawNodeList();
     }
-    public AtkResNode* GetResourceNode() => node;
+    public AtkResNode* ResourceNode => node;
 }

@@ -19,23 +19,29 @@ public class TextNodeOptions
     public AlignmentType Alignment { get; set; } = AlignmentType.Left;
     public byte FontSize { get; set; } = 12;
     public TextFlags Flags { get; set; } = TextFlags.AutoAdjustNodeSize | TextFlags.Bold | TextFlags.Edge;
-    
 }
 
 public unsafe class TextNode : IDisposable, IAtkNode
 {
     private readonly AtkTextNode* node;
+    private readonly AtkTooltip tooltip = new();
+    private bool tooltipEnabled;
     
     public TextNode(TextNodeOptions options)
     {
         node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
         
-        node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft);
+        node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision);
         UpdateOptions(options);
     }
 
     public void Dispose()
     {
+        if (tooltipEnabled)
+        {
+            tooltip.RemoveTooltip((AtkResNode*) node);
+        }
+        
         node->AtkResNode.Destroy(false);
         IMemorySpace.Free(node, (ulong)sizeof(AtkTextNode));
     }
@@ -43,7 +49,16 @@ public unsafe class TextNode : IDisposable, IAtkNode
     public void SetText(string text) => node->SetText(text);
     public void SetText(byte[] text) => node->SetText(text);
     public void SetVisible(bool visible) => node->AtkResNode.ToggleVisibility(visible);
+    public void UpdateTooltip(string newTooltip) => tooltip.UpdateText(newTooltip);
 
+    public void EnableTooltip(AtkUnitBase* parentAddon, string tooltipText)
+    {
+        if (tooltipEnabled) throw new Exception("Tooltip is already enabled");
+        
+        tooltip.AddTooltip(parentAddon, (AtkResNode*) node, tooltipText);
+        tooltipEnabled = true;
+    }
+    
     public void UpdateOptions(TextNodeOptions options)
     {
         node->AtkResNode.Type = options.Type;
@@ -60,5 +75,5 @@ public unsafe class TextNode : IDisposable, IAtkNode
         node->TextFlags = (byte) options.Flags;
     }
     
-    public AtkResNode* GetResourceNode() => (AtkResNode*) node;
+    public AtkResNode* ResourceNode => (AtkResNode*) node;
 }

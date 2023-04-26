@@ -61,7 +61,7 @@ public unsafe class ImageNode : IDisposable, IAtkNode
         IMemorySpace.Free(node, (ulong)sizeof(AtkImageNode));
     }
 
-    public AtkResNode* GetResourceNode() => (AtkResNode*) node;
+    public AtkResNode* ResourceNode => (AtkResNode*) node;
 
     public void LoadIcon(int iconId) => node->LoadIconTexture(iconId, 0);
     public void LoadTexture(string path) => node->LoadTexture(path);
