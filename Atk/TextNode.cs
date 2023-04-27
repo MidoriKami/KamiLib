@@ -24,12 +24,12 @@ public class TextNodeOptions
 public unsafe class TextNode : IDisposable, IAtkNode
 {
     private readonly AtkTextNode* node;
-    private readonly AtkTooltip tooltip = new();
-    private bool tooltipEnabled;
+    private readonly Tooltip tooltip;
     
     public TextNode(TextNodeOptions options)
     {
         node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
+        tooltip = new Tooltip();
         
         node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision);
         UpdateOptions(options);
@@ -37,10 +37,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
 
     public void Dispose()
     {
-        if (tooltipEnabled)
-        {
-            tooltip.RemoveTooltip((AtkResNode*) node);
-        }
+        tooltip.Dispose();
         
         node->AtkResNode.Destroy(false);
         IMemorySpace.Free(node, (ulong)sizeof(AtkTextNode));
@@ -50,14 +47,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
     public void SetText(byte[] text) => node->SetText(text);
     public void SetVisible(bool visible) => node->AtkResNode.ToggleVisibility(visible);
     public void UpdateTooltip(string newTooltip) => tooltip.UpdateText(newTooltip);
-
-    public void EnableTooltip(AtkUnitBase* parentAddon, string tooltipText)
-    {
-        if (tooltipEnabled) throw new Exception("Tooltip is already enabled");
-        
-        tooltip.AddTooltip(parentAddon, (AtkResNode*) node, tooltipText);
-        tooltipEnabled = true;
-    }
+    public void EnableTooltip(AtkUnitBase* parentAddon, string tooltipText) => tooltip.AddTooltip(parentAddon, (AtkResNode*) node, tooltipText);
     
     public void UpdateOptions(TextNodeOptions options)
     {
