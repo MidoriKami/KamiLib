@@ -14,6 +14,7 @@ public unsafe class Tooltip : IDisposable
     public Tooltip()
     {
         tooltipMemory = Marshal.AllocHGlobal(4096);
+        attachedNode = null;
     }
 
     public void AddTooltip(AtkUnitBase* parentAddon, AtkResNode* tooltipOwner, string text)
@@ -26,14 +27,7 @@ public unsafe class Tooltip : IDisposable
 
             tooltipOwner->Flags = (short) ((NodeFlags)tooltipOwner->Flags | NodeFlags.RespondToMouse | NodeFlags.EmitsEvents | NodeFlags.HasCollision);
         
-            var tooltipInfo = new AtkTooltipManager.AtkTooltipArgs
-            {
-                Flags = 0xFFFFFFFF,
-                Text = (byte*) tooltipMemory,
-                Unk_14 = 0,
-                Unk_16 = 0,
-                TypeSpecificID = 0,
-            };
+            var tooltipInfo = new AtkTooltipManager.AtkTooltipArgs { Text = (byte*) tooltipMemory };
             
             AtkStage.GetSingleton()->TooltipManager.AddTooltip(AtkTooltipManager.AtkTooltipType.Text, parentAddon->ID, tooltipOwner, &tooltipInfo);
         }
@@ -62,11 +56,11 @@ public unsafe class Tooltip : IDisposable
 
     public void Dispose()
     {
-        Marshal.FreeHGlobal(tooltipMemory);
-
         if (attachedNode is not null)
         {
             AtkStage.GetSingleton()->TooltipManager.RemoveTooltip(attachedNode);
         }
+        
+        Marshal.FreeHGlobal(tooltipMemory);
     }
 }
