@@ -2,7 +2,7 @@
 using System.Numerics;
 using ImGuiNET;
 
-namespace KamiLib.Misc;
+namespace KamiLib.Utilities;
 
 
 public class PluginVersion

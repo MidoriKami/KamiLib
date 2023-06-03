@@ -3,61 +3,22 @@ using System.Linq;
 using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Misc;
+namespace KamiLib.Utilities;
 
 public static class Time
 {
-    public static DateTime NextDailyReset()
-    {
-        var now = DateTime.UtcNow;
-            
-        if( now.Hour < 15 )
-        {
-            return now.Date.AddHours(15);
-        }
-        else
-        {
-            return now.AddDays(1).Date.AddHours(15);
-        }
-    }
+    private static DateTime GetNextDateTimeForHour(int hours) => DateTime.UtcNow.Hour < hours ? DateTime.UtcNow.Date.AddHours(hours) : DateTime.UtcNow.Date.AddDays(1).AddHours(hours);
 
-    public static DateTime NextWeeklyReset()
-    {
-        return NextDayOfWeek(DayOfWeek.Tuesday, 8);
-    }
+    public static DateTime NextDailyReset() => GetNextDateTimeForHour(15);
+    public static DateTime NextWeeklyReset() => NextDayOfWeek(DayOfWeek.Tuesday, 8);
+    public static DateTime NextFashionReportReset() => NextWeeklyReset().AddDays(3);
+    public static DateTime NextGrandCompanyReset() => GetNextDateTimeForHour(20);
 
-    public static DateTime NextFashionReportReset()
-    {
-        return NextWeeklyReset().AddDays(3);
-    }
-
-    public static DateTime NextGrandCompanyReset()
-    {
-        var now = DateTime.UtcNow;
-        var targetHour = 20;    
-        
-        if( now.Hour < targetHour )
-        {
-            return now.Date.AddHours(targetHour);
-        }
-        else
-        {
-            return now.AddDays(1).Date.AddHours(targetHour);
-        }
-    }
-    
     public static DateTime NextLeveAllowanceReset()
     {
         var now = DateTime.UtcNow;
 
-        if( now.Hour < 12 )
-        {
-            return now.Date.AddHours(12);   
-        }
-        else
-        {
-            return now.Date.AddDays(1);
-        }
+        return now.Hour < 12 ? now.Date.AddHours(12) : now.Date.AddDays(1);
     }
 
     public static DateTime NextDayOfWeek(DayOfWeek weekday, int hour)

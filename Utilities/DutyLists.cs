@@ -4,7 +4,7 @@ using Dalamud;
 using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Misc;
+namespace KamiLib.Utilities;
 
 public enum DutyType
 {
@@ -33,21 +33,21 @@ public class DutyLists
     {
         // ContentType.Row 5 == Raids
         Savage = LuminaCache<ContentFinderCondition>.Instance.OfLanguage(ClientLanguage.English)
-            .Where(t => t.ContentType.Row == 5)
+            .Where(t => t.ContentType.Row is 5)
             .Where(t => t.Name.RawString.Contains("Savage"))
             .Select(r => r.TerritoryType.Row)
             .ToList();
         
         // ContentType.Row 28 == Ultimate Raids
         Ultimate = LuminaCache<ContentFinderCondition>.Instance
-            .Where(t => t.ContentType.Row == 28)
+            .Where(t => t.ContentType.Row is 28)
             .Select(t => t.TerritoryType.Row)
             .ToList();
         
         // ContentType.Row 4 == Trials
         ExtremeUnreal = LuminaCache<ContentFinderCondition>.Instance.OfLanguage(ClientLanguage.English)
-            .Where(t => t.ContentType.Row == 4)
-            .Where(t => t.Name.RawString.Contains("Extreme") || t.Name.RawString.Contains("Unreal") || t.Name.RawString.Contains("The Minstrel"))
+            .Where(t => t.ContentType.Row is 4)
+            .Where(t => new[] {"Extreme", "Unreal", "The Minstrel"}.Any(s => t.Name.RawString.Contains(s)))
             .Select(t => t.TerritoryType.Row)
             .ToList();
 
