@@ -23,15 +23,15 @@ public class TextNodeOptions
 
 public unsafe class TextNode : IDisposable, IAtkNode
 {
-    private readonly AtkTextNode* node;
+    public AtkTextNode* Node { get; }
     private readonly Tooltip tooltip;
     
     public TextNode(TextNodeOptions options)
     {
-        node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
+        Node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
         tooltip = new Tooltip();
         
-        node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision);
+        Node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision);
         UpdateOptions(options);
     }
 
@@ -39,31 +39,28 @@ public unsafe class TextNode : IDisposable, IAtkNode
     {
         tooltip.Dispose();
         
-        node->AtkResNode.Destroy(false);
-        IMemorySpace.Free(node, (ulong)sizeof(AtkTextNode));
+        Node->AtkResNode.Destroy(false);
+        IMemorySpace.Free(Node, (ulong)sizeof(AtkTextNode));
     }
-
-    public void SetText(string text) => node->SetText(text);
-    public void SetText(byte[] text) => node->SetText(text);
-    public void SetVisible(bool visible) => node->AtkResNode.ToggleVisibility(visible);
+    
     public void UpdateTooltip(string newTooltip) => tooltip.UpdateText(newTooltip);
-    public void EnableTooltip(AtkUnitBase* parentAddon, string tooltipText) => tooltip.AddTooltip(parentAddon, (AtkResNode*) node, tooltipText);
+    public void EnableTooltip(AtkUnitBase* parentAddon, string tooltipText) => tooltip.AddTooltip(parentAddon, (AtkResNode*) Node, tooltipText);
     
     public void UpdateOptions(TextNodeOptions options)
     {
-        node->AtkResNode.Type = options.Type;
-        node->AtkResNode.NodeID = options.Id;
+        Node->AtkResNode.Type = options.Type;
+        Node->AtkResNode.NodeID = options.Id;
         // node->AtkResNode.SetWidth((ushort) options.Size.X); // Width should be automatic
-        node->AtkResNode.SetHeight(options.FontSize);
+        Node->AtkResNode.SetHeight(options.FontSize);
         // node->AtkResNode.SetPositionFloat(options.Position.X, options.Position.Y);
 
-        node->TextColor = options.TextColor.ToByteColor();
-        node->EdgeColor = options.EdgeColor.ToByteColor();
-        node->BackgroundColor = options.BackgroundColor.ToByteColor();
-        node->AlignmentFontType = (byte) options.Alignment;
-        node->FontSize = options.FontSize;
-        node->TextFlags = (byte) options.Flags;
+        Node->TextColor = options.TextColor.ToByteColor();
+        Node->EdgeColor = options.EdgeColor.ToByteColor();
+        Node->BackgroundColor = options.BackgroundColor.ToByteColor();
+        Node->AlignmentFontType = (byte) options.Alignment;
+        Node->FontSize = options.FontSize;
+        Node->TextFlags = (byte) options.Flags;
     }
-    
-    public AtkResNode* ResourceNode => (AtkResNode*) node;
+
+    public AtkResNode* ResourceNode => (AtkResNode*) Node;
 }
