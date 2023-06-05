@@ -19,8 +19,5 @@ public class DateTimeDisplay : LeftLabeledTabledDrawableAttribute
         ImGui.TextUnformatted(FormatDateTime(dateTime));
     }
 
-    protected virtual string FormatDateTime(DateTime dateTime)
-    {
-        return dateTime.ToString(CultureInfo.CurrentCulture);
-    }
+    protected virtual string FormatDateTime(DateTime dateTime) => dateTime.ToString(CultureInfo.CurrentCulture);
 }

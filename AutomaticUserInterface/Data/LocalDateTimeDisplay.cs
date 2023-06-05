@@ -10,8 +10,5 @@ public class LocalDateTimeDisplay : DateTimeDisplay
 {
     public LocalDateTimeDisplay(string? labelLocKey) : base(labelLocKey) { }
     
-    protected override string FormatDateTime(DateTime dateTime)
-    {
-        return dateTime.ToLocalTime().ToString(CultureInfo.CurrentCulture);
-    }
+    protected override string FormatDateTime(DateTime dateTime) => dateTime.ToLocalTime().ToString(CultureInfo.CurrentCulture);
 }
