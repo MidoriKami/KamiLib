@@ -51,32 +51,6 @@ public abstract class DrawableAttribute : AttributeBase
 
         return results;
     }
-
-    protected void DrawTabled(object configObject, FieldInfo field, Action? saveAction = null)
-    {
-        if (!HasLabel)
-        {
-            LeftColumn(configObject, field, saveAction);
-        }
-        else
-        {
-            if (ImGui.BeginTable($"##ValueTable{Label}", 2, ImGuiTableFlags.SizingStretchSame))
-            {
-                ImGui.TableNextColumn();
-                ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X);
-
-                LeftColumn(configObject, field, saveAction);
-
-                ImGui.TableNextColumn();
-                RightColumn(configObject, field, saveAction);
-
-                ImGui.EndTable();
-            }
-        }
-    }
-
-    protected virtual void LeftColumn(object obj, FieldInfo field, Action? saveAction = null) { }
-    protected virtual void RightColumn(object obj, FieldInfo field, Action? saveAction = null) { }
     
     public static void DrawAttributes(object obj, Action? saveAction = null)
     {

@@ -5,20 +5,13 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class IntListDisplay : DrawableAttribute
+public class IntListDisplay : LeftLabeledTabledDrawableAttribute
 {
     protected string EmptyListString = "NothingToTrack";
     
     public IntListDisplay(string? labelLocKey) : base(labelLocKey) { }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field);
-
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
-    {
-        ImGui.TextUnformatted(Label);
-    }
-
-    protected override void RightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var list = GetValue<List<int>>(obj, field);
         if (list.Count > 0)

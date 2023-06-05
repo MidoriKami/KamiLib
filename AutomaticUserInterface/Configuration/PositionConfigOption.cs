@@ -5,17 +5,11 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class PositionConfigOption : DrawableAttribute
+public class PositionConfigOption : RightLabeledTabledDrawableAttribute
 {
-
-    public PositionConfigOption(string? labelLocKey) : base(labelLocKey)
-    {
-        
-    }
+    public PositionConfigOption(string? labelLocKey) : base(labelLocKey) { }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field, saveAction);
-
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var vectorValue = GetValue<Vector2>(obj, field);
         if (ImGui.DragFloat2($"##{field.Name}", ref vectorValue, 5.0f))

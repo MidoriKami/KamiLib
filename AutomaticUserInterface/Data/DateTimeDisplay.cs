@@ -5,21 +5,22 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class DateTimeDisplay : DrawableAttribute
+/// <summary>
+/// Displays the tagged date time as it was saved
+/// </summary>
+public class DateTimeDisplay : LeftLabeledTabledDrawableAttribute
 {
     public DateTimeDisplay(string? labelLocKey) : base(labelLocKey) { }
 
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field);
-
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
-    {
-        ImGui.TextUnformatted(Label);
-    }
-
-    protected override void RightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var dateTime = GetValue<DateTime>(obj, field);
         
-        ImGui.TextUnformatted(dateTime.ToLocalTime().ToString(CultureInfo.CurrentCulture));
+        ImGui.TextUnformatted(FormatDateTime(dateTime));
+    }
+
+    protected virtual string FormatDateTime(DateTime dateTime)
+    {
+        return dateTime.ToString(CultureInfo.CurrentCulture);
     }
 }

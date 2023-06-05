@@ -2,6 +2,8 @@
 using System.Numerics;
 using System.Reflection;
 using Dalamud.Interface.Components;
+using Dalamud.Utility.Numerics;
+using FFXIVClientStructs.FFXIV.Client.Graphics;
 using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
@@ -12,6 +14,8 @@ public class ColorConfigOption : DrawableAttribute
 
     public string HelpText => TryGetLocalizedString(helpTextKey);
     public Vector4 DefaultColor { get; init; }
+    public Vector4 VectorByteColor => DefaultColor / 255;
+    public ByteColor ByteColor => DefaultColor.ToByteColor();
 
     private string DefaultLabel => TryGetLocalizedString("Default");
     

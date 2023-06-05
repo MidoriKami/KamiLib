@@ -6,30 +6,21 @@ using KamiLib.Utilities;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class EnumConfigOption : DrawableAttribute
+public class EnumConfigOption : TabledDrawableAttribute
 {
     private readonly string? helpTextKey;
 
     public string HelpText => TryGetLocalizedString(helpTextKey);
     
-    public EnumConfigOption() : base(null)
-    {
-        
-    }
-
-    public EnumConfigOption(string label) : base(label)
-    {
-        
-    }
+    public EnumConfigOption() : base(null) { }
+    public EnumConfigOption(string label) : base(label) { }
     
     public EnumConfigOption(string label, string helpText) : base(label)
     {
         helpTextKey = helpText;
     }
-    
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field, saveAction);
 
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var enumObject = GetValue<Enum>(obj, field);
         
@@ -40,7 +31,7 @@ public class EnumConfigOption : DrawableAttribute
         }
     }
 
-    protected override void RightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         if(HasLabel) ImGui.TextUnformatted(Label);
         if(helpTextKey is not null) ImGuiComponents.HelpMarker(HelpText);

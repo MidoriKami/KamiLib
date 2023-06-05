@@ -6,7 +6,7 @@ using KamiLib.Utilities;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class BoolDisplay : DrawableAttribute
+public class BoolDisplay : LeftLabeledTabledDrawableAttribute
 {
     protected string TrueString = "True";
     protected string FalseString = "False";
@@ -16,14 +16,7 @@ public class BoolDisplay : DrawableAttribute
 
     public BoolDisplay(string? labelLocKey) : base(labelLocKey) { }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field);
-
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
-    {
-        ImGui.TextUnformatted(Label);
-    }
-
-    protected override void RightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var boolData = GetValue<bool>(obj, field);
 

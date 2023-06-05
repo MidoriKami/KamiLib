@@ -4,7 +4,7 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class IntConfigOption : DrawableAttribute
+public class IntConfigOption : RightLabeledTabledDrawableAttribute
 {
     public int MinValue { get; init; }
     public int MaxValue { get; init; }
@@ -15,9 +15,7 @@ public class IntConfigOption : DrawableAttribute
         MaxValue = maxValue;
     }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field, saveAction);
-
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var intValue = GetValue<int>(obj, field);
         

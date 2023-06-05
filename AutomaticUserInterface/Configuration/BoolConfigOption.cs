@@ -10,10 +10,7 @@ public class BoolConfigOption : DrawableAttribute
     private readonly string? helpTextKey;
     private string HelpText => TryGetLocalizedString(helpTextKey);
     
-    public BoolConfigOption(string labelLocKey) : base(labelLocKey)
-    {
-        
-    }
+    public BoolConfigOption(string labelLocKey) : base(labelLocKey) { }
 
     public BoolConfigOption(string labelLocKey, string? helpTextLocKey) : base(labelLocKey)
     {

@@ -5,18 +5,11 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class UintDisplay : DrawableAttribute
+public class UintDisplay : LeftLabeledTabledDrawableAttribute
 {
-
     public UintDisplay(string? labelLocKey) : base(labelLocKey) { }
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field);
 
-    protected override void LeftColumn(object obj, FieldInfo field, Action? saveAction = null)
-    {
-        ImGui.Text(Label);
-    }
-
-    protected override void RightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {
         var uintValue = GetValue<uint>(obj, field);
         
