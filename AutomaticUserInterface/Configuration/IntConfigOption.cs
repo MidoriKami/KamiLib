@@ -9,7 +9,7 @@ public class IntConfigOption : RightLabeledTabledDrawableAttribute
     public int MinValue { get; init; }
     public int MaxValue { get; init; }
 
-    public IntConfigOption(string labelLocKey, int minValue, int maxValue) : base(labelLocKey)
+    public IntConfigOption(string label, string category, int group, int minValue, int maxValue) : base(label, category, group)
     {
         MinValue = minValue;
         MaxValue = maxValue;

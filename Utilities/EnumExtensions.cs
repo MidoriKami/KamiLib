@@ -21,7 +21,7 @@ public static class EnumExtensions
 
         var labelAttribute = LabelAttributeCache[enumValue];
 
-        return labelAttribute is not null ? labelAttribute.Label : enumValue.ToString();
+        return labelAttribute is not null ? labelAttribute.Description : enumValue.ToString();
     }
     
     public static Vector4 GetColor(this Enum enumValue) 

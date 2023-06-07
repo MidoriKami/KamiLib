@@ -14,7 +14,7 @@ public class BoolDisplay : LeftLabeledTabledDrawableAttribute
     protected KnownColor TrueColor = KnownColor.White;
     protected KnownColor FalseColor = KnownColor.White;
 
-    public BoolDisplay(string? labelLocKey) : base(labelLocKey) { }
+    public BoolDisplay(string? label, string category, int group) : base(label, category, group) { }
     
     protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {

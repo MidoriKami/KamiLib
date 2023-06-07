@@ -8,7 +8,7 @@ namespace KamiLib.AutomaticUserInterface;
 /// </summary>
 public class LocalDateTimeDisplay : DateTimeDisplay
 {
-    public LocalDateTimeDisplay(string? labelLocKey) : base(labelLocKey) { }
+    public LocalDateTimeDisplay(string? label, string category, int group) : base(label, category, group) { }
     
     protected override string FormatDateTime(DateTime dateTime) => dateTime.ToLocalTime().ToString(CultureInfo.CurrentCulture);
 }

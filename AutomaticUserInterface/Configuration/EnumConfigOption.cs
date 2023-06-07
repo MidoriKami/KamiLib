@@ -12,10 +12,10 @@ public class EnumConfigOption : TabledDrawableAttribute
 
     public string HelpText => TryGetLocalizedString(helpTextKey);
     
-    public EnumConfigOption() : base(null) { }
-    public EnumConfigOption(string label) : base(label) { }
+    public EnumConfigOption(string category, int group) : base(null, category, group) { }
+    public EnumConfigOption(string label, string category, int group) : base(label, category, group) { }
     
-    public EnumConfigOption(string label, string helpText) : base(label)
+    public EnumConfigOption(string label, string category, int group, string helpText) : base(label, category, group)
     {
         helpTextKey = helpText;
     }

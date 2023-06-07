@@ -1,8 +1,10 @@
-﻿namespace KamiLib.AutomaticUserInterface;
+﻿using System.ComponentModel;
 
-public class EnumLabel : AttributeBase
+namespace KamiLib.AutomaticUserInterface;
+
+public class EnumLabel : DescriptionAttribute
 {
-    public EnumLabel(string labelLocKey) : base(labelLocKey)
+    public EnumLabel(string label) : base(label)
     {
     }
 }

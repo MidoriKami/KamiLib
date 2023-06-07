@@ -8,7 +8,7 @@ public class ShortStringConfigOption : TabledDrawableAttribute
 {
     private readonly bool useAxisFont;
     
-    public ShortStringConfigOption(string labelLocKey, bool axisFont = false) : base(labelLocKey)
+    public ShortStringConfigOption(string label, string category, int group, bool axisFont = false) : base(label, category, group)
     {
         useAxisFont = axisFont;
     }

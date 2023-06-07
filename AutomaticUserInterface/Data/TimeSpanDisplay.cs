@@ -12,7 +12,7 @@ public class TimeSpanDisplay : LeftLabeledTabledDrawableAttribute
 {
     protected string TimeOutOfRangeString = "TimeNotAvailable";
     
-    public TimeSpanDisplay(string? labelLocKey) : base(labelLocKey) { }
+    public TimeSpanDisplay(string? label, string category, int group) : base(label, category, group) { }
     
     protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {

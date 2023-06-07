@@ -19,12 +19,12 @@ public class ColorConfigOption : DrawableAttribute
 
     private string DefaultLabel => TryGetLocalizedString("Default");
     
-    public ColorConfigOption(string labelLocKey, float r, float g, float b, float a) : base(labelLocKey)
+    public ColorConfigOption(string label, string category, int group, float r, float g, float b, float a) : base(label, category, group)
     {
         DefaultColor = new Vector4(r, g, b, a);
     }
 
-    public ColorConfigOption(string labelLocKey, string helpText, float r, float g, float b, float a) : base(labelLocKey)
+    public ColorConfigOption(string label, string category, int group, string helpText, float r, float g, float b, float a) : base(label, category, group)
     {
         DefaultColor = new Vector4(r, g, b, a);
         helpTextKey = helpText;

@@ -7,7 +7,7 @@ namespace KamiLib.AutomaticUserInterface;
 
 public class PositionConfigOption : RightLabeledTabledDrawableAttribute
 {
-    public PositionConfigOption(string? labelLocKey) : base(labelLocKey) { }
+    public PositionConfigOption(string? label, string category, int group) : base(label, category, group) { }
     
     protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
     {

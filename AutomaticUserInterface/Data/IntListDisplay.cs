@@ -9,7 +9,7 @@ public class IntListDisplay : LeftLabeledTabledDrawableAttribute
 {
     protected string EmptyListString = "NothingToTrack";
     
-    public IntListDisplay(string? labelLocKey) : base(labelLocKey) { }
+    public IntListDisplay(string? label, string category, int group) : base(label, category, group) { }
     
     protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {

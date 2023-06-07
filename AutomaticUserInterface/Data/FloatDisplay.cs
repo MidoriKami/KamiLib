@@ -7,7 +7,7 @@ namespace KamiLib.AutomaticUserInterface;
 
 public class FloatDisplay : LeftLabeledTabledDrawableAttribute
 {
-    public FloatDisplay(string? labelLocKey) : base(labelLocKey) { }
+    public FloatDisplay(string? label, string category, int group) : base(label, category, group) { }
     
     protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {

@@ -11,8 +11,8 @@ public abstract class DrawableAttribute : AttributeBase
 {
     private static readonly Dictionary<Type, IOrderedEnumerable<IGrouping<OrderData, AttributeData>>> AttributeCache = new();
     private record OrderData(int Group, string Label);
-    private record AttributeData(FieldInfo Field, DrawableAttribute DrawableAttribute, DrawCategory DrawCategory);
-    protected DrawableAttribute(string? labelLocKey) : base(labelLocKey) { }
+    private record AttributeData(FieldInfo Field, DrawableAttribute DrawableAttribute);
+    protected DrawableAttribute(string? label, string category, int group) : base(label, category, group) { }
     protected abstract void Draw(object obj, FieldInfo field, Action? saveAction = null);
 
     private static IOrderedEnumerable<IGrouping<OrderData, AttributeData>> GetSortedObjectAttributes(object configObject)
@@ -22,7 +22,7 @@ public abstract class DrawableAttribute : AttributeBase
             var attributes = GetAttributes(configObject);
             
             var objectAttributes = attributes
-                .GroupBy(attributeInfo => new OrderData(attributeInfo.DrawCategory.DrawIndex, attributeInfo.DrawCategory.Label))
+                .GroupBy(attributeInfo => new OrderData(attributeInfo.DrawableAttribute.GroupIndex, attributeInfo.DrawableAttribute.Category))
                 .OrderBy(orderData => orderData.Key.Group);
 
             AttributeCache.Add(configObject.GetType(), objectAttributes);
@@ -31,27 +31,13 @@ public abstract class DrawableAttribute : AttributeBase
         return AttributeCache[configObject.GetType()];
     }
 
-    private static IEnumerable<AttributeData> GetAttributes(object obj)
-    {
-        var results = new List<AttributeData>();
-        
-        foreach (var field in obj.GetType().GetFields())
-        {
-            if (!field.IsDefined(typeof(DrawableAttribute), true)) continue;
-            if (!field.IsDefined(typeof(DrawCategory), true)) continue;
+    private static IEnumerable<AttributeData> GetAttributes(object obj) => 
+        from field in obj.GetType().GetFields() 
+        where field.IsDefined(typeof(DrawableAttribute), true) 
+        let drawableAttribute = field.GetCustomAttribute<DrawableAttribute>() 
+        where drawableAttribute is not null 
+        select new AttributeData(field, drawableAttribute);
 
-            var configOptionAttribute = field.GetCustomAttribute<DrawableAttribute>();
-            if (configOptionAttribute is null) continue;
-            
-            var drawCategoryAttribute = field.GetCustomAttribute<DrawCategory>();
-            if (drawCategoryAttribute is null) continue;
-            
-            results.Add(new AttributeData(field, configOptionAttribute, drawCategoryAttribute));
-        }
-
-        return results;
-    }
-    
     public static void DrawAttributes(object obj, Action? saveAction = null)
     {
         var cachedAttributes = GetSortedObjectAttributes(obj);

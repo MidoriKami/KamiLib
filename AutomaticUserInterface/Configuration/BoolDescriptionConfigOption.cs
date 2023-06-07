@@ -10,7 +10,7 @@ public class BoolDescriptionConfigOption : BoolConfigOption
 
     public string Description => TryGetLocalizedString(descriptionLocKey);
     
-    public BoolDescriptionConfigOption(string labelLocKey, string description) : base(labelLocKey, null)
+    public BoolDescriptionConfigOption(string label, string category, int group, string description) : base(label, category, group, null)
     {
         descriptionLocKey = description;
     }

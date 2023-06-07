@@ -7,14 +7,19 @@ namespace KamiLib.AutomaticUserInterface;
 public abstract class AttributeBase : Attribute
 {
     private readonly string? labelLocalizationKey;
+    private readonly string categoryLocalizationKey;
+    public int GroupIndex { get; init; } 
 
     public string Label => TryGetLocalizedString(labelLocalizationKey);
+    public string Category => TryGetLocalizedString(categoryLocalizationKey);
 
     protected bool HasLabel => labelLocalizationKey is not null;
     
-    protected AttributeBase(string? labelLocKey)
+    protected AttributeBase(string? label, string categoryKey, int groupIndex)
     {
-        labelLocalizationKey = labelLocKey;
+        labelLocalizationKey = label;
+        categoryLocalizationKey = categoryKey;
+        GroupIndex = groupIndex;
     }
     
     protected static string TryGetLocalizedString(string? key)

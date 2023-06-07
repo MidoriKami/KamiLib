@@ -10,7 +10,7 @@ namespace KamiLib.AutomaticUserInterface;
 /// </summary>
 public class DateTimeDisplay : LeftLabeledTabledDrawableAttribute
 {
-    public DateTimeDisplay(string? labelLocKey) : base(labelLocKey) { }
+    public DateTimeDisplay(string? label, string category, int group) : base(label, category, group) { }
 
     protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
     {

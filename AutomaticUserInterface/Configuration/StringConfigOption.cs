@@ -8,7 +8,7 @@ public class StringConfigOption : DrawableAttribute
 {
     private readonly bool useAxisFont;
     
-    public StringConfigOption(string labelLocKey, bool axisFont = false) : base(labelLocKey)
+    public StringConfigOption(string label, string category, int group, bool axisFont = false) : base(label, category, group)
     {
         useAxisFont = axisFont;
     }

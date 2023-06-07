@@ -10,11 +10,11 @@ public class BoolConfigOption : DrawableAttribute
     private readonly string? helpTextKey;
     private string HelpText => TryGetLocalizedString(helpTextKey);
     
-    public BoolConfigOption(string labelLocKey) : base(labelLocKey) { }
+    public BoolConfigOption(string label, string category, int group) : base(label, category, group) { }
 
-    public BoolConfigOption(string labelLocKey, string? helpTextLocKey) : base(labelLocKey)
+    public BoolConfigOption(string label, string category, int group, string? helpText) : base(label, category, group)
     {
-        helpTextKey = helpTextLocKey;
+        helpTextKey = helpText;
     }
     
     protected override void Draw(object obj, FieldInfo field, Action? saveAction = null)

@@ -6,7 +6,7 @@ namespace KamiLib.AutomaticUserInterface;
 
 public abstract class TabledDrawableAttribute : DrawableAttribute
 {
-    protected TabledDrawableAttribute(string? labelLocKey) : base(labelLocKey) { }
+    protected TabledDrawableAttribute(string? label, string category, int group) : base(label, category, group) { }
 
     protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field, saveAction);
 
