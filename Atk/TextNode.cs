@@ -24,12 +24,10 @@ public class TextNodeOptions
 public unsafe class TextNode : IDisposable, IAtkNode
 {
     public AtkTextNode* Node { get; }
-    private readonly Tooltip tooltip;
     
     public TextNode(TextNodeOptions options)
     {
         Node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
-        tooltip = new Tooltip();
         
         Node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision);
         UpdateOptions(options);
@@ -37,22 +35,15 @@ public unsafe class TextNode : IDisposable, IAtkNode
 
     public void Dispose()
     {
-        tooltip.Dispose();
-        
         Node->AtkResNode.Destroy(false);
         IMemorySpace.Free(Node, (ulong)sizeof(AtkTextNode));
     }
-    
-    public void UpdateTooltip(string newTooltip) => tooltip.UpdateText(newTooltip);
-    public void EnableTooltip(AtkUnitBase* parentAddon, string tooltipText) => tooltip.AddTooltip(parentAddon, (AtkResNode*) Node, tooltipText);
     
     public void UpdateOptions(TextNodeOptions options)
     {
         Node->AtkResNode.Type = options.Type;
         Node->AtkResNode.NodeID = options.Id;
-        // node->AtkResNode.SetWidth((ushort) options.Size.X); // Width should be automatic
         Node->AtkResNode.SetHeight(options.FontSize);
-        // node->AtkResNode.SetPositionFloat(options.Position.X, options.Position.Y);
 
         Node->TextColor = options.TextColor.ToByteColor();
         Node->EdgeColor = options.EdgeColor.ToByteColor();
