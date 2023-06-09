@@ -21,12 +21,8 @@ public class StringConfigOption : DrawableAttribute
         if (ImGui.InputTextWithHint($"##{field.Name}", Label, ref stringValue, 2048))
         {
             field.SetValue(obj, stringValue);
-        }
-        if (useAxisFont) ImGui.PopFont();
-
-        if (ImGui.IsItemDeactivatedAfterEdit())
-        {
             saveAction?.Invoke();
         }
+        if (useAxisFont) ImGui.PopFont();
     }
 }
