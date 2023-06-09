@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿namespace KamiLib.AutomaticUserInterface;
 
-namespace KamiLib.AutomaticUserInterface;
-
-public class EnumLabel : DescriptionAttribute
+public class EnumLabel : AttributeBase
 {
-    public EnumLabel(string label) : base(label)
+    private readonly string labelLocalizationKey;
+    public string Label => TryGetLocalizedString(labelLocalizationKey);
+    
+    public EnumLabel(string label)
     {
+        labelLocalizationKey = label;
     }
 }
