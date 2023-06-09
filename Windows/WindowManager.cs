@@ -10,6 +10,7 @@ public class WindowManager : IDisposable
     private readonly WindowSystem windowSystem;
 
     private readonly List<Window> windows = new();
+    private Window? configurationWindow;
 
     public WindowManager()
     {
@@ -41,6 +42,7 @@ public class WindowManager : IDisposable
     {
         windows.Add(configWindow);
         windowSystem.AddWindow(configWindow);
+        configurationWindow = configWindow;
         
         Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
     }
@@ -55,7 +57,7 @@ public class WindowManager : IDisposable
 
     public T? GetWindowOfType<T>() => windows.OfType<T>().FirstOrDefault();
     private void DrawUI() => windowSystem.Draw();
-    private void DrawConfigUI() => KamiCommon.CommandManager.OnCommand($"{KamiCommon.PluginName}", "silent");
+    private void DrawConfigUI() => configurationWindow?.Toggle();
     public void ToggleWindowOfType<T>() where T : Window
     {
         if (GetWindowOfType<T>() is { } window)
