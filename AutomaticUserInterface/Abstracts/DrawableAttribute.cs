@@ -7,7 +7,7 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public abstract class DrawableAttribute : AttributeBase
+public abstract class DrawableAttribute : FieldAttributeBase
 {
     private static readonly Dictionary<Type, IOrderedEnumerable<IGrouping<OrderData, AttributeData>>> AttributeCache = new();
     private record OrderData(int Group, string Label);
@@ -51,14 +51,7 @@ public abstract class DrawableAttribute : AttributeBase
             ImGui.PushID(categoryGroup.Key.Label);
             foreach (var attributeData in categoryGroup)
             {
-                if (saveAction is not null)
-                {
-                    attributeData.DrawableAttribute.Draw(obj, attributeData.Field, saveAction);
-                }
-                else
-                {
-                    attributeData.DrawableAttribute.Draw(obj, attributeData.Field);
-                }
+                attributeData.DrawableAttribute.Draw(obj, attributeData.Field, saveAction);
             }
             ImGui.PopID();
             
