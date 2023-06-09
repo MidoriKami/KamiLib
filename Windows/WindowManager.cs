@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Interface.Windowing;
-using KamiLib.ChatCommands;
 
 namespace KamiLib.Windows;
 
@@ -42,9 +41,6 @@ public class WindowManager : IDisposable
     {
         windows.Add(configWindow);
         windowSystem.AddWindow(configWindow);
-        
-        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>(null, false, "Configuration", allowInDen));
-        KamiCommon.CommandManager.AddCommand(new OpenWindowCommand<T>("silent", true, "Configuration", allowInDen));
         
         Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
     }
