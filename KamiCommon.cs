@@ -3,6 +3,7 @@ using DailyDuty.System;
 using Dalamud.Plugin;
 using KamiLib.Caching;
 using KamiLib.ChatCommands;
+using KamiLib.Commands;
 using KamiLib.Localization;
 using KamiLib.Windows;
 
@@ -11,7 +12,6 @@ namespace KamiLib;
 public static class KamiCommon
 {
     public static string PluginName { get; private set; } = string.Empty;
-    public static CommandManager CommandManager { get; private set; } = null!;
     public static WindowManager WindowManager { get; private set; } = null!;
     public static LocalizationWrapper? Localization { get; private set; }
     public static FontController FontManager { get; private set; } = null!;
@@ -25,7 +25,6 @@ public static class KamiCommon
         LocalizationManager.Instance.Initialize();
 
         FontManager = new FontController();
-        CommandManager = new CommandManager();
         WindowManager = new WindowManager();
     }
 
@@ -36,7 +35,7 @@ public static class KamiCommon
 
     public static void Dispose()
     {
-        CommandManager.Dispose();
+        CommandController.UnregisterCommands();
         WindowManager.Dispose();
         IconCache.Cleanup();
         LocalizationManager.Cleanup();
