@@ -42,7 +42,7 @@ public static class CommandController
         SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(PrintHelpText, new SingleTierCommandHandler("HelpText", "help")));
     }
 
-    public static void UnregisterCommands()
+    public static void UnregisterMainCommands()
     {
         foreach (var command in MainCommands)
         {

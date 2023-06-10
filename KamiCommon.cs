@@ -2,7 +2,6 @@
 using DailyDuty.System;
 using Dalamud.Plugin;
 using KamiLib.Caching;
-using KamiLib.ChatCommands;
 using KamiLib.Commands;
 using KamiLib.Localization;
 using KamiLib.Windows;
@@ -35,7 +34,7 @@ public static class KamiCommon
 
     public static void Dispose()
     {
-        CommandController.UnregisterCommands();
+        CommandController.UnregisterMainCommands();
         WindowManager.Dispose();
         IconCache.Cleanup();
         LocalizationManager.Cleanup();
