@@ -15,24 +15,24 @@ public abstract class DrawableAttribute : FieldAttributeBase
     protected DrawableAttribute(string? label, string category, int group) : base(label, category, group) { }
     protected abstract void Draw(object obj, FieldInfo field, Action? saveAction = null);
 
-    private static IOrderedEnumerable<IGrouping<OrderData, AttributeData>> GetSortedObjectAttributes(object configObject)
+    private static IOrderedEnumerable<IGrouping<OrderData, AttributeData>> GetSortedObjectAttributes(Type obj)
     {
-        if (!AttributeCache.ContainsKey(configObject.GetType()))
+        if (!AttributeCache.ContainsKey(obj))
         {
-            var attributes = GetAttributes(configObject);
+            var attributes = GetAttributes(obj);
             
             var objectAttributes = attributes
                 .GroupBy(attributeInfo => new OrderData(attributeInfo.DrawableAttribute.GroupIndex, attributeInfo.DrawableAttribute.Category))
                 .OrderBy(orderData => orderData.Key.Group);
 
-            AttributeCache.Add(configObject.GetType(), objectAttributes);
+            AttributeCache.Add(obj, objectAttributes);
         }
 
-        return AttributeCache[configObject.GetType()];
+        return AttributeCache[obj];
     }
 
-    private static IEnumerable<AttributeData> GetAttributes(object obj) => 
-        from field in obj.GetType().GetFields() 
+    private static IEnumerable<AttributeData> GetAttributes(Type obj) => 
+        from field in obj.GetFields() 
         where field.IsDefined(typeof(DrawableAttribute), true) 
         let drawableAttribute = field.GetCustomAttribute<DrawableAttribute>() 
         where drawableAttribute is not null 
@@ -40,7 +40,7 @@ public abstract class DrawableAttribute : FieldAttributeBase
 
     public static void DrawAttributes(object obj, Action? saveAction = null)
     {
-        var cachedAttributes = GetSortedObjectAttributes(obj);
+        var cachedAttributes = GetSortedObjectAttributes(obj.GetType());
 
         foreach (var categoryGroup in cachedAttributes)
         {
@@ -57,6 +57,14 @@ public abstract class DrawableAttribute : FieldAttributeBase
             
             ImGuiHelpers.ScaledDummy(10.0f);
             ImGuiHelpers.ScaledIndent(-15.0f);
+        }
+        
+        foreach (var nestedField in obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (nestedField.GetValue(obj) is { } nested)
+            {
+                DrawAttributes(nested, saveAction);
+            }
         }
     }
 }
