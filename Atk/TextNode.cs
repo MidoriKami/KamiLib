@@ -23,6 +23,7 @@ public class TextNodeOptions
 
 public unsafe class TextNode : IDisposable, IAtkNode
 {
+    private readonly Tooltip tooltip = new();
     public AtkTextNode* Node { get; }
     
     public TextNode(TextNodeOptions options)
@@ -35,9 +36,15 @@ public unsafe class TextNode : IDisposable, IAtkNode
 
     public void Dispose()
     {
+        tooltip.Dispose();
+        
         Node->AtkResNode.Destroy(false);
         IMemorySpace.Free(Node, (ulong)sizeof(AtkTextNode));
     }
+
+    public void AddTooltip(AtkUnitBase* parentAddon) => tooltip.AddTooltip(parentAddon, (AtkResNode*) Node);
+    public void RemoveTooltip(AtkUnitBase* parentAddon) => tooltip.RemoveTooltip(parentAddon, (AtkResNode*) Node);
+    public void SetTooltipStringFunction(Func<string> getTooltipFunc) => tooltip.SetTooltipStringFunction(getTooltipFunc);
     
     public void UpdateOptions(TextNodeOptions options)
     {
