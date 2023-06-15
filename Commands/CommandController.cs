@@ -16,11 +16,11 @@ namespace KamiLib.Commands;
 
 public static class CommandController
 {
-    private delegate void BaseCommandDelegate();
-    private delegate void SingleTierCommandDelegate();
-    private delegate void DoubleTierCommandDelegate(params string[] args);
+    public delegate void BaseCommandDelegate();
+    public delegate void SingleTierCommandDelegate();
+    public delegate void DoubleTierCommandDelegate(params string[] args);
 
-    private record DelegateInfo<T, TU>(T Delegate, TU Attribute) where T : Delegate where TU : CommandAttribute;
+    public record DelegateInfo<T, TU>(T Delegate, TU Attribute) where T : Delegate where TU : CommandAttribute;
 
     private static readonly List<DelegateInfo<BaseCommandDelegate, BaseCommandHandler>> BaseCommands = new();
     private static readonly List<DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>> SingleTierCommands = new();
@@ -117,20 +117,24 @@ public static class CommandController
         {
             if (TryGetAttribute<BaseCommandHandler>(method, out var baseCommandHandler))
             {
-                BaseCommands.Add(new DelegateInfo<BaseCommandDelegate, BaseCommandHandler>(method.CreateDelegate<BaseCommandDelegate>(obj), baseCommandHandler));
+                RegisterBaseCommand(method.CreateDelegate<BaseCommandDelegate>(obj), baseCommandHandler);
             }
             
             if (TryGetAttribute<SingleTierCommandHandler>(method, out var singleTierCommandHandler))
             {
-                SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(method.CreateDelegate<SingleTierCommandDelegate>(obj), singleTierCommandHandler));
+                RegisterSingleTierCommand(method.CreateDelegate<SingleTierCommandDelegate>(obj), singleTierCommandHandler);
             }
             
             if (TryGetAttribute<DoubleTierCommandHandler>(method, out var attribute))
             {
-                DoubleTierCommands.Add(new DelegateInfo<DoubleTierCommandDelegate, DoubleTierCommandHandler>(method.CreateDelegate<DoubleTierCommandDelegate>(obj), attribute));
+                RegisterDoubleTierCommand(method.CreateDelegate<DoubleTierCommandDelegate>(obj), attribute);
             }
         }
     }
+
+    public static void RegisterBaseCommand(BaseCommandDelegate function, BaseCommandHandler attribute) => BaseCommands.Add(new DelegateInfo<BaseCommandDelegate, BaseCommandHandler>(function, attribute));
+    public static void RegisterSingleTierCommand(SingleTierCommandDelegate function, SingleTierCommandHandler attribute) => SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(function, attribute));
+    public static void RegisterDoubleTierCommand(DoubleTierCommandDelegate function, DoubleTierCommandHandler attribute) => DoubleTierCommands.Add(new DelegateInfo<DoubleTierCommandDelegate, DoubleTierCommandHandler>(function, attribute));
 
     private static void PrintHelpText()
     {
