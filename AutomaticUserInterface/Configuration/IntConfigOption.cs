@@ -4,6 +4,9 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
+/// <summary>
+/// Int Slider Configuration Options
+/// </summary>
 public class IntConfigOption : RightLabeledTabledDrawableAttribute
 {
     public int MinValue { get; init; }
