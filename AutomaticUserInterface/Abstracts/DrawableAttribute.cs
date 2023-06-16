@@ -31,12 +31,36 @@ public abstract class DrawableAttribute : FieldAttributeBase
         return AttributeCache[obj];
     }
 
-    private static IEnumerable<AttributeData> GetAttributes(Type obj) => 
-        from field in obj.GetFields() 
-        where field.IsDefined(typeof(DrawableAttribute), true) 
-        let drawableAttribute = field.GetCustomAttribute<DrawableAttribute>() 
-        where drawableAttribute is not null 
-        select new AttributeData(field, drawableAttribute);
+    private static IEnumerable<AttributeData> GetAttributes(Type obj)
+    {
+        var fields = obj.GetFields();
+
+        var disabledFields = new List<string>();
+        var resultList = new List<AttributeData>();
+        
+        foreach (var field in fields)
+        {
+            if (field.IsDefined(typeof(Disabled)))
+            {
+                disabledFields.Add(field.Name);
+                continue;
+            }
+            
+            if (!field.IsDefined(typeof(DrawableAttribute), true)) continue;
+
+            var drawableAttribute = field.GetCustomAttribute<DrawableAttribute>();
+            if (drawableAttribute is null) continue;
+            
+            resultList.Add(new AttributeData(field, drawableAttribute));
+        }
+
+        foreach (var disabledField in disabledFields)
+        {
+            resultList.RemoveAll(entry => string.Equals(entry.Field.Name, disabledField, StringComparison.OrdinalIgnoreCase));
+        }
+
+        return resultList;
+    }
 
     public static void DrawAttributes(object obj, Action? saveAction = null)
     {
@@ -54,11 +78,11 @@ public abstract class DrawableAttribute : FieldAttributeBase
                 attributeData.DrawableAttribute.Draw(obj, attributeData.Field, saveAction);
             }
             ImGui.PopID();
-            
+
             ImGuiHelpers.ScaledDummy(10.0f);
             ImGuiHelpers.ScaledIndent(-15.0f);
         }
-        
+
         foreach (var nestedField in obj.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance))
         {
             if (nestedField.GetValue(obj) is { } nested)
