@@ -36,6 +36,7 @@ public static class KamiCommon
     public static void Dispose()
     {
         CommandController.UnregisterMainCommands();
+        DebugWindow.Cleanup();
         WindowManager.Dispose();
         IconCache.Cleanup();
         LocalizationManager.Cleanup();
