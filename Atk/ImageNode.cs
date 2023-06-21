@@ -44,7 +44,7 @@ public unsafe class ImageNode : IDisposable, IAtkNode
         partsList->Parts = part;
         Node->PartsList = partsList;
         
-        Node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft);
+        Node->AtkResNode.NodeFlags = NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft;
         Node->AtkResNode.Color = options.Color.ToByteColor();
         UpdateOptions(options);
     }

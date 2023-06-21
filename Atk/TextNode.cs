@@ -30,7 +30,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
     {
         Node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
         
-        Node->AtkResNode.Flags = (short) (NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision);
+        Node->AtkResNode.NodeFlags = NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision;
         UpdateOptions(options);
     }
 

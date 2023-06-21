@@ -24,7 +24,7 @@ public unsafe class ResNode : IDisposable, IAtkNode
 
         Node->Type = NodeType.Res;
         Node->NodeID = options.Id;
-        Node->Flags = (short) (NodeFlags.Enabled | NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.IsTopNode);
+        Node->NodeFlags = NodeFlags.Enabled | NodeFlags.Visible | NodeFlags.AnchorLeft | NodeFlags.IsTopNode;
         Node->SetWidth((ushort) options.Size.X);
         Node->SetHeight((ushort) options.Size.Y);
         Node->SetPositionFloat(options.Position.X, options.Position.Y);
