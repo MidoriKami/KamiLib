@@ -29,6 +29,11 @@ public class ColorConfigOption : DrawableAttribute
         DefaultColor = new Vector4(r, g, b, a);
         helpTextKey = helpText;
     }
+
+    public ColorConfigOption(string label, string category, int group, byte r, byte g, byte b, byte a) : base(label, category, group)
+    {
+        DefaultColor = new Vector4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+    }
     
     protected override void Draw(object obj, FieldInfo field, Action? saveAction = null)
     {
