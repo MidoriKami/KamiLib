@@ -15,6 +15,8 @@ public class IconCache : IDisposable
     
     private static IconCache? _instance;
     public static IconCache Instance => _instance ??= new IconCache();
+
+    private static Func<string, TextureWrap?>? _alternateGetTextureFunc;
     
     public static void Cleanup()
     {
@@ -38,7 +40,7 @@ public class IconCache : IDisposable
             try
             {
                 var path = IconFilePath.Format(iconId / 1000, iconId);
-                var tex = Service.DataManager.GetImGuiTexture(path);
+                var tex = _alternateGetTextureFunc is null ? Service.DataManager.GetImGuiTexture(path) : _alternateGetTextureFunc.Invoke(path);
 
                 if (tex is not null && tex.ImGuiHandle != nint.Zero) 
                 {
@@ -65,4 +67,5 @@ public class IconCache : IDisposable
 
         return iconTextures[iconId];
     }
+    public void SetAlternativeGetTextureFunc(Func<string, TextureWrap?> getTexture) => _alternateGetTextureFunc = getTexture;
 }
