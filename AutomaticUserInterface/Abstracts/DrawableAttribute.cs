@@ -35,31 +35,29 @@ public abstract class DrawableAttribute : FieldAttributeBase
     {
         var fields = obj.GetFields();
 
-        var disabledFields = new List<string>();
-        var resultList = new List<AttributeData>();
+        var disabledFields = GetDisabledAttributesFieldNames(fields);
+        var resultList = GetDrawableAttributeData(fields).ToList();
         
-        foreach (var field in fields)
-        {
-            if (field.IsDefined(typeof(Disabled)))
-            {
-                disabledFields.Add(field.Name);
-                continue;
-            }
-            
-            if (!field.IsDefined(typeof(DrawableAttribute), true)) continue;
-
-            var drawableAttribute = field.GetCustomAttribute<DrawableAttribute>();
-            if (drawableAttribute is null) continue;
-            
-            resultList.Add(new AttributeData(field, drawableAttribute));
-        }
-
         foreach (var disabledField in disabledFields)
         {
             resultList.RemoveAll(entry => string.Equals(entry.Field.Name, disabledField, StringComparison.OrdinalIgnoreCase));
         }
 
         return resultList;
+    }
+
+    private static IEnumerable<string> GetDisabledAttributesFieldNames(IEnumerable<FieldInfo> fields) 
+        => from field in fields where field.IsDefined(typeof(Disabled)) where field.GetCustomAttribute<Disabled>() is not null select field.Name;
+
+    private static IEnumerable<AttributeData> GetDrawableAttributeData(IEnumerable<FieldInfo> fields)
+    {
+        foreach (var field in fields)
+        {
+            if (!field.IsDefined(typeof(DrawableAttribute), true)) continue;
+            if (field.GetCustomAttribute<DrawableAttribute>() is not { } attribute) continue;
+
+            yield return new AttributeData(field, attribute);
+        }
     }
 
     public static void DrawAttributes(object obj, Action? saveAction = null)
