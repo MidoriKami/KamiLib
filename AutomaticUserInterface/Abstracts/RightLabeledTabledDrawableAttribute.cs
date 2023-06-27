@@ -6,9 +6,9 @@ namespace KamiLib.AutomaticUserInterface;
 
 public abstract class RightLabeledTabledDrawableAttribute : TabledDrawableAttribute
 {
-    protected RightLabeledTabledDrawableAttribute(string? label, string category, int group) : base(label, category, group) { }
+    protected RightLabeledTabledDrawableAttribute(string? label) : base(label) { }
 
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         ImGui.TextUnformatted(Label);
     }

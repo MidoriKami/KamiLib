@@ -8,13 +8,13 @@ namespace KamiLib.AutomaticUserInterface;
 /// Displays time in the following format:
 /// Day.Hour:Minute:Seconds
 /// </summary>
-public class TimeSpanDisplay : LeftLabeledTabledDrawableAttribute
+public class TimeSpanDisplayAttribute : LeftLabeledTabledDrawableAttribute
 {
     protected string TimeOutOfRangeString = "TimeNotAvailable";
     
-    public TimeSpanDisplay(string? label, string category, int group) : base(label, category, group) { }
+    public TimeSpanDisplayAttribute(string? label) : base(label) { }
     
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var timeSpan = GetValue<TimeSpan>(obj, field);
         

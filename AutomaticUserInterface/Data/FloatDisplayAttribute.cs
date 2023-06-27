@@ -5,11 +5,11 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class FloatDisplay : LeftLabeledTabledDrawableAttribute
+public class FloatDisplayAttribute : LeftLabeledTabledDrawableAttribute
 {
-    public FloatDisplay(string? label, string category, int group) : base(label, category, group) { }
+    public FloatDisplayAttribute(string? label) : base(label) { }
     
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var floatValue = GetValue<float>(obj, field);
         

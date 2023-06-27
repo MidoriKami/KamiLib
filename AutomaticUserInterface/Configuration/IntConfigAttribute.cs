@@ -7,18 +7,18 @@ namespace KamiLib.AutomaticUserInterface;
 /// <summary>
 /// Int Slider Configuration Options
 /// </summary>
-public class IntConfigOption : RightLabeledTabledDrawableAttribute
+public class IntConfigAttribute : RightLabeledTabledDrawableAttribute
 {
     public int MinValue { get; init; }
     public int MaxValue { get; init; }
 
-    public IntConfigOption(string label, string category, int group, int minValue, int maxValue) : base(label, category, group)
+    public IntConfigAttribute(string label, int minValue, int maxValue) : base(label)
     {
         MinValue = minValue;
         MaxValue = maxValue;
     }
     
-    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var intValue = GetValue<int>(obj, field);
         

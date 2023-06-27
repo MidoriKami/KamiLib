@@ -5,19 +5,19 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class BoolConfigOption : DrawableAttribute
+public class BoolConfigAttribute : DrawableAttribute
 {
     private readonly string? helpTextKey;
     private string HelpText => TryGetLocalizedString(helpTextKey);
     
-    public BoolConfigOption(string label, string category, int group) : base(label, category, group) { }
+    public BoolConfigAttribute(string label) : base(label) { }
 
-    public BoolConfigOption(string label, string category, int group, string? helpText) : base(label, category, group)
+    public BoolConfigAttribute(string label, string? helpText) : base(label)
     {
         helpTextKey = helpText;
     }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void Draw(object obj, MemberInfo field, Action? saveAction = null)
     {
         var value = GetValue<bool>(obj, field);
 

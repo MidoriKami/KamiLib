@@ -1,41 +1,46 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using System.Reflection;
 using Dalamud.Interface.Components;
-using Dalamud.Utility.Numerics;
-using FFXIVClientStructs.FFXIV.Client.Graphics;
 using ImGuiNET;
+using KamiLib.Utilities;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class ColorConfigOption : DrawableAttribute
+public class ColorConfigAttribute : DrawableAttribute
 {
     private readonly string? helpTextKey;
 
     public string HelpText => TryGetLocalizedString(helpTextKey);
-    public Vector4 DefaultColor { get; init; }
-    public Vector4 VectorByteColor => DefaultColor / 255;
-    public ByteColor ByteColor => DefaultColor.ToByteColor();
+    public Vector4? DefaultColor { get; init; }
 
     private string DefaultLabel => TryGetLocalizedString("Default");
+
+    public ColorConfigAttribute(string label) : base(label) { }
     
-    public ColorConfigOption(string label, string category, int group, float r, float g, float b, float a) : base(label, category, group)
+    public ColorConfigAttribute(string label, float r, float g, float b, float a) : base(label)
     {
         DefaultColor = new Vector4(r, g, b, a);
     }
 
-    public ColorConfigOption(string label, string category, int group, string helpText, float r, float g, float b, float a) : base(label, category, group)
+    public ColorConfigAttribute(string label, string helpText, float r, float g, float b, float a) : base(label)
     {
         DefaultColor = new Vector4(r, g, b, a);
         helpTextKey = helpText;
     }
 
-    public ColorConfigOption(string label, string category, int group, byte r, byte g, byte b, byte a) : base(label, category, group)
+    public ColorConfigAttribute(string label, byte r, byte g, byte b, byte a) : base(label)
     {
         DefaultColor = new Vector4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
     }
+
+    public ColorConfigAttribute(string label, string hexColor) : base(label)
+    {
+        DefaultColor = ColorTranslator.FromHtml(hexColor).ToKnownColor().AsVector4();
+    }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void Draw(object obj, MemberInfo field, Action? saveAction = null)
     {
         var vectorValue = GetValue<Vector4>(obj, field);
         
@@ -44,17 +49,19 @@ public class ColorConfigOption : DrawableAttribute
             SetValue(obj, field, vectorValue);
             saveAction?.Invoke();
         }
-        
-        ImGui.SameLine();
-        
-        if (ImGui.Button($"{DefaultLabel}##{field.Name}"))
+
+        if (DefaultColor is not null)
         {
-            SetValue(obj, field, DefaultColor);
-            saveAction?.Invoke();
+            ImGui.SameLine();
+        
+            if (ImGui.Button($"{DefaultLabel}##{field.Name}"))
+            {
+                SetValue(obj, field, DefaultColor);
+                saveAction?.Invoke();
+            }
         }
         
         ImGui.SameLine();
-        
         ImGui.Text(Label);
         
         if(helpTextKey is not null) ImGuiComponents.HelpMarker(HelpText);

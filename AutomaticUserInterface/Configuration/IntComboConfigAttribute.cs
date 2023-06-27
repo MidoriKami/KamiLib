@@ -6,17 +6,17 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class IntComboConfigOption : IntConfigOption
+public class IntComboConfigAttribute : IntConfigAttribute
 {
     private readonly string? helpTextKey;
     private string HelpText => TryGetLocalizedString(helpTextKey);
 
-    public IntComboConfigOption(string label, string category, int group, int minValue, int maxValue, string? helpText = null) : base(label, category, group, minValue, maxValue)
+    public IntComboConfigAttribute(string label, int minValue, int maxValue, string? helpText = null) : base(label, minValue, maxValue)
     {
         helpTextKey = helpText;
     }
 
-    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var intValue = GetValue<int>(obj, field);
         var range = MaxValue - MinValue;
@@ -37,7 +37,7 @@ public class IntComboConfigOption : IntConfigOption
         
     }
 
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         ImGui.TextUnformatted(Label);
         

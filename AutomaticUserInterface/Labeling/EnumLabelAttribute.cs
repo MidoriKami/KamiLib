@@ -1,11 +1,11 @@
 ﻿namespace KamiLib.AutomaticUserInterface;
 
-public class EnumLabel : AttributeBase
+public class EnumLabelAttribute : AttributeBase
 {
     private readonly string labelLocalizationKey;
     public string Label => TryGetLocalizedString(labelLocalizationKey);
     
-    public EnumLabel(string label)
+    public EnumLabelAttribute(string label)
     {
         labelLocalizationKey = label;
     }

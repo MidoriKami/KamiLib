@@ -7,28 +7,31 @@ namespace KamiLib.AutomaticUserInterface;
 public abstract class FieldAttributeBase : AttributeBase
 {
     private readonly string? labelLocalizationKey;
-    private readonly string categoryLocalizationKey;
     
-    public int GroupIndex { get; init; }
     public string Label => TryGetLocalizedString(labelLocalizationKey);
-    public string Category => TryGetLocalizedString(categoryLocalizationKey);
 
     protected bool HasLabel => labelLocalizationKey is not null;
     
-    protected FieldAttributeBase(string? label, string categoryKey, int groupIndex)
+    protected FieldAttributeBase(string? label)
     {
         labelLocalizationKey = label;
-        categoryLocalizationKey = categoryKey;
-        GroupIndex = groupIndex;
     }
     
-    protected T GetValue<T>(object obj, FieldInfo fieldInfo)
+    protected T GetValue<T>(object obj, MemberInfo memberInfo)
     {
         try
         {
-            var value = fieldInfo.GetValue(obj)!;
-
-            return (T) value;
+            switch (memberInfo.MemberType)
+            {
+                case MemberTypes.Field:
+                    return (T) (memberInfo as FieldInfo)?.GetValue(obj)!;
+                
+                case MemberTypes.Property:
+                    return (T) (memberInfo as PropertyInfo)?.GetValue(obj)!;
+                
+                default:
+                    throw new NotImplementedException();
+            }
         }
         catch (Exception e)
         {
@@ -37,8 +40,20 @@ public abstract class FieldAttributeBase : AttributeBase
         }
     }
 
-    protected void SetValue<T>(object obj, FieldInfo fieldInfo, T value)
+    protected void SetValue<T>(object obj, MemberInfo memberInfo, T value)
     {
-        fieldInfo.SetValue(obj, value);
+        switch (memberInfo.MemberType)
+        {
+            case MemberTypes.Field:
+                (memberInfo as FieldInfo)?.SetValue(obj, value);
+                break;
+                
+            case MemberTypes.Property:
+                (memberInfo as PropertyInfo)?.SetValue(obj, value);
+                break;
+                
+            default:
+                throw new NotImplementedException();
+        }
     }
 }

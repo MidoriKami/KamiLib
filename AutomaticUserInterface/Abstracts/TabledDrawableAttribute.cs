@@ -6,15 +6,15 @@ namespace KamiLib.AutomaticUserInterface;
 
 public abstract class TabledDrawableAttribute : DrawableAttribute
 {
-    protected TabledDrawableAttribute(string? label, string category, int group) : base(label, category, group) { }
+    protected TabledDrawableAttribute(string? label) : base(label) { }
 
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null) => DrawTabled(obj, field, saveAction);
+    protected override void Draw(object obj, MemberInfo field, Action? saveAction = null) => DrawTabled(obj, field, saveAction);
 
-    protected abstract void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null);
+    protected abstract void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null);
 
-    protected abstract void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null);
+    protected abstract void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null);
 
-    private void DrawTabled(object configObject, FieldInfo field, Action? saveAction = null)
+    private void DrawTabled(object configObject, MemberInfo field, Action? saveAction = null)
     {
         if (ImGui.BeginTable($"##ValueTable{Label}", 2, ImGuiTableFlags.SizingStretchSame))
         {

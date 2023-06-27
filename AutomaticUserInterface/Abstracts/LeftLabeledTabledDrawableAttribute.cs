@@ -7,9 +7,9 @@ namespace KamiLib.AutomaticUserInterface;
 public abstract class LeftLabeledTabledDrawableAttribute : TabledDrawableAttribute
 {
 
-    protected LeftLabeledTabledDrawableAttribute(string? label, string category, int group) : base(label, category, group) { }
+    protected LeftLabeledTabledDrawableAttribute(string? label) : base(label) { }
     
-    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         ImGui.TextUnformatted(Label);
     }

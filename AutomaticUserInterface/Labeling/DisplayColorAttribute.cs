@@ -3,11 +3,11 @@ using System.Drawing;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class DisplayColor : DescriptionAttribute
+public class DisplayColorAttribute : DescriptionAttribute
 {
     public KnownColor Color { get; }
 
-    public DisplayColor(KnownColor color)
+    public DisplayColorAttribute(KnownColor color)
     {
         Color = color;
     }

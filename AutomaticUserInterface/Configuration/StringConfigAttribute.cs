@@ -4,30 +4,25 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class ShortStringConfigOption : TabledDrawableAttribute
+public class StringConfigAttribute : DrawableAttribute
 {
     private readonly bool useAxisFont;
     
-    public ShortStringConfigOption(string label, string category, int group, bool axisFont = false) : base(label, category, group)
+    public StringConfigAttribute(string label, bool axisFont = false) : base(label)
     {
         useAxisFont = axisFont;
     }
-    
-    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+
+    protected override void Draw(object obj, MemberInfo field, Action? saveAction = null)
     {
         var stringValue = GetValue<string>(obj, field);
 
         if (useAxisFont) ImGui.PushFont(KamiCommon.FontManager.Axis12.ImFont);
         if (ImGui.InputTextWithHint($"##{field.Name}", Label, ref stringValue, 2048))
         {
-            field.SetValue(obj, stringValue);
+            SetValue(obj, field, stringValue);
             saveAction?.Invoke();
         }
         if (useAxisFont) ImGui.PopFont();
-    }
-    
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
-    {
-        // This side empty intentionally
     }
 }

@@ -4,18 +4,18 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class BoolDescriptionConfigOption : BoolConfigOption
+public class BoolDescriptionConfigAttribute : BoolConfigAttribute
 {
     private readonly string? descriptionLocKey;
 
     public string Description => TryGetLocalizedString(descriptionLocKey);
     
-    public BoolDescriptionConfigOption(string label, string category, int group, string description) : base(label, category, group, null)
+    public BoolDescriptionConfigAttribute(string label, string description) : base(label,null)
     {
         descriptionLocKey = description;
     }
     
-    protected override void Draw(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void Draw(object obj, MemberInfo field, Action? saveAction = null)
     {
         ImGui.Text(Description);
         

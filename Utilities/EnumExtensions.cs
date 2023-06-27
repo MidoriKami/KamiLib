@@ -9,14 +9,14 @@ namespace KamiLib.Utilities;
 
 public static class EnumExtensions
 {
-    private static readonly Dictionary<Enum, EnumLabel?> LabelAttributeCache = new();
-    private static readonly Dictionary<Enum, DisplayColor?> DisplayColorAttributeCache = new();
+    private static readonly Dictionary<Enum, EnumLabelAttribute?> LabelAttributeCache = new();
+    private static readonly Dictionary<Enum, DisplayColorAttribute?> DisplayColorAttributeCache = new();
 
     public static string GetLabel(this Enum enumValue) 
     {
         if (!LabelAttributeCache.ContainsKey(enumValue))
         {
-            LabelAttributeCache.Add(enumValue, enumValue.GetAttribute<EnumLabel>());
+            LabelAttributeCache.Add(enumValue, enumValue.GetAttribute<EnumLabelAttribute>());
         }
 
         var labelAttribute = LabelAttributeCache[enumValue];
@@ -28,7 +28,7 @@ public static class EnumExtensions
     {
         if (!DisplayColorAttributeCache.ContainsKey(enumValue))
         {
-            DisplayColorAttributeCache.Add(enumValue, enumValue.GetAttribute<DisplayColor>());
+            DisplayColorAttributeCache.Add(enumValue, enumValue.GetAttribute<DisplayColorAttribute>());
         }
 
         var colorAttribute = DisplayColorAttributeCache[enumValue];

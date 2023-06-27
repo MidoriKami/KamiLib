@@ -4,18 +4,18 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class FloatConfigOption : RightLabeledTabledDrawableAttribute
+public class FloatConfigAttribute : RightLabeledTabledDrawableAttribute
 {
     public float MinValue { get; init; }
     public float MaxValue { get; init; }
 
-    public FloatConfigOption(string? label, string category, int group, float minValue = 0.0f, float maxValue = 1.0f) : base(label, category, group)
+    public FloatConfigAttribute(string? label, float minValue = 0.0f, float maxValue = 1.0f) : base(label)
     {
         MinValue = minValue;
         MaxValue = maxValue;
     }
     
-    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var floatValue = GetValue<float>(obj, field);
 

@@ -5,11 +5,11 @@ using ImGuiNET;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class PositionConfigOption : RightLabeledTabledDrawableAttribute
+public class Vector2ConfigAttribute : RightLabeledTabledDrawableAttribute
 {
-    public PositionConfigOption(string? label, string category, int group) : base(label, category, group) { }
+    public Vector2ConfigAttribute(string? label) : base(label) { }
     
-    protected override void DrawLeftColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawLeftColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var vectorValue = GetValue<Vector2>(obj, field);
         if (ImGui.DragFloat2($"##{field.Name}", ref vectorValue, 5.0f))

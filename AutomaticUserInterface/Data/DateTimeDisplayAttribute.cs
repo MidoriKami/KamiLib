@@ -8,11 +8,11 @@ namespace KamiLib.AutomaticUserInterface;
 /// <summary>
 /// Displays the tagged date time as it was saved
 /// </summary>
-public class DateTimeDisplay : LeftLabeledTabledDrawableAttribute
+public class DateTimeDisplayAttribute : LeftLabeledTabledDrawableAttribute
 {
-    public DateTimeDisplay(string? label, string category, int group) : base(label, category, group) { }
+    public DateTimeDisplayAttribute(string? label) : base(label) { }
 
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var dateTime = GetValue<DateTime>(obj, field);
         

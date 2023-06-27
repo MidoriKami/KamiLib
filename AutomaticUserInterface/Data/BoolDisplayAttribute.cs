@@ -6,7 +6,7 @@ using KamiLib.Utilities;
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class BoolDisplay : LeftLabeledTabledDrawableAttribute
+public class BoolDisplayAttribute : LeftLabeledTabledDrawableAttribute
 {
     protected string TrueString = "True";
     protected string FalseString = "False";
@@ -14,9 +14,9 @@ public class BoolDisplay : LeftLabeledTabledDrawableAttribute
     protected KnownColor TrueColor = KnownColor.White;
     protected KnownColor FalseColor = KnownColor.White;
 
-    public BoolDisplay(string? label, string category, int group) : base(label, category, group) { }
+    public BoolDisplayAttribute(string? label) : base(label) { }
     
-    protected override void DrawRightColumn(object obj, FieldInfo field, Action? saveAction = null)
+    protected override void DrawRightColumn(object obj, MemberInfo field, Action? saveAction = null)
     {
         var boolData = GetValue<bool>(obj, field);
 

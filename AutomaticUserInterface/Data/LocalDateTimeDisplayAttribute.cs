@@ -6,9 +6,9 @@ namespace KamiLib.AutomaticUserInterface;
 /// <summary>
 /// Displays DateTime field in LocalTime
 /// </summary>
-public class LocalDateTimeDisplay : DateTimeDisplay
+public class LocalDateTimeDisplayAttribute : DateTimeDisplayAttribute
 {
-    public LocalDateTimeDisplay(string? label, string category, int group) : base(label, category, group) { }
+    public LocalDateTimeDisplayAttribute(string? label) : base(label) { }
     
     protected override string FormatDateTime(DateTime dateTime) => dateTime.ToLocalTime().ToString(CultureInfo.CurrentCulture);
 }
