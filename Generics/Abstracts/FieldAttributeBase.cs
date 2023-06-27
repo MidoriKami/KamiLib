@@ -30,7 +30,7 @@ public abstract class FieldAttributeBase : AttributeBase
                     return (T) (memberInfo as PropertyInfo)?.GetValue(obj)!;
                 
                 default:
-                    throw new NotImplementedException();
+                    throw new Exception("Unsupported Member Type");
             }
         }
         catch (Exception e)
@@ -53,7 +53,7 @@ public abstract class FieldAttributeBase : AttributeBase
                 break;
                 
             default:
-                throw new NotImplementedException();
+                throw new Exception("Unsupported Member Type");
         }
     }
 }
