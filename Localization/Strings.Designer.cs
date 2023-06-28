@@ -175,5 +175,14 @@ namespace KamiLib.Localization {
                 return ResourceManager.GetString("Selection_NoItemSelected", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Multiple.
+        /// </summary>
+        internal static string SelectMultiple {
+            get {
+                return ResourceManager.GetString("SelectMultiple", resourceCulture);
+            }
+        }
     }
 }

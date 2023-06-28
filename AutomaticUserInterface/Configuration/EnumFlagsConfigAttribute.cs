@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Reflection;
 using Dalamud.Interface;
-using Dalamud.Interface.Components;
 using ImGuiNET;
+using KamiLib.Localization;
 using KamiLib.Utilities;
 
 namespace KamiLib.AutomaticUserInterface;
@@ -18,7 +17,7 @@ public class EnumFlagsConfigAttribute : EnumConfigAttribute
     {
         var valueChanged = false;
         
-        if (ImGui.BeginCombo($"##EnumCombo{value.GetType()}", value.GetLabel()))
+        if (ImGui.BeginCombo($"##EnumCombo{value.GetType()}", Strings.SelectMultiple))
         {
             foreach (Enum enumValue in Enum.GetValues(value.GetType()))
             {

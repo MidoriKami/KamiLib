@@ -57,4 +57,7 @@
     <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>Select an item in the left pane</value>
     </data>
+    <data name="SelectMultiple" xml:space="preserve">
+        <value>Select Multiple</value>
+    </data>
 </root>
