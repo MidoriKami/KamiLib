@@ -37,7 +37,7 @@ public class EnumConfigAttribute : TabledDrawableAttribute
         if(helpTextKey is not null) ImGuiComponents.HelpMarker(HelpText);
     }
 
-    protected bool DrawEnumCombo(ref Enum value)
+    protected virtual bool DrawEnumCombo(ref Enum value)
     {
         var valueChanged = false;
         
