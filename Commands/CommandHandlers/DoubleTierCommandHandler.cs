@@ -1,7 +1,7 @@
 ﻿using Dalamud.Game.Text.SeStringHandling;
 using KamiLib.Commands.Abstracts;
 
-namespace KamiLib.Commands.temp;
+namespace KamiLib.Commands;
 
 /// <summary>
 /// Complex Commands with Arguments<br/>

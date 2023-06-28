@@ -1,6 +1,6 @@
 ﻿using KamiLib.Commands.Abstracts;
 
-namespace KamiLib.Commands.temp;
+namespace KamiLib.Commands;
 
 /// <summary>
 /// Simple Commands with No Arguments<br/>
