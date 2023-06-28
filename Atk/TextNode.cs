@@ -30,7 +30,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
     {
         Node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
         
-        Node->AtkResNode.NodeFlags = NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft | NodeFlags.RespondToMouse | NodeFlags.HasCollision;
+        Node->AtkResNode.NodeFlags = NodeFlags.Enabled | NodeFlags.RespondToMouse | NodeFlags.HasCollision | NodeFlags.EmitsEvents;
         UpdateOptions(options);
     }
 
@@ -45,6 +45,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
     public void AddTooltip(AtkUnitBase* parentAddon) => tooltip.AddTooltip(parentAddon, (AtkResNode*) Node);
     public void RemoveTooltip(AtkUnitBase* parentAddon) => tooltip.RemoveTooltip(parentAddon, (AtkResNode*) Node);
     public void SetTooltipStringFunction(Func<string> getTooltipFunc) => tooltip.SetTooltipStringFunction(getTooltipFunc);
+    public void ToggleTooltip(bool enabled) => tooltip.ToggleTooltip(enabled);
     
     public void UpdateOptions(TextNodeOptions options)
     {
