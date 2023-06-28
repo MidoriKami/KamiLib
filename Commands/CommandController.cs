@@ -9,7 +9,6 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Logging;
 using KamiLib.ChatCommands;
 using KamiLib.Commands.Abstracts;
-using KamiLib.Commands.temp;
 using KamiLib.Localization;
 
 namespace KamiLib.Commands;
