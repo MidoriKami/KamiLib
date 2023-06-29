@@ -36,7 +36,7 @@ internal class CategoryData : IEquatable<CategoryData>
 
 internal class OrderedAttributeData
 {
-    public required IOrderedEnumerable<IGrouping<CategoryData, AttributeData>> OrderedData { get; init; }
+    public required IDictionary<CategoryData, List<AttributeData>> OrderedData { get; init; }
 }
 
 internal class AttributeCache
@@ -54,70 +54,55 @@ internal class AttributeCache
         }
     }
     
-    private static OrderedAttributeData GenerateForType(Type type) => new()
+    private OrderedAttributeData GenerateForType(Type type)
     {
-        OrderedData = GetAttributeDataForType(type.UnderlyingSystemType.GetInterfaces().Append(type))
-            .OrderBy(groups => groups.Key.Group)
-            .ThenBy(groups => groups.Key.CategoryLabel)
-    };
+        // Get all disabled entries
+        var disabledMembers = new List<string>();
 
-    private static IEnumerable<IGrouping<CategoryData, AttributeData>> GetAttributeDataForType(IEnumerable<Type> types)
-    {
-        var list = new List<IGrouping<CategoryData, AttributeData>>();
+        foreach (var implementation in type.UnderlyingSystemType.GetInterfaces().Append(type))
+        {
+            foreach (var member in implementation.GetMembers(BindingFlags.Public | BindingFlags.Instance))
+            {
+                if(member is not {MemberType: MemberTypes.Field or MemberTypes.Property}) continue;
+                if(member.IsDefined(typeof(Disabled))) disabledMembers.Add(member.Name);
+            }
+        }
         
-        foreach (var type in types)
+        // Get all memberInfos
+        var memberInfos = new Dictionary<CategoryData, List<AttributeData>>();
+
+        foreach (var implementation in type.UnderlyingSystemType.GetInterfaces().Append(type))
         {
-            list.AddRange(GetAttributeDataForType(type));
-        }
-
-        return list;
-    }
-
-    private static IEnumerable<IGrouping<CategoryData, AttributeData>> GetAttributeDataForType(Type type)
-    {
-        var members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
-        var drawableEnabledMembers = GetDrawableEnabledMembers(members);
-
-        var category = type.GetCustomAttribute<CategoryAttribute>()!;
-
-        return drawableEnabledMembers
-            .Select(member => new AttributeData
+            if (implementation.GetCustomAttribute<CategoryAttribute>() is not { } categoryAttribute) continue;
+            
+            foreach (var member in implementation.GetMembers(BindingFlags.Public | BindingFlags.Instance))
             {
-                Attribute = member.GetCustomAttribute<DrawableAttribute>()!,
-                Member = member
-            })
-            .GroupBy(data => new CategoryData
-            {
-                Group = category.Index,
-                CategoryLabel = category.Category,
-            });
-    }
+                if(member is not {MemberType: MemberTypes.Field or MemberTypes.Property}) continue;
+                if(!member.IsDefined(typeof(DrawableAttribute), true)) continue;
+                if (disabledMembers.Contains(member.Name)) continue;
+                if (member.GetCustomAttribute<DrawableAttribute>() is not { } drawableAttribute) continue;
 
-    private static IEnumerable<MemberInfo> GetDisabledMembers(IEnumerable<MemberInfo> members)
-    {
-        foreach (var member in members)
-        {
-            if(member is not { MemberType: MemberTypes.Field or MemberTypes.Property }) continue;
+                var categoryData = new CategoryData
+                {
+                    Group = categoryAttribute.Index,
+                    CategoryLabel = categoryAttribute.Category
+                };
 
-            if (member.IsDefined(typeof(Disabled), true)) yield return member;
+                var attributeData = new AttributeData
+                {
+                    Attribute = drawableAttribute,
+                    Member = member,
+                };
+
+                if(!memberInfos.ContainsKey(categoryData)) memberInfos.Add(categoryData, new List<AttributeData>());
+                
+                memberInfos[categoryData].Add(attributeData);
+            }
         }
-    }
-
-    private static IEnumerable<MemberInfo> GetDrawableMembers(IEnumerable<MemberInfo> members)
-    {
-        foreach (var member in members)
+        
+        return new OrderedAttributeData
         {
-            if(member is not { MemberType: MemberTypes.Field or MemberTypes.Property }) continue;
-
-            if (member.IsDefined(typeof(DrawableAttribute), true)) yield return member;
-        }
-    }
-
-    private static IEnumerable<MemberInfo> GetDrawableEnabledMembers(IReadOnlyCollection<MemberInfo> members)
-    {
-        var disabledMembers = GetDisabledMembers(members);
-        var drawableMembers = GetDrawableMembers(members);
-
-        return drawableMembers.Where(drawableMember => !disabledMembers.Any(disabledMember => string.Equals(disabledMember.Name, drawableMember.Name)));
+            OrderedData = memberInfos
+        };
     }
 }

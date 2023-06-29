@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Reflection;
 using Dalamud.Interface;
 using ImGuiNET;
@@ -25,14 +25,14 @@ public abstract class DrawableAttribute : FieldAttributeBase
         }
     }
 
-    private static void DrawGroup(IGrouping<CategoryData, AttributeData> grouping, object sourceObject, Action? saveAction = null)
+    private static void DrawGroup(KeyValuePair<CategoryData, List<AttributeData>> grouping, object sourceObject, Action? saveAction = null)
     {
         ImGui.Text(grouping.Key.CategoryLabel);
         ImGui.Separator();
         ImGuiHelpers.ScaledIndent(15.0f);
 
         ImGui.PushID(grouping.Key.CategoryLabel);
-        foreach (var attributeData in grouping)
+        foreach (var attributeData in grouping.Value)
         {
             attributeData.Attribute.Draw(sourceObject, attributeData.Member, saveAction);
         }
