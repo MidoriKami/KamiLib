@@ -55,4 +55,7 @@
     <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>Selecciona un objeto en el panel izquierdo</value>
     </data>
+    <data name="SelectMultiple" xml:space="preserve">
+        <value>Select Multiple</value>
+    </data>
 </root>
