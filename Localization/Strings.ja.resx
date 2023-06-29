@@ -55,4 +55,13 @@
     <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>左から設定する項目を選択してください</value>
     </data>
+    <data name="SelectMultiple" xml:space="preserve">
+        <value>Select Multiple</value>
+    </data>
+    <data name="Search" xml:space="preserve">
+        <value>Search...</value>
+    </data>
+    <data name="NothingBlacklisted" xml:space="preserve">
+        <value>Nothing Blacklisted</value>
+    </data>
 </root>

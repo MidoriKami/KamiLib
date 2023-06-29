@@ -60,4 +60,10 @@
     <data name="SelectMultiple" xml:space="preserve">
         <value>Select Multiple</value>
     </data>
+    <data name="Search" xml:space="preserve">
+        <value>Search...</value>
+    </data>
+    <data name="NothingBlacklisted" xml:space="preserve">
+        <value>Nothing Blacklisted</value>
+    </data>
 </root>

@@ -9,9 +9,9 @@ using Dalamud.Utility;
 using ImGuiNET;
 using KamiLib.AutomaticUserInterface;
 using KamiLib.Caching;
+using KamiLib.Localization;
 using KamiLib.Utilities;
 using Lumina.Excel.GeneratedSheets;
-using NoTankYou.Localization;
 using Action = System.Action;
 
 namespace NoTankYou.Models.Attributes;

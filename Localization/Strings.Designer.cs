@@ -168,6 +168,24 @@ namespace KamiLib.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nothing Blacklisted.
+        /// </summary>
+        internal static string NothingBlacklisted {
+            get {
+                return ResourceManager.GetString("NothingBlacklisted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search....
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select an item in the left pane.
         /// </summary>
         internal static string Selection_NoItemSelected {
