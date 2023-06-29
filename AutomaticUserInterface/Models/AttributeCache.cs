@@ -36,13 +36,12 @@ internal class CategoryData : IEquatable<CategoryData>
 
 internal class OrderedAttributeData
 {
-    public required IOrderedEnumerable<IGrouping<CategoryData, AttributeData>> OrderedData { get; set; }
+    public required IOrderedEnumerable<IGrouping<CategoryData, AttributeData>> OrderedData { get; init; }
 }
 
 internal class AttributeCache
 {
     private readonly Dictionary<Type, OrderedAttributeData> cache = new();
-    private readonly Dictionary<Type, List<string>> disabledMembers = new();
 
     public OrderedAttributeData this[Type type]
     {
@@ -50,51 +49,19 @@ internal class AttributeCache
         {
             if (cache.TryGetValue(type, out var item)) return item;
 
-            foreach (var group in GenerateForType(type))
-            {
-                foreach (var attribute in group)
-                {
-                    if (disabledMembers.TryGetValue(type, out var disabled))
-                    {
-                        if (disabled.Contains(attribute.Member.Name))
-                        {
-                            
-                        }
-                    }
-                }
-            }
-            
-            var generated = GenerateForType(type).OrderedData.ToList()
-                .RemoveAll(group => group.);
-            
-            cache.Add(type, generated);
+            cache.Add(type, GenerateForType(type));
             return cache[type];
         }
     }
-
-    private IOrderedEnumerable<IGrouping<CategoryData, AttributeData>> RemoveDisabled(IOrderedEnumerable<IGrouping<CategoryData, AttributeData>> generated, Type type)
+    
+    private static OrderedAttributeData GenerateForType(Type type) => new()
     {
-        foreach (var group in GenerateForType(type))
-        {
-            foreach (var attribute in group)
-            {
-                if (disabledMembers.TryGetValue(type, out var disabled))
-                {
-                    if (disabled.Contains(attribute.Member.Name))
-                    {
-                        yield return group;
-                    }
-                }
-            }
-        }
-    }
-
-    private IOrderedEnumerable<IGrouping<CategoryData, AttributeData>> GenerateForType(Type type)
-        => GetAttributeDataForType(type.UnderlyingSystemType.GetInterfaces().Append(type))
+        OrderedData = GetAttributeDataForType(type.UnderlyingSystemType.GetInterfaces().Append(type))
             .OrderBy(groups => groups.Key.Group)
-            .ThenBy(groups => groups.Key.CategoryLabel);
+            .ThenBy(groups => groups.Key.CategoryLabel)
+    };
 
-    private IEnumerable<IGrouping<CategoryData, AttributeData>> GetAttributeDataForType(IEnumerable<Type> types)
+    private static IEnumerable<IGrouping<CategoryData, AttributeData>> GetAttributeDataForType(IEnumerable<Type> types)
     {
         var list = new List<IGrouping<CategoryData, AttributeData>>();
         
@@ -106,10 +73,10 @@ internal class AttributeCache
         return list;
     }
 
-    private IEnumerable<IGrouping<CategoryData, AttributeData>> GetAttributeDataForType(Type type)
+    private static IEnumerable<IGrouping<CategoryData, AttributeData>> GetAttributeDataForType(Type type)
     {
         var members = type.GetMembers(BindingFlags.Public | BindingFlags.Instance);
-        var drawableEnabledMembers = GetDrawableEnabledMembers(members, type);
+        var drawableEnabledMembers = GetDrawableEnabledMembers(members);
 
         var category = type.GetCustomAttribute<CategoryAttribute>()!;
 
@@ -119,24 +86,24 @@ internal class AttributeCache
                 Attribute = member.GetCustomAttribute<DrawableAttribute>()!,
                 Member = member
             })
-            .GroupBy(_ => new CategoryData
+            .GroupBy(data => new CategoryData
             {
                 Group = category.Index,
                 CategoryLabel = category.Category,
             });
     }
 
-    private IEnumerable<MemberInfo> GetDisabledMembers(IEnumerable<MemberInfo> members)
+    private static IEnumerable<MemberInfo> GetDisabledMembers(IEnumerable<MemberInfo> members)
     {
         foreach (var member in members)
         {
             if(member is not { MemberType: MemberTypes.Field or MemberTypes.Property }) continue;
 
-            if (member.IsDefined(typeof(Disabled))) yield return member;
+            if (member.IsDefined(typeof(Disabled), true)) yield return member;
         }
     }
 
-    private IEnumerable<MemberInfo> GetDrawableMembers(IEnumerable<MemberInfo> members)
+    private static IEnumerable<MemberInfo> GetDrawableMembers(IEnumerable<MemberInfo> members)
     {
         foreach (var member in members)
         {
@@ -146,15 +113,11 @@ internal class AttributeCache
         }
     }
 
-    private IEnumerable<MemberInfo> GetDrawableEnabledMembers(IReadOnlyCollection<MemberInfo> members, Type sourceType)
+    private static IEnumerable<MemberInfo> GetDrawableEnabledMembers(IReadOnlyCollection<MemberInfo> members)
     {
-        var disabledMemberList = GetDisabledMembers(members).ToList();
+        var disabledMembers = GetDisabledMembers(members);
         var drawableMembers = GetDrawableMembers(members);
-        
-        if(!disabledMembers.ContainsKey(sourceType)) disabledMembers.Add(sourceType, new List<string>());
-        
-        disabledMembers[sourceType].AddRange(disabledMemberList.Select(member => member.Name));
 
-        return drawableMembers.Where(drawableMember => !disabledMemberList.Any(disabledMember => string.Equals(disabledMember.Name, drawableMember.Name)));
+        return drawableMembers.Where(drawableMember => !disabledMembers.Any(disabledMember => string.Equals(disabledMember.Name, drawableMember.Name)));
     }
 }

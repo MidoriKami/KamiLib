@@ -8,7 +8,7 @@ namespace KamiLib.AutomaticUserInterface;
 
 public class EnumFlagsConfigAttribute : EnumConfigAttribute
 {
-    public EnumFlagsConfigAttribute() { }
+    public EnumFlagsConfigAttribute() : base() { }
     public EnumFlagsConfigAttribute(string label) : base(label) { }
 
     public EnumFlagsConfigAttribute(string label, string helpText) : base(label, helpText) { }

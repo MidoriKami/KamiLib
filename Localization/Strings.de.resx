@@ -55,7 +55,4 @@
     <data name="Selection_NoItemSelected" xml:space="preserve">
         <value>Wählen sie einen Gegenstand im linken Bereich aus</value>
     </data>
-    <data name="SelectMultiple" xml:space="preserve">
-        <value>Select Multiple</value>
-    </data>
 </root>
