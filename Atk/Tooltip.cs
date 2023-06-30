@@ -6,7 +6,7 @@ namespace KamiLib.Atk;
 public unsafe class Tooltip : IDisposable
 {
     private SimpleEvent? eventHandlerInfo;
-    public bool TooltipEnabled = true;
+    private bool tooltipEnabled = true;
 
     private Func<string>? getTooltipTextAction;
 
@@ -30,13 +30,13 @@ public unsafe class Tooltip : IDisposable
         eventHandlerInfo.Dispose();
     }
 
-    public void ToggleTooltip(bool enabled) => TooltipEnabled = enabled;
+    public void ToggleTooltip(bool enabled) => tooltipEnabled = enabled;
 
     public void SetTooltipStringFunction(Func<string> func) => getTooltipTextAction = func;
     
     private void TooltipDelegate(AtkEventType eventType, AtkUnitBase* atkUnitBase, AtkResNode* node)
     {
-        if (!TooltipEnabled) return;
+        if (!tooltipEnabled) return;
         
         switch (eventType)
         {
