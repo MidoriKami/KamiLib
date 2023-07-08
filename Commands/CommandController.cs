@@ -131,6 +131,20 @@ public static class CommandController
         }
     }
 
+    public static void UnregisterCommands(object obj)
+    {
+        var methods = obj.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+        foreach (var method in methods)
+        {
+            BaseCommands.RemoveAll(commands => commands.Delegate.Target == obj);
+            
+            SingleTierCommands.RemoveAll(commands => commands.Delegate.Target == obj);
+            
+            DoubleTierCommands.RemoveAll(commands => commands.Delegate.Target == obj);
+        }
+    }
+
     public static void RegisterBaseCommand(BaseCommandDelegate function, BaseCommandHandler attribute) => BaseCommands.Add(new DelegateInfo<BaseCommandDelegate, BaseCommandHandler>(function, attribute));
     public static void RegisterSingleTierCommand(SingleTierCommandDelegate function, SingleTierCommandHandler attribute) => SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(function, attribute));
     public static void RegisterDoubleTierCommand(DoubleTierCommandDelegate function, DoubleTierCommandHandler attribute) => DoubleTierCommands.Add(new DelegateInfo<DoubleTierCommandDelegate, DoubleTierCommandHandler>(function, attribute));
