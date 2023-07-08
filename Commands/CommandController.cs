@@ -133,16 +133,11 @@ public static class CommandController
 
     public static void UnregisterCommands(object obj)
     {
-        var methods = obj.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-        foreach (var method in methods)
-        {
-            BaseCommands.RemoveAll(commands => commands.Delegate.Target == obj);
+        BaseCommands.RemoveAll(commands => commands.Delegate.Target == obj);
             
-            SingleTierCommands.RemoveAll(commands => commands.Delegate.Target == obj);
+        SingleTierCommands.RemoveAll(commands => commands.Delegate.Target == obj);
             
-            DoubleTierCommands.RemoveAll(commands => commands.Delegate.Target == obj);
-        }
+        DoubleTierCommands.RemoveAll(commands => commands.Delegate.Target == obj);
     }
 
     public static void RegisterBaseCommand(BaseCommandDelegate function, BaseCommandHandler attribute) => BaseCommands.Add(new DelegateInfo<BaseCommandDelegate, BaseCommandHandler>(function, attribute));
