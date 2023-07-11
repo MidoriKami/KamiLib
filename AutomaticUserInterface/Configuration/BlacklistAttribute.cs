@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Numerics;
 using System.Reflection;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Utility;
 using ImGuiNET;
+using KamiLib;
 using KamiLib.AutomaticUserInterface;
 using KamiLib.Caching;
 using KamiLib.Localization;
@@ -30,79 +30,60 @@ public class BlacklistAttribute : DrawableAttribute
 
     public BlacklistAttribute() : base(null)
     {
-        _searchResults = Search("", 10);
+        _searchResults = Search("", 5);
     }
     
     protected override void Draw(object obj, MemberInfo field, Action? saveAction = null)
     {
-        var hashSet = GetValue<HashSet<uint>>(obj, field);
-        var regionSize = ImGui.GetContentRegionAvail();
+        ImGui.Indent(-15.0f);
         
-        ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = regionSize.X * 0.15f / 2.0f } );
-        ImGui.PushItemWidth(regionSize.X * 0.85f);
+        var hashSet = GetValue<HashSet<uint>>(obj, field);
+        
+        DrawSearchBox();
+        DrawSearchResults(obj, field, saveAction, hashSet);
+        DrawCurrentlyBlacklisted(obj, field, saveAction, hashSet);
+        
+        ImGui.Indent(15.0f);
+    }
+    
+    private static void DrawSearchBox()
+    {
+        ImGui.PushItemWidth(ImGui.GetContentRegionAvail().X);
         if (ImGui.InputTextWithHint("##SearchBox", Strings.Search, ref _searchString, 64, ImGuiInputTextFlags.AutoSelectAll))
         {
-            _searchResults = Search(_searchString, 10);
+            _searchResults = Search(_searchString, 5);
         }
-
-        DrawSearchResults(obj, field, saveAction, hashSet);
-
-        ImGuiHelpers.ScaledDummy(5.0f);
-        
-        DrawCurrentlyBlacklisted(obj, field, saveAction, hashSet);
     }
 
     private void DrawSearchResults(object obj, MemberInfo field, Action? saveAction, IReadOnlySet<uint> hashSet)
     {
-        var regionSize = ImGui.GetContentRegionAvail();
-        var width = regionSize.X * 0.85f;
-        var height = 270.0f * ImGuiHelpers.GlobalScale;
-        
-        ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = regionSize.X * 0.15f / 2.0f } );
-        if (ImGui.BeginChild("##SearchResults", new Vector2(width, height), true, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
+        if (ImGui.BeginChild("##SearchResults", ImGui.GetContentRegionAvail() with { Y = 325.0f * ImGuiHelpers.GlobalScale }, false, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
         {
-            if (_searchResults is not null)
-            {
-                foreach (var result in _searchResults)
-                {
-                    if (hashSet.Contains(result.TerritoryID))
-                    {
-                        if (ImGuiComponents.IconButton($"RemoveButton{result.TerritoryID}", FontAwesomeIcon.Trash))
-                        {
-                            RemoveZone(obj, field, saveAction, result.TerritoryID);
-                        }
-                    }
-                    else
-                    {
-                        if (ImGuiComponents.IconButton($"AddButton{result.TerritoryID}", FontAwesomeIcon.Plus))
-                        {
-                            AddZone(obj, field, saveAction, result.TerritoryID);
-                        }
-                    }
+            if (_searchResults is null) return;
+            
+            ImGui.TextUnformatted("Current Area");
+            ImGui.Separator();
+            DrawConfigurableTerritoryLine("CurrentArea", obj, field, saveAction, hashSet, Service.ClientState.TerritoryType);
 
-                    ImGui.SameLine();
-
-                    DrawTerritory(result.TerritoryID);
-                }
-            }
+            ImGui.TextUnformatted("Search Results");
+            ImGui.Separator();
+            foreach (var result in _searchResults) DrawConfigurableTerritoryLine("SearchResult", obj, field, saveAction, hashSet, result.TerritoryID);
         }
         ImGui.EndChild();
+        
+        ImGuiHelpers.ScaledDummy(5.0f);
     }
     
     private void DrawCurrentlyBlacklisted(object obj, MemberInfo field, Action? saveAction, HashSet<uint> hashSet)
     {
-        var regionSize = ImGui.GetContentRegionAvail();
-        var width = regionSize.X * 0.85f;
-        var height = 270.0f * ImGuiHelpers.GlobalScale * 0.5f;
         var removalSet = new HashSet<uint>();
 
-        ImGui.SetCursorPos(ImGui.GetCursorPos() with { X = regionSize.X * 0.15f / 2.0f } );
-        if (ImGui.BeginChild("##CurrentlyBlacklisted", new Vector2(width, height), true))
+        if (ImGui.BeginChild("##CurrentlyBlacklisted", ImGui.GetContentRegionAvail() with { Y = 270.0f * ImGuiHelpers.GlobalScale * 0.5f }, false))
         {
-            if (hashSet.Count == 0)
-            {
-                ImGui.TextUnformatted(Strings.NothingBlacklisted);
-            }
+            ImGui.TextUnformatted("Currently Blacklisted");
+            ImGui.Separator();
+            
+            if (hashSet.Count is 0) ImGui.TextUnformatted(Strings.NothingBlacklisted);
 
             foreach (var zone in hashSet)
             {
@@ -122,6 +103,31 @@ public class BlacklistAttribute : DrawableAttribute
             }
         }
         ImGui.EndChild();
+    }
+    
+    private void DrawConfigurableTerritoryLine(string additionalId, object obj, MemberInfo field, Action? saveAction, IReadOnlySet<uint> hashSet, uint territoryId)
+    {
+        DrawAddRemoveButton(additionalId, obj, field, saveAction, hashSet, territoryId);
+        ImGui.SameLine();
+        DrawTerritory(territoryId);
+    }
+
+    private void DrawAddRemoveButton(string additionalId, object obj, MemberInfo field, Action? saveAction, IReadOnlySet<uint> hashSet, uint territoryId)
+    {
+        if (hashSet.Contains(territoryId))
+        {
+            if (ImGuiComponents.IconButton($"RemoveButton{territoryId}{additionalId}", FontAwesomeIcon.Trash))
+            {
+                RemoveZone(obj, field, saveAction, territoryId);
+            }
+        }
+        else
+        {
+            if (ImGuiComponents.IconButton($"AddButton{territoryId}{additionalId}", FontAwesomeIcon.Plus))
+            {
+                AddZone(obj, field, saveAction, territoryId);
+            }
+        }
     }
 
     private void AddZone(object obj, MemberInfo field, Action? saveAction, uint zone)
@@ -157,24 +163,35 @@ public class BlacklistAttribute : DrawableAttribute
             
             ImGui.TableNextColumn();
             ImGui.TextUnformatted(territoryName);
+
+            ImGui.TableNextColumn();
+            ImGui.TableNextColumn();
+            if (GetDutyNameForTerritoryType(zoneId) is { } dutyName && !dutyName.IsNullOrEmpty())
+            {
+                ImGui.TextColored(KnownColor.Gray.AsVector4(), dutyName);
+            }
+            else
+            {
+                ImGui.Text(string.Empty);
+            }
             
             ImGui.EndTable();
         }
     }
     
-    private static List<SearchResult> Search(string searchTerms, int numResults)
+    private static List<SearchResult> Search(string searchTerms, int numResults) => LuminaCache<TerritoryType>.Instance
+        .Where(territory => territory is { RowId: not 0, PlaceName.Value.RowId: not 0, QuestBattle.Row: 0, TerritoryIntendedUse: not 15 and not 29 })
+        .Where(territory => territory.PlaceName.Value!.Name.ToDalamudString().TextValue.ToLowerInvariant().Contains(searchTerms.ToLowerInvariant()))
+        .Select(territory => new SearchResult { TerritoryID = territory.RowId })
+        .OrderBy(searchResult => searchResult.TerritoryName)
+        .Take(numResults)
+        .ToList();
+
+    private static string? GetDutyNameForTerritoryType(uint territory)
     {
-        return LuminaCache<TerritoryType>.Instance
-            .Where(territory => territory.PlaceName.Row is not 0)
-            .Where(territory => territory.PlaceName.Value is not null)
-            .GroupBy(territory => territory.PlaceName.Value!.Name.ToDalamudString().TextValue)
-            .Select(territory => territory.First())
-            .Where(territory => territory.PlaceName.Value!.Name.ToDalamudString().TextValue.ToLower().Contains(searchTerms.ToLower()))
-            .Select(territory => new SearchResult {
-                TerritoryID = territory.RowId
-            })
-            .OrderBy(searchResult => searchResult.TerritoryName)
-            .Take(numResults)
-            .ToList();
+        if (LuminaCache<TerritoryType>.Instance.GetRow(territory) is not { ContentFinderCondition.Row: var cfcRow}) return null;
+        if (LuminaCache<ContentFinderCondition>.Instance.GetRow(cfcRow) is not { Name: var dutyName }) return null;
+
+        return dutyName.ToDalamudString().TextValue;
     }
 }
