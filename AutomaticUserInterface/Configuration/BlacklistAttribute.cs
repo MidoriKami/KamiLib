@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Dalamud.Interface;
@@ -192,6 +193,6 @@ public class BlacklistAttribute : DrawableAttribute
         if (LuminaCache<TerritoryType>.Instance.GetRow(territory) is not { ContentFinderCondition.Row: var cfcRow}) return null;
         if (LuminaCache<ContentFinderCondition>.Instance.GetRow(cfcRow) is not { Name: var dutyName }) return null;
 
-        return dutyName.ToDalamudString().TextValue;
+        return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(dutyName.ToDalamudString().TextValue);
     }
 }
