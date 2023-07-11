@@ -36,7 +36,7 @@ internal class CategoryData : IEquatable<CategoryData>
 
 internal class OrderedAttributeData
 {
-    public required IDictionary<CategoryData, List<AttributeData>> OrderedData { get; init; }
+    public required IOrderedEnumerable<KeyValuePair<CategoryData, List<AttributeData>>> OrderedData { get; init; }
 }
 
 internal class AttributeCache
@@ -103,6 +103,8 @@ internal class AttributeCache
         return new OrderedAttributeData
         {
             OrderedData = memberInfos
+                .OrderBy(data => data.Key.Group)
+                .ThenBy(data => data.Key.CategoryLabel)
         };
     }
 }

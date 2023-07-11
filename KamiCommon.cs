@@ -41,5 +41,6 @@ public static class KamiCommon
         IconCache.Cleanup();
         LocalizationManager.Cleanup();
         EventController.Cleanup();
+        CursorController.Cleanup();
     }
 }
