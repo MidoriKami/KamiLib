@@ -75,35 +75,22 @@ public class BlacklistAttribute : DrawableAttribute
         ImGuiHelpers.ScaledDummy(5.0f);
     }
     
-    private void DrawCurrentlyBlacklisted(object obj, MemberInfo field, Action? saveAction, HashSet<uint> hashSet)
+    private void DrawCurrentlyBlacklisted(object obj, MemberInfo field, Action? saveAction, IReadOnlyCollection<uint> hashSet)
     {
-        var removalSet = new HashSet<uint>();
+        ImGui.TextUnformatted("Currently Blacklisted");
+        ImGui.Separator();
 
-        if (ImGui.BeginChild("##CurrentlyBlacklisted", ImGui.GetContentRegionAvail() with { Y = 270.0f * ImGuiHelpers.GlobalScale * 0.5f }, false))
+        if (hashSet.Count is 0) ImGui.TextUnformatted(Strings.NothingBlacklisted);
+        uint? removalZone = null;
+
+        foreach (var zone in hashSet)
         {
-            ImGui.TextUnformatted("Currently Blacklisted");
-            ImGui.Separator();
-            
-            if (hashSet.Count is 0) ImGui.TextUnformatted(Strings.NothingBlacklisted);
-
-            foreach (var zone in hashSet)
-            {
-                if (ImGuiComponents.IconButton($"RemoveButton{zone}", FontAwesomeIcon.Trash))
-                {
-                    removalSet.Add(zone);
-                }
-
-                ImGui.SameLine();
-
-                DrawTerritory(zone);
-            }
-
-            foreach (var removalZone in removalSet)
-            {
-                RemoveZone(obj, field, saveAction, removalZone);
-            }
+            if (ImGuiComponents.IconButton($"RemoveButton{zone}", FontAwesomeIcon.Trash)) removalZone = zone;
+            ImGui.SameLine();
+            DrawTerritory(zone);
         }
-        ImGui.EndChild();
+
+        if(removalZone is { } toRemove) RemoveZone(obj, field, saveAction, toRemove);
     }
     
     private void DrawConfigurableTerritoryLine(string additionalId, object obj, MemberInfo field, Action? saveAction, IReadOnlySet<uint> hashSet, uint territoryId)
