@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Dalamud;
 using Lumina.Excel;
@@ -18,8 +19,8 @@ public class LuminaCache<T> : IEnumerable<T> where T : ExcelRow
         searchAction = action ?? (row => Service.DataManager.GetExcelSheet<T>()!.GetRow(row));
     }
 
-    private readonly Dictionary<uint, T> cache = new();
-    private readonly Dictionary<Tuple<uint, uint>, T> subRowCache = new ();
+    private readonly ConcurrentDictionary<uint, T> cache = new();
+    private readonly ConcurrentDictionary<Tuple<uint, uint>, T> subRowCache = new ();
 
     public ExcelSheet<T> OfLanguage(ClientLanguage language)
     {
