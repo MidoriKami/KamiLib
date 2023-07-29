@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using System.Linq;
+using Dalamud.Game.ClientState.Conditions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
@@ -81,4 +82,6 @@ public static class Condition
     {
         return Service.Condition[ConditionFlag.Performing];
     }
+
+    public static bool Any(params ConditionFlag[] flags) => flags.Any(conditionFlag => Service.Condition[conditionFlag]);
 }
