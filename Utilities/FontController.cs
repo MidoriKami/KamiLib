@@ -1,8 +1,7 @@
 ﻿using System;
 using Dalamud.Interface.GameFonts;
-using KamiLib;
 
-namespace DailyDuty.System;
+namespace KamiLib.System;
 
 public class FontController : IDisposable
 {
