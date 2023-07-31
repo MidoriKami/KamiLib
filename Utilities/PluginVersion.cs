@@ -10,11 +10,11 @@ public class PluginVersion
     private static PluginVersion? _instance;
     public static PluginVersion Instance => _instance ??= new PluginVersion();
 
-    private readonly string versionText;
+    public string VersionText { get; private set; }
     
     private PluginVersion()
     {
-        versionText = GetVersionText();
+        VersionText = GetVersionText();
     }
     
     private static string GetVersionText()
@@ -38,11 +38,11 @@ public class PluginVersion
     {
         var region = ImGui.GetContentRegionAvail();
 
-        var versionTextSize = ImGui.CalcTextSize(versionText) / 2.0f;
+        var versionTextSize = ImGui.CalcTextSize(VersionText) / 2.0f;
         var cursorStart = ImGui.GetCursorPos();
         cursorStart.X += region.X / 2.0f - versionTextSize.X;
 
         ImGui.SetCursorPos(cursorStart);
-        ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), versionText);
+        ImGui.TextColored(new Vector4(0.6f, 0.6f, 0.6f, 1.0f), VersionText);
     }
 }
