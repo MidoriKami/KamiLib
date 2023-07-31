@@ -1,10 +1,10 @@
 ﻿using System;
-using DailyDuty.System;
 using Dalamud.Plugin;
 using KamiLib.Atk;
 using KamiLib.Caching;
 using KamiLib.Commands;
 using KamiLib.Localization;
+using KamiLib.System;
 using KamiLib.Windows;
 
 namespace KamiLib;
