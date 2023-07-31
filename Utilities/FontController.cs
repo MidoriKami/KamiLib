@@ -5,15 +5,15 @@ namespace KamiLib.System;
 
 public class FontController : IDisposable
 {
-    public GameFontHandle Axis12 { get; }
-
-    public FontController()
-    {
-        Axis12 = Service.PluginInterface.UiBuilder.GetGameFontHandle( new GameFontStyle(GameFontFamilyAndSize.Axis12) );
-    }
+    private GameFontHandle? axis12;
+    private GameFontHandle? axis18;
+    
+    public GameFontHandle Axis12 => axis12 ??= Service.PluginInterface.UiBuilder.GetGameFontHandle( new GameFontStyle(GameFontFamilyAndSize.Axis12) );
+    public GameFontHandle Axis18 => axis18 ??= Service.PluginInterface.UiBuilder.GetGameFontHandle( new GameFontStyle(GameFontFamilyAndSize.Axis18) );
 
     public void Dispose()
     {
-        Axis12.Dispose();
+        axis12?.Dispose();
+        axis18?.Dispose();
     }
 }
