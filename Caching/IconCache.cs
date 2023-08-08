@@ -40,7 +40,7 @@ public class IconCache : IDisposable
             try
             {
                 var path = IconFilePath.Format(iconId / 1000, iconId);
-                var tex = _alternateGetTextureFunc is null ? Service.TextureProvider.GetTextureFromGame(path) : _alternateGetTextureFunc.Invoke(path);
+                var tex = _alternateGetTextureFunc is null ? Service.DataManager.GetImGuiTexture(path) : _alternateGetTextureFunc.Invoke(path);
 
                 if (tex is not null && tex.ImGuiHandle != nint.Zero) 
                 {
