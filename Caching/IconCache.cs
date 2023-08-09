@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Dalamud.Logging;
 using Dalamud.Utility;
 using ImGuiScene;
@@ -35,27 +34,24 @@ public class IconCache : IDisposable
         
     private void LoadIconTexture(uint iconId) 
     {
-        Task.Run(() => 
+        try
         {
-            try
-            {
-                var path = IconFilePath.Format(iconId / 1000, iconId);
-                var tex = _alternateGetTextureFunc is null ? Service.DataManager.GetImGuiTexture(path) : _alternateGetTextureFunc.Invoke(path);
+            var path = IconFilePath.Format(iconId / 1000, iconId);
+            var tex = _alternateGetTextureFunc is null ? Service.TextureProvider.GetIcon(iconId) : _alternateGetTextureFunc.Invoke(path);
 
-                if (tex is not null && tex.ImGuiHandle != nint.Zero) 
-                {
-                    iconTextures[iconId] = tex;
-                } 
-                else 
-                {
-                    tex?.Dispose();
-                }
-            } 
-            catch (Exception ex) 
+            if (tex is not null && tex.ImGuiHandle != nint.Zero) 
             {
-                PluginLog.LogError($"Failed loading texture for icon {iconId} - {ex.Message}");
+                iconTextures[iconId] = tex;
+            } 
+            else 
+            {
+                tex?.Dispose();
             }
-        });
+        } 
+        catch (Exception ex) 
+        {
+            PluginLog.LogError($"Failed loading texture for icon {iconId} - {ex.Message}");
+        }
     }
     
     public TextureWrap? GetIcon(uint iconId) 
@@ -67,5 +63,6 @@ public class IconCache : IDisposable
 
         return iconTextures[iconId];
     }
-    public void SetAlternativeGetTextureFunc(Func<string, TextureWrap?> getTexture) => _alternateGetTextureFunc = getTexture;
+
+    public static void SetAlternativeGetTextureFunc(Func<string, TextureWrap?> getTexture) => _alternateGetTextureFunc = getTexture;
 }
