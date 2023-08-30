@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Interface.Windowing;
+using KamiLib.ChatCommands;
 
 namespace KamiLib.Windows;
 
@@ -11,6 +12,7 @@ public class WindowManager : IDisposable
 
     private readonly List<Window> windows = new();
     private Window? configurationWindow;
+    private Action? openConfigWindow;
 
     public WindowManager()
     {
@@ -24,7 +26,7 @@ public class WindowManager : IDisposable
     public void Dispose()
     {
         Service.PluginInterface.UiBuilder.Draw -= DrawUI;
-        Service.PluginInterface.UiBuilder.OpenConfigUi -= DrawConfigUI;
+        Service.PluginInterface.UiBuilder.OpenConfigUi -= openConfigWindow;
 
         windowSystem.RemoveAllWindows();
     }
@@ -44,7 +46,18 @@ public class WindowManager : IDisposable
         windowSystem.AddWindow(configWindow);
         configurationWindow = configWindow;
         
-        Service.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+        openConfigWindow = () =>
+        {
+            if (!allowInDen && Service.ClientState.IsPvP)
+            {
+                Chat.PrintError("The configuration menu cannot be opened while in a PvP area");
+                return;
+            }
+            
+            configurationWindow?.Toggle();
+        };
+
+        Service.PluginInterface.UiBuilder.OpenConfigUi += openConfigWindow;
     }
 
     public void RemoveWindow(Window window)
@@ -57,7 +70,7 @@ public class WindowManager : IDisposable
 
     public T? GetWindowOfType<T>() => windows.OfType<T>().FirstOrDefault();
     private void DrawUI() => windowSystem.Draw();
-    private void DrawConfigUI() => configurationWindow?.Toggle();
+
     public void ToggleWindowOfType<T>() where T : Window
     {
         if (GetWindowOfType<T>() is { } window)
