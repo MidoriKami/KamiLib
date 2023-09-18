@@ -36,6 +36,12 @@ public static class CommandController
             {
                 ShowInHelp = false,
             });
+            
+            Service.Commands.AddHandler($"{alias} help", new CommandInfo(CommandHandler)
+            {
+                HelpMessage = "Display all available commands",
+                ShowInHelp = true,
+            });
         }
         
         SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(PrintHelpText, new SingleTierCommandHandler("HelpText", "help")));
