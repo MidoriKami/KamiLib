@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Reflection;
-using Dalamud.Logging;
 
 namespace KamiLib.Hooking;
 
@@ -23,10 +22,10 @@ public static class Safety
                 var callingClass = trace.GetMethod()?.DeclaringType;
                 var callingName = trace.GetMethod()?.Name;
                 
-                PluginLog.Error($"Exception Source: {callingAssembly} :: {callingClass} :: {callingName}");
+                Service.Log.Error($"Exception Source: {callingAssembly} :: {callingClass} :: {callingName}");
             }
 
-            PluginLog.Error(exception, message ?? "Caught Exception Safely");
+            Service.Log.Error(exception, message ?? "Caught Exception Safely");
         }
     }
 }

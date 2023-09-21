@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dalamud.Logging;
 using ImGuiScene;
 
 namespace KamiLib.Caching;
@@ -44,7 +43,7 @@ public class IconCache : IDisposable
         } 
         catch (Exception ex) 
         {
-            PluginLog.LogError($"Failed loading texture for icon {iconId} - {ex.Message}");
+            Service.Log.Error($"Failed loading texture for icon {iconId} - {ex.Message}");
         }
     }
     

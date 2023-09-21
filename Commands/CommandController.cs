@@ -6,7 +6,6 @@ using System.Reflection;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Logging;
 using KamiLib.ChatCommands;
 using KamiLib.Commands.Abstracts;
 using KamiLib.Localization;
@@ -58,7 +57,7 @@ public static class CommandController
     private static void CommandHandler(string command, string arguments)
     {
 #if DEBUG
-        PluginLog.Debug(string.IsNullOrEmpty(arguments) ? $"Received Command: {command}" : $"Received Command: {command}, {string.Join(", ", arguments.Split(" "))}");
+        Service.Log.Debug(string.IsNullOrEmpty(arguments) ? $"Received Command: {command}" : $"Received Command: {command}, {string.Join(", ", arguments.Split(" "))}");
 #endif
         var totalCommandCount = BaseCommands.Count + SingleTierCommands.Count + DoubleTierCommands.Count;
         if (totalCommandCount is 0)

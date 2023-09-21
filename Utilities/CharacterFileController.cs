@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Newtonsoft.Json;
 
@@ -45,7 +44,7 @@ public static unsafe class CharacterFileController
         }
         catch (Exception exception)
         {
-            PluginLog.Error(exception, $"[FileController] Failed to load file: {fileName}");
+            Service.Log.Error(exception, $"[FileController] Failed to load file: {fileName}");
 
             loadedData = null;
             return false;
@@ -67,7 +66,7 @@ public static unsafe class CharacterFileController
         }
         catch (Exception exception)
         {
-            PluginLog.Error(exception, $"[FileController] Failed to save file: {fileName}");
+            Service.Log.Error(exception, $"[FileController] Failed to save file: {fileName}");
         }
     }
 
@@ -94,7 +93,7 @@ public static unsafe class CharacterFileController
     private static void DebugPrint(string message)
     {
 #if DEBUG
-        PluginLog.Debug(message);
+        Service.Log.Debug(message);
 #endif
     }
 }
