@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Numerics;
-using Dalamud.Game.AddonEventManager;
+using Dalamud.Game.Addon;
 using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -61,18 +61,19 @@ public unsafe class TextNode : IDisposable, IAtkNode
         onClick = onClickAction;
         onClickEnabled = true;
     }
+    
     public void RemoveTooltip()
     {
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 1000, (nint) Node, AddonEventType.MouseOver);
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 2000, (nint) Node, AddonEventType.MouseOut);
+        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 1000);
+        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 2000);
         tooltipEnabled = false;
     }
     
     public void RemoveClickEvent()
     {
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 3000, (nint) Node, AddonEventType.MouseOver);
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 4000, (nint) Node, AddonEventType.MouseOut);
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 5000, (nint) Node, AddonEventType.MouseClick);
+        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 3000);
+        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 4000);
+        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 5000);
         onClickEnabled = false;
     }
     
