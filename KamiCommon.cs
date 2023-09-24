@@ -37,7 +37,6 @@ public static class KamiCommon
         CommandController.UnregisterMainCommands();
         DebugWindow.Cleanup();
         WindowManager.Dispose();
-        IconCache.Cleanup();
         LocalizationManager.Cleanup();
     }
 }
