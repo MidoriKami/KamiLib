@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Plugin;
-using KamiLib.Atk;
 using KamiLib.Caching;
 using KamiLib.Commands;
 using KamiLib.Localization;
@@ -40,7 +39,5 @@ public static class KamiCommon
         WindowManager.Dispose();
         IconCache.Cleanup();
         LocalizationManager.Cleanup();
-        EventController.Cleanup();
-        CursorController.Cleanup();
     }
 }

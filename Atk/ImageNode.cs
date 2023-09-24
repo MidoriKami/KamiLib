@@ -16,6 +16,7 @@ public class ImageNodeOptions
     public Vector4 Color { get; set; } = new(1.0f, 1.0f, 1.0f, 0.25f);
 }
 
+// todo: rebuild using DailyDuty
 public unsafe class ImageNode : IDisposable, IAtkNode
 {
     public AtkImageNode* Node { get; }

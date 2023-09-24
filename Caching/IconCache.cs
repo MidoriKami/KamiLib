@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dalamud.Logging;
-using ImGuiScene;
+using Dalamud.Interface.Internal;
 
 namespace KamiLib.Caching;
 
 public class IconCache : IDisposable
 {
-    private readonly Dictionary<uint, TextureWrap?> iconTextures = new();
+    private readonly Dictionary<uint, IDalamudTextureWrap?> iconTextures = new();
     
     private static IconCache? _instance;
     public static IconCache Instance => _instance ??= new IconCache();
@@ -44,11 +43,11 @@ public class IconCache : IDisposable
         } 
         catch (Exception ex) 
         {
-            PluginLog.LogError($"Failed loading texture for icon {iconId} - {ex.Message}");
+            Service.Log.Error($"Failed loading texture for icon {iconId} - {ex.Message}");
         }
     }
     
-    public TextureWrap? GetIcon(uint iconId) 
+    public IDalamudTextureWrap? GetIcon(uint iconId) 
     {
         if (iconTextures.TryGetValue(iconId, out var value)) return value;
 

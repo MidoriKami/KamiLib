@@ -13,6 +13,7 @@ public class ResNodeOptions
     public required Vector2 Position { get; set; }
 }
 
+// todo: rebuild using DailyDuty
 public unsafe class ResNode : IDisposable, IAtkNode
 {
     public AtkResNode* Node { get; }

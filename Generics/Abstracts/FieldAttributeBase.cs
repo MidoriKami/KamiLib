@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using Dalamud.Logging;
 
 namespace KamiLib.AutomaticUserInterface;
 
@@ -35,7 +34,7 @@ public abstract class FieldAttributeBase : AttributeBase
         }
         catch (Exception e)
         {
-            PluginLog.Error(e, "Reflection Error");
+            Service.Log.Error(e, "Reflection Error");
             throw;
         }
     }

@@ -41,11 +41,11 @@ public class EnumConfigAttribute : TabledDrawableAttribute
     {
         var valueChanged = false;
         
-        if (ImGui.BeginCombo($"##EnumCombo{value.GetType()}", value.GetLabel()))
+        if (ImGui.BeginCombo($"##EnumCombo{value.GetType()}", value.Label()))
         {
             foreach (Enum enumValue in Enum.GetValues(value.GetType()))
             {
-                if (ImGui.Selectable(enumValue.GetLabel(), enumValue.Equals(value)))
+                if (ImGui.Selectable(enumValue.Label(), enumValue.Equals(value)))
                 {
                     value = enumValue;
                     valueChanged = true;

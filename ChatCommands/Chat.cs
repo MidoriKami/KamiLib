@@ -6,7 +6,7 @@ namespace KamiLib.ChatCommands;
 
 public static class Chat
 {
-    public static void Print(string tag, string message) => Service.Chat.Print(GetBaseString(tag, message).BuiltString);
+    public static void Print(string tag, string message) => Service.Chat.Print(GetBaseString(tag, message).BuiltString, KamiCommon.PluginName, 45);
 
     public static void PrintHelp(string command, string? helpText = null)
     {
@@ -28,7 +28,7 @@ public static class Chat
             return;
         }
         
-        Service.Chat.Print(GetBaseString(tag, message, payload).BuiltString);
+        Service.Chat.Print(GetBaseString(tag, message, payload).BuiltString, KamiCommon.PluginName, 45);
     }
 
     public static void PrintError(string message) => Service.Chat.PrintError(GetBaseString(Strings.Common_Error, message).BuiltString);
@@ -38,14 +38,12 @@ public static class Chat
         if (payload is null)
         {
             return new SeStringBuilder()
-                .AddUiForeground($"[{KamiCommon.PluginName}] ", 45)
                 .AddUiForeground($"[{tag}] ", 62)
                 .AddText(message);
         }
         else
         {
             return new SeStringBuilder()
-                .AddUiForeground($"[{KamiCommon.PluginName}] ", 45)
                 .AddUiForeground($"[{tag}] ", 62)
                 .Add(payload)
                 .AddUiForeground(message, 35)

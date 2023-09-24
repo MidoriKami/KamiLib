@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Reflection;
+using Dalamud.Interface;
 using ImGuiNET;
 using KamiLib.Utilities;
 
@@ -20,7 +21,7 @@ public class BoolDisplayAttribute : LeftLabeledTabledDrawableAttribute
     {
         var boolData = GetValue<bool>(obj, field);
 
-        var color = boolData ? TrueColor.AsVector4() : FalseColor.AsVector4();
+        var color = boolData ? TrueColor.Vector() : FalseColor.Vector();
         var label = boolData ? TrueString : FalseString;
         
         ImGui.TextColored(color, label);

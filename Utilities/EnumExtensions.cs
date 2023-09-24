@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using Dalamud.Interface;
 using Dalamud.Utility;
 using KamiLib.AutomaticUserInterface;
 
@@ -12,7 +13,7 @@ public static class EnumExtensions
     private static readonly Dictionary<Enum, EnumLabelAttribute?> LabelAttributeCache = new();
     private static readonly Dictionary<Enum, DisplayColorAttribute?> DisplayColorAttributeCache = new();
 
-    public static string GetLabel(this Enum enumValue) 
+    public static string Label(this Enum enumValue) 
     {
         if (!LabelAttributeCache.ContainsKey(enumValue))
         {
@@ -24,7 +25,7 @@ public static class EnumExtensions
         return labelAttribute is not null ? labelAttribute.Label : enumValue.ToString();
     }
     
-    public static Vector4 GetColor(this Enum enumValue) 
+    public static Vector4 Color(this Enum enumValue) 
     {
         if (!DisplayColorAttributeCache.ContainsKey(enumValue))
         {
@@ -33,12 +34,6 @@ public static class EnumExtensions
 
         var colorAttribute = DisplayColorAttributeCache[enumValue];
         
-        return colorAttribute?.Color.AsVector4() ?? KnownColor.White.AsVector4();
-    }
-
-    public static Vector4 AsVector4(this KnownColor enumValue)
-    {
-        var enumColor = Color.FromKnownColor(enumValue);
-        return new Vector4(enumColor.R / 255.0f, enumColor.G / 255.0f, enumColor.B / 255.0f, enumColor.A / 255.0f);
+        return colorAttribute?.Color.Vector() ?? KnownColor.White.Vector();
     }
 }
