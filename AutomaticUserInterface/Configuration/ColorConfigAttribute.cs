@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 using System.Reflection;
+using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using ImGuiNET;
 using KamiLib.Utilities;
@@ -37,7 +38,7 @@ public class ColorConfigAttribute : DrawableAttribute
 
     public ColorConfigAttribute(string label, string hexColor) : base(label)
     {
-        DefaultColor = ColorTranslator.FromHtml(hexColor).ToKnownColor().AsVector4();
+        DefaultColor = ColorTranslator.FromHtml(hexColor).ToKnownColor().Vector();
     }
     
     protected override void Draw(object obj, MemberInfo field, Action? saveAction = null)

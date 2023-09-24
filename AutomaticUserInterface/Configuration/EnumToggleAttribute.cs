@@ -36,7 +36,7 @@ public class EnumToggleAttribute : DrawableAttribute
                 saveAction?.Invoke();
             }
             ImGui.SameLine();
-            ImGui.TextUnformatted(enumValue.GetLabel());
+            ImGui.TextUnformatted(enumValue.Label());
             
             ImGui.NextColumn();
         }

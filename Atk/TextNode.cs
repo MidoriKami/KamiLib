@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
-using Dalamud.Game.Addon;
+using Dalamud.Game.Addon.Events;
 using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -8,6 +10,7 @@ using KamiLib.Interfaces;
 
 namespace KamiLib.Atk;
 
+// todo: rebuild using DailyDuty
 public class TextNodeOptions
 {
     public NodeType Type { get; set; } = NodeType.Text;
@@ -31,6 +34,9 @@ public unsafe class TextNode : IDisposable, IAtkNode
 
     private bool onClickEnabled;
     private bool tooltipEnabled;
+
+    private readonly List<IAddonEventHandle?> tooltipHandles = new();
+    private readonly List<IAddonEventHandle?> clickHandles = new();
     
     public TextNode(TextNodeOptions options)
     {
@@ -48,32 +54,43 @@ public unsafe class TextNode : IDisposable, IAtkNode
 
     public void AddTooltip(AtkUnitBase* parentAddon)
     {
-        Service.EventManager.AddEvent(Node->AtkResNode.NodeID + 1000, (nint) parentAddon, (nint) Node, AddonEventType.MouseOver, HandleTooltip);
-        Service.EventManager.AddEvent(Node->AtkResNode.NodeID + 2000, (nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleTooltip);
+        tooltipHandles.AddRange(new List<IAddonEventHandle?>
+        {
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOver, HandleTooltip),
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleTooltip),
+        });
+
         tooltipEnabled = true;
     }
     
     public void AddClickEvent(AtkUnitBase* parentAddon, Action onClickAction)
     {
-        Service.EventManager.AddEvent(Node->AtkResNode.NodeID + 3000, (nint) parentAddon, (nint) Node, AddonEventType.MouseOver, HandleOnClick);
-        Service.EventManager.AddEvent(Node->AtkResNode.NodeID + 4000, (nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleOnClick);
-        Service.EventManager.AddEvent(Node->AtkResNode.NodeID + 5000, (nint) parentAddon, (nint) Node, AddonEventType.MouseClick, HandleOnClick);
+        clickHandles.AddRange(new List<IAddonEventHandle?>
+        {
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOver, HandleOnClick),
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleOnClick),
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseClick, HandleOnClick),
+        });
+
         onClick = onClickAction;
         onClickEnabled = true;
     }
     
     public void RemoveTooltip()
     {
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 1000);
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 2000);
+        foreach (var tooltipHandle in tooltipHandles.OfType<IAddonEventHandle>())
+        {
+            Service.EventManager.RemoveEvent(tooltipHandle);
+        }
         tooltipEnabled = false;
     }
     
     public void RemoveClickEvent()
     {
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 3000);
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 4000);
-        Service.EventManager.RemoveEvent(Node->AtkResNode.NodeID + 5000);
+        foreach (var tooltipHandle in clickHandles.OfType<IAddonEventHandle>())
+        {
+            Service.EventManager.RemoveEvent(tooltipHandle);
+        }
         onClickEnabled = false;
     }
     

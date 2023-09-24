@@ -37,7 +37,7 @@ public class RadioEnumConfigAttribute : RightLabeledTabledDrawableAttribute
         {
             if (!firstLine) ImGui.SameLine();
             
-            if (ImGui.RadioButton(enumValue.GetLabel(), enumValue.Equals(enumObject)))
+            if (ImGui.RadioButton(enumValue.Label(), enumValue.Equals(enumObject)))
             {
                 SetValue(obj, field, enumValue);
                 saveAction?.Invoke();

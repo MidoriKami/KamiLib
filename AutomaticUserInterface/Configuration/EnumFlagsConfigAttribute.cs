@@ -35,7 +35,7 @@ public class EnumFlagsConfigAttribute : EnumConfigAttribute
                 
                 ImGui.SameLine();
                 
-                if (ImGui.Selectable(enumValue.GetLabel(), false))
+                if (ImGui.Selectable(enumValue.Label(), false))
                 {
                     var sourceValue = Convert.ToInt32(value);
                     var targetValue = Convert.ToInt32(enumValue);

@@ -148,7 +148,7 @@ public class BlacklistAttribute : DrawableAttribute
             ImGui.TableSetupColumn($"##Label{zone.RowId}");
 
             ImGui.TableNextColumn();
-            ImGui.TextColored(KnownColor.Gray.AsVector4(), zone.RowId.ToString());
+            ImGui.TextColored(KnownColor.Gray.Vector(), zone.RowId.ToString());
             
             ImGui.TableNextColumn();
             ImGui.TextUnformatted(territoryName);
@@ -157,7 +157,7 @@ public class BlacklistAttribute : DrawableAttribute
             ImGui.TableNextColumn();
             if (GetDutyNameForTerritoryType(zoneId) is { } dutyName && !dutyName.IsNullOrEmpty())
             {
-                ImGui.TextColored(KnownColor.Gray.AsVector4(), dutyName);
+                ImGui.TextColored(KnownColor.Gray.Vector(), dutyName);
             }
             else
             {
