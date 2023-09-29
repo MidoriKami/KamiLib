@@ -24,7 +24,13 @@ public class DebugWindow : Window
         IsOpen = true;
     }
     
-    public static void Cleanup() => KamiCommon.WindowManager.RemoveWindow(Instance);
+    public static void Cleanup()
+    {
+        if (_instance is not null)
+        {
+            KamiCommon.WindowManager.RemoveWindow(Instance);
+        }
+    }
 
     public override void Draw()
     {
