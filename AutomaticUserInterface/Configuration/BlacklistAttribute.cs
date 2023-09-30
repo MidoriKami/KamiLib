@@ -12,7 +12,6 @@ using KamiLib;
 using KamiLib.AutomaticUserInterface;
 using KamiLib.Caching;
 using KamiLib.Localization;
-using KamiLib.Utilities;
 using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Plugin;
-using KamiLib.Caching;
 using KamiLib.Commands;
 using KamiLib.Localization;
 using KamiLib.System;
