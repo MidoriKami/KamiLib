@@ -7,18 +7,6 @@ namespace KamiLib.ChatCommands;
 public static class Chat
 {
     public static void Print(string tag, string message) => Service.Chat.Print(GetBaseString(tag, message).BuiltString, KamiCommon.PluginName, 45);
-
-    public static void PrintHelp(string command, string? helpText = null)
-    {
-        var message = GetBaseString(Strings.Command_Label, command);
-
-        if (helpText is not null)
-        {
-            message.AddUiForeground("- " + helpText, 32);
-        }
-
-        Service.Chat.Print(message.BuiltString);
-    }
     
     public static void Print(string tag, string message, DalamudLinkPayload? payload)
     {
