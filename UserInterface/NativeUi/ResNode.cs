@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.Interfaces;
 
-namespace KamiLib.UserInterface.Native;
+namespace KamiLib.NativeUi;
 
 public class ResNodeOptions
 {
@@ -34,7 +34,7 @@ public unsafe class ResNode : IDisposable, IAtkNode
     public void Dispose()
     {
         Node->Destroy(false);
-        IMemorySpace.Free(Node, (ulong)sizeof(AtkResNode));
+        IMemorySpace.Free(Node, (ulong) sizeof(AtkResNode));
     }
 
     public void AddResourceNode(IAtkNode newNode, AtkUnitBase* container)
@@ -59,7 +59,7 @@ public unsafe class ResNode : IDisposable, IAtkNode
             {
                 currentNode = currentNode->PrevSiblingNode;
             }
-            
+
             newResNode->ParentNode = Node;
             newResNode->NextSiblingNode = currentNode;
             currentNode->PrevSiblingNode = newResNode;
@@ -67,7 +67,7 @@ public unsafe class ResNode : IDisposable, IAtkNode
             newResNode->ChildNode = null;
             Node->ChildCount++;
         }
-        
+
         container->UldManager.UpdateDrawNodeList();
     }
 }

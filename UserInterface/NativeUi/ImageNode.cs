@@ -5,7 +5,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.Interfaces;
 
-namespace KamiLib.UserInterface.Native;
+namespace KamiLib.NativeUi;
 
 public class ImageNodeOptions
 {
@@ -21,43 +21,43 @@ public unsafe class ImageNode : IDisposable, IAtkNode
 {
     public AtkImageNode* Node { get; }
     public AtkResNode* ResourceNode => (AtkResNode*) Node;
-
+    
     public ImageNode(ImageNodeOptions options)
     {
         Node = IMemorySpace.GetUISpace()->Create<AtkImageNode>();
-        
+
         var partsList = (AtkUldPartsList*) IMemorySpace.GetUISpace()->Malloc((ulong) sizeof(AtkUldPartsList), 8);
         partsList->Id = 1;
         partsList->Parts = null;
         partsList->PartCount = 1;
-        
-        var part = (AtkUldPart*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldPart), 8);
+
+        var part = (AtkUldPart*) IMemorySpace.GetUISpace()->Malloc((ulong) sizeof(AtkUldPart), 8);
         part->U = 0;
         part->V = 0;
         part->Width = 0;
         part->Height = 0;
-        
-        var asset = (AtkUldAsset*)IMemorySpace.GetUISpace()->Malloc((ulong)sizeof(AtkUldAsset), 8);
+
+        var asset = (AtkUldAsset*) IMemorySpace.GetUISpace()->Malloc((ulong) sizeof(AtkUldAsset), 8);
         asset->Id = 1;
         asset->AtkTexture.Ctor();
 
         part->UldAsset = asset;
         partsList->Parts = part;
         Node->PartsList = partsList;
-        
+
         Node->AtkResNode.NodeFlags = NodeFlags.EmitsEvents | NodeFlags.Enabled | NodeFlags.AnchorLeft;
         Node->AtkResNode.Color = options.Color.ToByteColor();
         UpdateOptions(options);
     }
-    
+
     public void Dispose()
     {
         IMemorySpace.Free(Node->PartsList->Parts->UldAsset, (ulong) sizeof(AtkUldAsset));
-        IMemorySpace.Free(Node->PartsList->Parts, (ulong)sizeof(AtkUldPart));
-        IMemorySpace.Free(Node->PartsList, (ulong)sizeof(AtkUldPartsList));
-        
+        IMemorySpace.Free(Node->PartsList->Parts, (ulong) sizeof(AtkUldPart));
+        IMemorySpace.Free(Node->PartsList, (ulong) sizeof(AtkUldPartsList));
+
         Node->AtkResNode.Destroy(false);
-        IMemorySpace.Free(Node, (ulong)sizeof(AtkImageNode));
+        IMemorySpace.Free(Node, (ulong) sizeof(AtkImageNode));
     }
 
     public void UpdateOptions(ImageNodeOptions options)

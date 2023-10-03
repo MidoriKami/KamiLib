@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace KamiLib.UserInterface.Native;
+namespace KamiLib.NativeUi;
 
 public static unsafe class Node
 {
-    public static T* GetNodeByID<T>(AtkUldManager uldManager, uint nodeId) where T : unmanaged 
+    public static T* GetNodeByID<T>(AtkUldManager uldManager, uint nodeId) where T : unmanaged
     {
         foreach (var index in Enumerable.Range(0, uldManager.NodeListCount))
         {
@@ -14,10 +14,10 @@ public static unsafe class Node
 
             return (T*) currentNode;
         }
-        
+
         return null;
     }
-    
+
     public static void LinkNodeAtEnd(AtkResNode* resNode, AtkUnitBase* parent)
     {
         var node = parent->RootNode->ChildNode;
@@ -28,7 +28,7 @@ public static unsafe class Node
         resNode->ParentNode = node->ParentNode;
 
         node->ChildCount++;
-        
+
         parent->UldManager.UpdateDrawNodeList();
     }
 
@@ -43,7 +43,7 @@ public static unsafe class Node
         {
             resNode->NextSiblingNode->PrevSiblingNode = resNode->PrevSiblingNode;
         }
-        
+
         parent->UldManager.UpdateDrawNodeList();
     }
 
@@ -59,7 +59,7 @@ public static unsafe class Node
         {
             rootNode->ChildNode->NextSiblingNode = resNode;
         }
-        
+
         rootNode->ChildNode = resNode;
 
         parent->UldManager.UpdateDrawNodeList();
@@ -69,14 +69,14 @@ public static unsafe class Node
     {
         if (!IsAddonReady(parent)) return;
         if (parent->RootNode->ChildNode->NodeID != resNode->NodeID) return;
-        
+
         var rootNode = parent->RootNode;
-        
+
         if (resNode->PrevSiblingNode is not null)
         {
             resNode->PrevSiblingNode->NextSiblingNode = null;
         }
-        
+
         rootNode->ChildNode = resNode->PrevSiblingNode;
 
         parent->UldManager.UpdateDrawNodeList();

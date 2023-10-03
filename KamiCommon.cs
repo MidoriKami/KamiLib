@@ -1,9 +1,7 @@
 ﻿using System;
 using Dalamud.Plugin;
-using KamiLib.Commands;
-using KamiLib.Localization;
 using KamiLib.System;
-using KamiLib.Windows;
+using KamiLib.UserInterface;
 
 namespace KamiLib;
 
@@ -13,7 +11,7 @@ public static class KamiCommon
     public static WindowManager WindowManager { get; private set; } = null!;
     public static LocalizationWrapper? Localization { get; private set; }
     public static FontController FontManager { get; private set; } = null!;
-    
+
     public static void Initialize(DalamudPluginInterface pluginInterface, string pluginName)
     {
         pluginInterface.Create<Service>();
@@ -26,10 +24,13 @@ public static class KamiCommon
         WindowManager = new WindowManager();
     }
 
-    public static void RegisterLocalizationHandler(Func<string, string?> handler) => Localization = new LocalizationWrapper
+    public static void RegisterLocalizationHandler(Func<string, string?> handler)
     {
-        GetTranslatedString = handler,
-    };
+        Localization = new LocalizationWrapper
+        {
+            GetTranslatedString = handler
+        };
+    }
 
     public static void Dispose()
     {

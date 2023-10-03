@@ -14,10 +14,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="LICENSE" />
-        <None Remove=".gitignore" />
+        <None Remove="LICENSE"/>
+        <None Remove=".gitignore"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <Reference Include="FFXIVClientStructs">
             <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
@@ -50,17 +50,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Localization\Strings.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <Folder Include="Plugin\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Localization\Strings.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>Strings.resx</DependentUpon>
-      </Compile>
+        <EmbeddedResource Update="Systems\Localization\Strings.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 </Project>

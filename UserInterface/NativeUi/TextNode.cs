@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.Interfaces;
 
-namespace KamiLib.UserInterface.Native;
+namespace KamiLib.NativeUi;
 
 // todo: rebuild using DailyDuty
 public class TextNodeOptions
@@ -29,19 +29,22 @@ public unsafe class TextNode : IDisposable, IAtkNode
 {
     public AtkTextNode* Node { get; }
 
-    private Action? onClick;
+    public AtkResNode* ResourceNode => (AtkResNode*) Node;
+    
+    private readonly List<IAddonEventHandle?> clickHandles = new();
+
+    private readonly List<IAddonEventHandle?> tooltipHandles = new();
     private Func<string>? getTooltip;
+
+    private Action? onClick;
 
     private bool onClickEnabled;
     private bool tooltipEnabled;
 
-    private readonly List<IAddonEventHandle?> tooltipHandles = new();
-    private readonly List<IAddonEventHandle?> clickHandles = new();
-    
     public TextNode(TextNodeOptions options)
     {
         Node = IMemorySpace.GetUISpace()->Create<AtkTextNode>();
-        
+
         Node->AtkResNode.NodeFlags = NodeFlags.Enabled | NodeFlags.RespondToMouse | NodeFlags.HasCollision | NodeFlags.EmitsEvents;
         UpdateOptions(options);
     }
@@ -49,7 +52,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
     public void Dispose()
     {
         Node->AtkResNode.Destroy(false);
-        IMemorySpace.Free(Node, (ulong)sizeof(AtkTextNode));
+        IMemorySpace.Free(Node, (ulong) sizeof(AtkTextNode));
     }
 
     public void AddTooltip(AtkUnitBase* parentAddon)
@@ -57,25 +60,25 @@ public unsafe class TextNode : IDisposable, IAtkNode
         tooltipHandles.AddRange(new List<IAddonEventHandle?>
         {
             Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOver, HandleTooltip),
-            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleTooltip),
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleTooltip)
         });
 
         tooltipEnabled = true;
     }
-    
+
     public void AddClickEvent(AtkUnitBase* parentAddon, Action onClickAction)
     {
         clickHandles.AddRange(new List<IAddonEventHandle?>
         {
             Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOver, HandleOnClick),
             Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseOut, HandleOnClick),
-            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseClick, HandleOnClick),
+            Service.EventManager.AddEvent((nint) parentAddon, (nint) Node, AddonEventType.MouseClick, HandleOnClick)
         });
 
         onClick = onClickAction;
         onClickEnabled = true;
     }
-    
+
     public void RemoveTooltip()
     {
         foreach (var tooltipHandle in tooltipHandles.OfType<IAddonEventHandle>())
@@ -84,7 +87,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
         }
         tooltipEnabled = false;
     }
-    
+
     public void RemoveClickEvent()
     {
         foreach (var tooltipHandle in clickHandles.OfType<IAddonEventHandle>())
@@ -93,13 +96,22 @@ public unsafe class TextNode : IDisposable, IAtkNode
         }
         onClickEnabled = false;
     }
-    
-    public void SetTooltipStringFunction(Func<string> getTooltipFunc) => getTooltip = getTooltipFunc;
 
-    public void ToggleTooltip(bool enabled) => tooltipEnabled = enabled;
-    
-    public void ToggleClickEvent(bool enabled) => onClickEnabled = enabled;
-    
+    public void SetTooltipStringFunction(Func<string> getTooltipFunc)
+    {
+        getTooltip = getTooltipFunc;
+    }
+
+    public void ToggleTooltip(bool enabled)
+    {
+        tooltipEnabled = enabled;
+    }
+
+    public void ToggleClickEvent(bool enabled)
+    {
+        onClickEnabled = enabled;
+    }
+
     public void UpdateOptions(TextNodeOptions options)
     {
         Node->AtkResNode.Type = options.Type;
@@ -113,7 +125,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
         Node->FontSize = options.FontSize;
         Node->TextFlags = (byte) options.Flags;
     }
-    
+
     private void HandleTooltip(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode)
     {
         var addon = (AtkUnitBase*) atkUnitBase;
@@ -126,7 +138,7 @@ public unsafe class TextNode : IDisposable, IAtkNode
                 case AddonEventType.MouseOver:
                     AtkStage.GetSingleton()->TooltipManager.ShowTooltip(addon->ID, node, getTooltip.Invoke());
                     break;
-            
+
                 case AddonEventType.MouseOut:
                     AtkStage.GetSingleton()->TooltipManager.HideTooltip(addon->ID);
                     break;
@@ -143,17 +155,15 @@ public unsafe class TextNode : IDisposable, IAtkNode
                 case AddonEventType.MouseOver:
                     Service.EventManager.SetCursor(AddonCursorType.Clickable);
                     break;
-            
+
                 case AddonEventType.MouseOut:
                     Service.EventManager.ResetCursor();
                     break;
-            
+
                 case AddonEventType.MouseClick:
                     onClick.Invoke();
                     break;
             }
         }
     }
-
-    public AtkResNode* ResourceNode => (AtkResNode*) Node;
 }
