@@ -4,7 +4,7 @@ using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
-namespace KamiLib.Atk;
+namespace KamiLib.UserInterface.Native;
 
 public class AtkValueHelper
 {

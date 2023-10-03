@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace KamiLib.Atk;
+namespace KamiLib.UserInterface.Native;
 
 public static unsafe class Node
 {

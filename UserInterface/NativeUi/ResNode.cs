@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.Interfaces;
 
-namespace KamiLib.Atk;
+namespace KamiLib.UserInterface.Native;
 
 public class ResNodeOptions
 {

@@ -2,7 +2,7 @@
 using KamiLib.Caching;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.GameState;
+namespace KamiLib.Game;
 
 public static class Condition
 {
