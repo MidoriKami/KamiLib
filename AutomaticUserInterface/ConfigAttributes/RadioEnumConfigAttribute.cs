@@ -4,7 +4,7 @@ using Dalamud.Interface.Components;
 using ImGuiNET;
 using KamiLib.Utilities;
 
-namespace KamiLib.AutomaticUserInterface.Configuration;
+namespace KamiLib.AutomaticUserInterface;
 
 public class RadioEnumConfigAttribute : RightLabeledTabledDrawableAttribute
 {

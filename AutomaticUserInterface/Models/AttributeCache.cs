@@ -64,7 +64,7 @@ internal class AttributeCache
             foreach (var member in implementation.GetMembers(BindingFlags.Public | BindingFlags.Instance))
             {
                 if(member is not {MemberType: MemberTypes.Field or MemberTypes.Property}) continue;
-                if(member.IsDefined(typeof(Disabled))) disabledMembers.Add(member.Name);
+                if(member.IsDefined(typeof(DisabledAttribute))) disabledMembers.Add(member.Name);
             }
         }
         

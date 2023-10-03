@@ -2,7 +2,7 @@
 
 namespace KamiLib.AutomaticUserInterface;
 
-public class Disabled : Attribute
+public class DisabledAttribute : Attribute
 {
     
 }
