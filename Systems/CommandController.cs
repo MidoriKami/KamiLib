@@ -36,14 +36,12 @@ public static class CommandController
                 ShowInHelp = false
             });
 
-            Service.Commands.AddHandler($"{alias} help", new CommandInfo(CommandHandler)
+            Service.Commands.AddHandler($"{alias} help", new CommandInfo(PrintHelpText)
             {
                 HelpMessage = "Display all available commands",
                 ShowInHelp = true
             });
         }
-
-        SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(PrintHelpText, new SingleTierCommandHandler("HelpText", "help")));
     }
 
     public static void UnregisterMainCommands()
@@ -158,7 +156,7 @@ public static class CommandController
         DoubleTierCommands.Add(new DelegateInfo<DoubleTierCommandDelegate, DoubleTierCommandHandler>(function, attribute));
     }
 
-    private static void PrintHelpText()
+    private static void PrintHelpText(string command, string arguments)
     {
         Chat.Print(Strings.Command_Label, "Displaying all available commands");
 
