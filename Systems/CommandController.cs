@@ -57,6 +57,11 @@ public static class CommandController
 #if DEBUG
         Service.Log.Debug(string.IsNullOrEmpty(arguments) ? $"Received Command: {command}" : $"Received Command: {command}, {string.Join(", ", arguments.Split(" "))}");
 #endif
+        if (arguments is "help")
+        {
+            PrintHelpText(command, arguments);
+        }
+        
         var totalCommandCount = BaseCommands.Count + SingleTierCommands.Count + DoubleTierCommands.Count;
         if (totalCommandCount is 0)
         {
@@ -171,6 +176,7 @@ public static class CommandController
 
         Service.Chat.Print(stringBuilder.Build());
     }
+    
     private static void AddDoubleTierCommands(SeStringBuilder stringBuilder)
     {
         if (DoubleTierCommands.Count > 0)
