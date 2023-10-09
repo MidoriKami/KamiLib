@@ -130,7 +130,6 @@ public class TerritorySearchModal
             .Where(territory => territory is { RowId: not 0, PlaceName.Value.RowId: not 0, QuestBattle.Row: 0, TerritoryIntendedUse: not 15 and not 29 })
             .Where(territory => territory.PlaceName.Value!.Name.ToDalamudString().TextValue.ToLowerInvariant().Contains(searchString.ToLowerInvariant()))
             .OrderBy(searchResult => searchResult.RowId)
-            .Prepend(LuminaCache<TerritoryType>.Instance.GetRow(Service.ClientState.TerritoryType)!)
             .ToList();
     }
     
