@@ -8,14 +8,12 @@ using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility;
 using Dalamud.Utility;
 using ImGuiNET;
-using KamiLib;
-using KamiLib.AutomaticUserInterface;
 using KamiLib.Game;
 using KamiLib.Localization;
 using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
 
-namespace NoTankYou.Models.Attributes;
+namespace KamiLib.AutomaticUserInterface;
 
 // todo: use listclipper
 public class BlacklistAttribute : DrawableAttribute

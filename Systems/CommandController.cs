@@ -36,14 +36,12 @@ public static class CommandController
                 ShowInHelp = false
             });
 
-            Service.Commands.AddHandler($"{alias} help", new CommandInfo(CommandHandler)
+            Service.Commands.AddHandler($"{alias} help", new CommandInfo(PrintHelpText)
             {
                 HelpMessage = "Display all available commands",
                 ShowInHelp = true
             });
         }
-
-        SingleTierCommands.Add(new DelegateInfo<SingleTierCommandDelegate, SingleTierCommandHandler>(PrintHelpText, new SingleTierCommandHandler("HelpText", "help")));
     }
 
     public static void UnregisterMainCommands()
@@ -59,6 +57,11 @@ public static class CommandController
 #if DEBUG
         Service.Log.Debug(string.IsNullOrEmpty(arguments) ? $"Received Command: {command}" : $"Received Command: {command}, {string.Join(", ", arguments.Split(" "))}");
 #endif
+        if (arguments is "help")
+        {
+            PrintHelpText(command, arguments);
+        }
+        
         var totalCommandCount = BaseCommands.Count + SingleTierCommands.Count + DoubleTierCommands.Count;
         if (totalCommandCount is 0)
         {
@@ -158,7 +161,7 @@ public static class CommandController
         DoubleTierCommands.Add(new DelegateInfo<DoubleTierCommandDelegate, DoubleTierCommandHandler>(function, attribute));
     }
 
-    private static void PrintHelpText()
+    private static void PrintHelpText(string command, string arguments)
     {
         Chat.Print(Strings.Command_Label, "Displaying all available commands");
 
@@ -173,6 +176,7 @@ public static class CommandController
 
         Service.Chat.Print(stringBuilder.Build());
     }
+    
     private static void AddDoubleTierCommands(SeStringBuilder stringBuilder)
     {
         if (DoubleTierCommands.Count > 0)
