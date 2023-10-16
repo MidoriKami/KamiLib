@@ -13,6 +13,8 @@ public abstract class TabbedSelectionWindow : SelectionWindow
     private bool suppressSelectionSystem;
     protected bool Reorderable { get; set; } = true;
 
+    protected bool RegularTabScrollBar = true;
+
     protected TabbedSelectionWindow(string windowName, float height = 0, float initialSelectionWidth = 250.0f) : base(windowName, height, initialSelectionWidth)
     {
     }
@@ -49,7 +51,7 @@ public abstract class TabbedSelectionWindow : SelectionWindow
 
                 if (ImGui.BeginTabItem(tab.TabName))
                 {
-                    if (ImGui.BeginChild("##TabChild", -Vector2.One, false, ImGuiWindowFlags.AlwaysVerticalScrollbar))
+                    if (ImGui.BeginChild("##TabChild", -Vector2.One, false, RegularTabScrollBar ? ImGuiWindowFlags.AlwaysVerticalScrollbar : ImGuiWindowFlags.None))
                     {
                         tab.Draw();
                     }
