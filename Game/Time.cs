@@ -56,6 +56,10 @@ public static class Time
         return nextReset.Date.AddHours(hour);
     }
 
+    public class DatacenterException : Exception {
+        
+    }
+    
     public static DateTime NextJumboCactpotReset()
     {
         var region = LookupDatacenterRegion(Service.ClientState.LocalPlayer?.HomeWorld.GameData?.DataCenter.Row);
@@ -73,9 +77,12 @@ public static class Time
 
             // Australia
             4 => NextDayOfWeek(DayOfWeek.Saturday, 9),
+            
+            // Cloud
+            7 => NextDayOfWeek(DayOfWeek.Sunday, 2),
 
             // Unknown Region
-            _ => DateTime.MinValue
+            _ => throw new DatacenterException()
         };
     }
 

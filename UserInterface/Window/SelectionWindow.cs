@@ -59,7 +59,7 @@ public abstract class SelectionWindow : Window, IDrawable
             ImGui.EndChild();
 
             ImGui.TableNextColumn();
-            if (ImGui.BeginChild($"###{KamiCommon.PluginName}RightSide", Vector2.Zero, ShowBorders, (ShowScrollBar ? ImGuiWindowFlags.AlwaysVerticalScrollbar : ImGuiWindowFlags.None) | ImGuiWindowFlags.NoDecoration))
+            if (ImGui.BeginChild($"###{KamiCommon.PluginName}RightSide", Vector2.Zero, ShowBorders, (ShowScrollBar ? ImGuiWindowFlags.AlwaysVerticalScrollbar : ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse) | ImGuiWindowFlags.NoDecoration))
             {
                 selectionList.DrawSelected();
             }
