@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
-using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.Text.SeStringHandling;
@@ -12,6 +9,7 @@ using Dalamud.Memory;
 using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiLib.KamiToolKit.Controllers;
 using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.KamiToolKit.Nodes;
@@ -20,10 +18,9 @@ public unsafe class TextNode : ResourceNode, ITextNode {
     public override AtkResNode* ResNode { get; protected set; }
     public override NodeType NodeType => NodeType.Text;
 
-    private readonly AtkUnitBase* addon;
+    private readonly TooltipHandler tooltipHandler;
+    private readonly ClickHandler clickHandler;
     private bool isDisposed;
-    private readonly List<IAddonEventHandle?> clickHandles = new();
-    private readonly List<IAddonEventHandle?> tooltipHandles = new();
 
     private AtkTextNode* ContainedTextNode {
         get => (AtkTextNode*)ResNode; 
@@ -31,7 +28,8 @@ public unsafe class TextNode : ResourceNode, ITextNode {
     }
     
     public TextNode(AtkUnitBase* addon) {
-        this.addon = addon;
+        tooltipHandler = new TooltipHandler(this, addon);
+        clickHandler = new ClickHandler(this, addon);
 
         AllocateTextNode();
         SetDefaults();
@@ -74,60 +72,20 @@ public unsafe class TextNode : ResourceNode, ITextNode {
         set => ContainedTextNode->TextFlags = (byte) value;
     }
 
-    private string? internalTooltip;
-    public string? Tooltip {
-        set {
-            if (internalTooltip is null && value is not null) {
-                tooltipHandles.AddRange(new List<IAddonEventHandle?>
-                {
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseOver, HandleTooltip),
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseOut, HandleTooltip)
-                });
-
-                internalTooltip = value;
-            }
-            else if (internalTooltip is not null && value is null) {
-                foreach (var tooltipHandle in tooltipHandles.OfType<IAddonEventHandle>()) {
-                    Service.EventManager.RemoveEvent(tooltipHandle);
-                }
-                tooltipHandles.Clear();
-
-                internalTooltip = null;
-            }
-        }
+    public SeString? Tooltip {
+        set => tooltipHandler.Text = value;
     }
 
-    private Action? internalOnClick;
     public Action? OnClick {
-        set {
-            if (internalOnClick is null && value is not null) {
-                clickHandles.AddRange(new List<IAddonEventHandle?>
-                {
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseOver, HandleOnClick),
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseOut, HandleOnClick),
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseClick, HandleOnClick)
-                });
-
-                internalOnClick = value;
-            }
-            else if (internalOnClick is not null && value is null) {
-                foreach (var clickHandle in clickHandles.OfType<IAddonEventHandle>()) {
-                    Service.EventManager.RemoveEvent(clickHandle);
-                }
-                clickHandles.Clear();
-
-                internalOnClick = null;
-            }
-        }
+        set => clickHandler.OnClick = value;
     }
     
     public override void Dispose() {
         if (!isDisposed) {
             Service.AddonLifecycle.UnregisterListener(AutoDispose);
 
-            // These will trigger the events to be unregistered if they were in use.
-            Tooltip = null;
-            OnClick = null;
+            tooltipHandler.Dispose();
+            clickHandler.Dispose();
             
             ResNode->Destroy(false);
             IMemorySpace.Free(ResNode, (ulong) sizeof(AtkTextNode));
@@ -156,38 +114,4 @@ public unsafe class TextNode : ResourceNode, ITextNode {
     
     private void AutoDispose(AddonEvent type, AddonArgs args) 
         => Dispose();
-    
-    private void HandleTooltip(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
-        var node = (AtkResNode*) atkResNode;
-
-        if (internalTooltip is not null) {
-            switch (atkEventType) {
-                case AddonEventType.MouseOver:
-                    AtkStage.GetSingleton()->TooltipManager.ShowTooltip(addon->ID, node, internalTooltip);
-                    break;
-
-                case AddonEventType.MouseOut:
-                    AtkStage.GetSingleton()->TooltipManager.HideTooltip(addon->ID);
-                    break;
-            }
-        }
-    }
-    
-    private void HandleOnClick(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
-        if (internalOnClick is not null) {
-            switch (atkEventType) {
-                case AddonEventType.MouseOver:
-                    Service.EventManager.SetCursor(AddonCursorType.Clickable);
-                    break;
-
-                case AddonEventType.MouseOut:
-                    Service.EventManager.ResetCursor();
-                    break;
-
-                case AddonEventType.MouseClick:
-                    internalOnClick.Invoke();
-                    break;
-            }
-        }
-    }
 }

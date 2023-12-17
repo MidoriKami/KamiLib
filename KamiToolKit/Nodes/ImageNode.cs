@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using Dalamud.Game.Addon.Events;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiLib.KamiToolKit.Controllers;
 using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.KamiToolKit.Nodes;
@@ -16,12 +14,11 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
     public override AtkResNode* ResNode { get; protected set; }
     public override NodeType NodeType => NodeType.Image;
 
-    private readonly AtkUnitBase* addon;
+    private readonly ClickHandler clickHandler;
     private bool isDisposed;
-    private readonly List<IAddonEventHandle?> clickHandles = new();
 
     public ImageNode(AtkUnitBase* addon) {
-        this.addon = addon;
+        clickHandler = new ClickHandler(this, addon);
 
         AllocateImageNode();
         SetDefaults();
@@ -44,28 +41,8 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
         set => ContainedImageNode->Flags = (byte) value;
     }
 
-    private Action? internalOnClick;
     public Action? OnClick {
-        set {
-            if (internalOnClick is null && value is not null) {
-                clickHandles.AddRange(new List<IAddonEventHandle?>
-                {
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseOver, HandleOnClick),
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseOut, HandleOnClick),
-                    Service.EventManager.AddEvent((nint) addon, (nint) ResNode, AddonEventType.MouseClick, HandleOnClick),
-                });
-
-                internalOnClick = value;
-            }
-            else if (internalOnClick is not null && value is null) {
-                foreach (var clickHandle in clickHandles.OfType<IAddonEventHandle>()) {
-                    Service.EventManager.RemoveEvent(clickHandle);
-                }
-                clickHandles.Clear();
-
-                internalOnClick = null;
-            }
-        }
+        set => clickHandler.OnClick = value;
     }
 
     public void LoadTexture(string texturePath)
@@ -115,8 +92,7 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
         if (!isDisposed) {
             Service.AddonLifecycle.UnregisterListener(AutoDispose);
             
-            // These will trigger the events to be unregistered if they were in use.
-            OnClick = null;
+            clickHandler.Dispose();
             
             IMemorySpace.Free(ContainedImageNode->PartsList->Parts->UldAsset, (ulong) sizeof(AtkUldAsset));
             IMemorySpace.Free(ContainedImageNode->PartsList->Parts, (ulong) sizeof(AtkUldPart));
@@ -131,22 +107,4 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
     
     private void AutoDispose(AddonEvent type, AddonArgs args) 
         => Dispose();
-    
-    private void HandleOnClick(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
-        if (internalOnClick is not null) {
-            switch (atkEventType) {
-                case AddonEventType.MouseOver:
-                    Service.EventManager.SetCursor(AddonCursorType.Clickable);
-                    break;
-
-                case AddonEventType.MouseOut:
-                    Service.EventManager.ResetCursor();
-                    break;
-
-                case AddonEventType.MouseClick:
-                    internalOnClick.Invoke();
-                    break;
-            }
-        }
-    }
 }
