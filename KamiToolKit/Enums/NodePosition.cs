@@ -3,6 +3,8 @@
 public enum NodePosition {
     BeforeTarget,
     AfterTarget,
-    BeforeEverything,
-    AfterEverything,
+    BeforeAllSiblings,
+    AfterAllSiblings,
+    AsLastChild,
+    AsFirstChild,
 }

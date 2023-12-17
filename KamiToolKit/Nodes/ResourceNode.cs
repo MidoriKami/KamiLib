@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.KamiToolKit.Interfaces;
 
@@ -9,6 +10,8 @@ public abstract unsafe class ResourceNode : IResNode {
 
     public virtual NodeType NodeType => NodeType.Res;
 
+    public abstract void Dispose();
+    
     public uint NodeId {
         get => ResNode->NodeID;
         set => ResNode->NodeID = value;
@@ -56,5 +59,56 @@ public abstract unsafe class ResourceNode : IResNode {
     public float Y {
         get => ResNode->Y;
         set => ResNode->SetPositionFloat(ResNode->X, value);
+    }
+
+    public bool Visible {
+        get => ResNode->IsVisible;
+        set => ResNode->ToggleVisibility(value);
+    }
+
+    public Vector4 Color {
+        get => new(ResNode->Color.R, ResNode->Color.G, ResNode->Color.B, ResNode->Color.A);
+        set => ResNode->Color = value.ToByteColor();
+    }
+
+    public Vector3 AddColor {
+        get => new(ResNode->AddRed, ResNode->AddGreen, ResNode->AddBlue);
+        set {
+            ResNode->AddRed = (short) value.X;
+            ResNode->AddGreen = (short) value.Y;
+            ResNode->AddBlue = (short) value.Z;
+        }
+    }
+    
+    public Vector3 MultiplyColor {
+        get => new(ResNode->MultiplyRed, ResNode->MultiplyGreen, ResNode->MultiplyBlue);
+        set {
+            ResNode->MultiplyRed = (byte) value.X;
+            ResNode->MultiplyGreen = (byte) value.Y;
+            ResNode->MultiplyBlue = (byte) value.Z;
+        }
+    }
+
+    public float ScaleX {
+        get => ResNode->ScaleX;
+        set => ResNode->ScaleX = value;
+    }
+
+    public float ScaleY {
+        get => ResNode->ScaleY;
+        set => ResNode->ScaleY = value;
+    }
+    
+    public Vector2 Scale {
+        get => new(ScaleX, ScaleY);
+        set {
+            ScaleX = value.X;
+            ScaleY = value.Y;
+        }
+    }
+
+    public float Rotation {
+        get => ResNode->Rotation;
+        set => ResNode->Rotation = value;
     }
 }

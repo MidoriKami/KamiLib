@@ -114,14 +114,14 @@ public unsafe class TextNode : ResourceNode, ITextNode {
                 foreach (var clickHandle in clickHandles.OfType<IAddonEventHandle>()) {
                     Service.EventManager.RemoveEvent(clickHandle);
                 }
-                tooltipHandles.Clear();
+                clickHandles.Clear();
 
                 internalOnClick = null;
             }
         }
     }
     
-    public void Dispose() {
+    public override void Dispose() {
         if (!isDisposed) {
             Service.AddonLifecycle.UnregisterListener(AutoDispose);
 

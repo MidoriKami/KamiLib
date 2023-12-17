@@ -6,7 +6,7 @@ using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.NativeUi;
 
-public static unsafe class Node {
+public static unsafe class NodeHelper {
     public static T* GetNodeByID<T>(AtkUldManager uldManager, uint nodeId) where T : unmanaged {
         foreach (var index in Enumerable.Range(0, uldManager.NodeListCount)) {
             var currentNode = uldManager.NodeList[index];
@@ -28,14 +28,22 @@ public static unsafe class Node {
                 EmplaceAfter(newNode, targetNode);
                 break;
 
-            case NodePosition.BeforeEverything:
-                EmplaceBeforeAll(newNode, targetNode);
+            case NodePosition.BeforeAllSiblings:
+                EmplaceBeforeSiblings(newNode, targetNode);
                 break;
 
-            case NodePosition.AfterEverything:
-                EmplaceAfterAll(newNode, targetNode);
+            case NodePosition.AfterAllSiblings:
+                EmplaceAfterSiblings(newNode, targetNode);
                 break;
-
+            
+            case NodePosition.AsLastChild:
+                EmplaceAsLastChild(newNode, targetNode);
+                break;
+            
+            case NodePosition.AsFirstChild:
+                EmplaceAsFirstChild(newNode, targetNode);
+                break;
+            
             default:
                 throw new ArgumentOutOfRangeException(nameof(position), position, null);
         }
@@ -72,7 +80,7 @@ public static unsafe class Node {
         newNode.ResNode->NextSiblingNode = targetNode;
     }
 
-    private static void EmplaceBeforeAll(IResNode newNode, AtkResNode* targetNode) {
+    private static void EmplaceBeforeSiblings(IResNode newNode, AtkResNode* targetNode) {
         var current = targetNode;
         var previous = current;
 
@@ -86,7 +94,7 @@ public static unsafe class Node {
         }
     }
 
-    private static void EmplaceAfterAll(IResNode newNode, AtkResNode* targetNode) {
+    private static void EmplaceAfterSiblings(IResNode newNode, AtkResNode* targetNode) {
         var current = targetNode;
         var previous = current;
 
@@ -99,7 +107,59 @@ public static unsafe class Node {
             EmplaceAfter(newNode, previous);
         }
     }
+
+    private static void EmplaceAsLastChild(IResNode newNode, AtkResNode* targetNode) {
+        var newResNode = newNode.ResNode;
+
+        // If the child list is empty
+        if (targetNode->ChildNode is null)
+        {
+            targetNode->ChildNode = newResNode;
+            newResNode->ParentNode = targetNode;
+            newResNode->PrevSiblingNode = null;
+            newResNode->NextSiblingNode = null;
+            newResNode->ChildNode = null;
+        }
+        // Else Add to the List
+        else
+        {
+            var currentNode = targetNode->ChildNode;
+            while (currentNode is not null && currentNode->PrevSiblingNode != null)
+            {
+                currentNode = currentNode->PrevSiblingNode;
+            }
+        
+            newResNode->ParentNode = targetNode;
+            newResNode->NextSiblingNode = currentNode;
+            currentNode->PrevSiblingNode = newResNode;
+            newResNode->ChildNode = null;
+            newResNode->PrevSiblingNode = null;
+        }
+    }
     
+    private static void EmplaceAsFirstChild(IResNode newNode, AtkResNode* targetNode) {
+        var newResNode = newNode.ResNode;
+
+        // If the child list is empty
+        if (targetNode->ChildNode is null && targetNode->ChildCount is 0)
+        {
+            targetNode->ChildNode = newResNode;
+            newResNode->ParentNode = targetNode;
+            newResNode->PrevSiblingNode = null;
+            newResNode->NextSiblingNode = null;
+            newResNode->ChildNode = null;
+        }
+        // Else Add to the List as the First Child
+        else {
+            targetNode->ChildNode->NextSiblingNode = newResNode;
+            newResNode->PrevSiblingNode = targetNode->ChildNode;
+            targetNode->ChildNode = newResNode;
+            newResNode->ParentNode = targetNode;
+            newResNode->NextSiblingNode = null;
+            newResNode->ChildNode = null;
+        }
+    }
+
     public static void UnlinkNode(IResNode resNode) {
         if (resNode.ResNode is null) return;
         var node = resNode.ResNode;
