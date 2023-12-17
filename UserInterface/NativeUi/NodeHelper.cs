@@ -1,14 +1,14 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiLib.KamiToolKit.Enums;
+using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.NativeUi;
 
-public static unsafe class Node
-{
-    public static T* GetNodeByID<T>(AtkUldManager uldManager, uint nodeId) where T : unmanaged
-    {
-        foreach (var index in Enumerable.Range(0, uldManager.NodeListCount))
-        {
+public static unsafe class Node {
+    public static T* GetNodeByID<T>(AtkUldManager uldManager, uint nodeId) where T : unmanaged {
+        foreach (var index in Enumerable.Range(0, uldManager.NodeListCount)) {
             var currentNode = uldManager.NodeList[index];
             if (currentNode->NodeID != nodeId) continue;
 
@@ -18,72 +18,132 @@ public static unsafe class Node
         return null;
     }
 
-    public static void LinkNodeAtEnd(AtkResNode* resNode, AtkUnitBase* parent)
-    {
-        var node = parent->RootNode->ChildNode;
-        while (node->PrevSiblingNode != null) node = node->PrevSiblingNode;
+    public static void InsertNode(IResNode newNode, AtkResNode* targetNode, NodePosition position) {
+        switch (position) {
+            case NodePosition.BeforeTarget:
+                EmplaceBefore(newNode, targetNode);
+                break;
 
-        node->PrevSiblingNode = resNode;
-        resNode->NextSiblingNode = node;
-        resNode->ParentNode = node->ParentNode;
+            case NodePosition.AfterTarget:
+                EmplaceAfter(newNode, targetNode);
+                break;
 
-        node->ChildCount++;
+            case NodePosition.BeforeEverything:
+                EmplaceBeforeAll(newNode, targetNode);
+                break;
 
-        parent->UldManager.UpdateDrawNodeList();
+            case NodePosition.AfterEverything:
+                EmplaceAfterAll(newNode, targetNode);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException(nameof(position), position, null);
+        }
     }
 
-    public static void UnlinkNodeAtEnd(AtkResNode* resNode, AtkUnitBase* parent)
-    {
-        if (resNode->PrevSiblingNode is not null)
-        {
-            resNode->PrevSiblingNode->NextSiblingNode = resNode->NextSiblingNode;
+    private static void EmplaceBefore(IResNode newNode, AtkResNode* targetNode) {
+        newNode.ResNode->ParentNode = targetNode->ParentNode;
+
+        // Target node is the head of the nodelist, we will be the new head.
+        if (targetNode->NextSiblingNode is null) {
+            targetNode->ParentNode->ChildNode = newNode.ResNode;
         }
 
-        if (resNode->NextSiblingNode is not null)
-        {
-            resNode->NextSiblingNode->PrevSiblingNode = resNode->PrevSiblingNode;
+        // We have a node that will be before us
+        if (targetNode->NextSiblingNode is not null) {
+            targetNode->NextSiblingNode->PrevSiblingNode = newNode.ResNode;
+            newNode.ResNode->NextSiblingNode = targetNode->NextSiblingNode;
         }
 
-        parent->UldManager.UpdateDrawNodeList();
+        targetNode->NextSiblingNode = newNode.ResNode;
+        newNode.ResNode->PrevSiblingNode = targetNode;
     }
 
-    public static void LinkNodeAtStart(AtkResNode* resNode, AtkUnitBase* parent)
-    {
-        var rootNode = parent->RootNode;
+    private static void EmplaceAfter(IResNode newNode, AtkResNode* targetNode) {
+        newNode.ResNode->ParentNode = targetNode->ParentNode;
 
-        resNode->ParentNode = rootNode;
-        resNode->PrevSiblingNode = rootNode->ChildNode;
-        resNode->NextSiblingNode = null;
-
-        if (rootNode->ChildNode->NextSiblingNode is not null)
-        {
-            rootNode->ChildNode->NextSiblingNode = resNode;
+        // We have a node that will be after us
+        if (targetNode->PrevSiblingNode is not null) {
+            targetNode->PrevSiblingNode->NextSiblingNode = newNode.ResNode;
+            newNode.ResNode->PrevSiblingNode = targetNode->PrevSiblingNode;
         }
 
-        rootNode->ChildNode = resNode;
-
-        parent->UldManager.UpdateDrawNodeList();
+        targetNode->PrevSiblingNode = newNode.ResNode;
+        newNode.ResNode->NextSiblingNode = targetNode;
     }
 
-    public static void UnlinkNodeAtStart(AtkResNode* resNode, AtkUnitBase* parent)
-    {
-        if (!IsAddonReady(parent)) return;
-        if (parent->RootNode->ChildNode->NodeID != resNode->NodeID) return;
+    private static void EmplaceBeforeAll(IResNode newNode, AtkResNode* targetNode) {
+        var current = targetNode;
+        var previous = current;
 
-        var rootNode = parent->RootNode;
-
-        if (resNode->PrevSiblingNode is not null)
-        {
-            resNode->PrevSiblingNode->NextSiblingNode = null;
+        while (current is not null) {
+            previous = current;
+            current = current->NextSiblingNode;
         }
 
-        rootNode->ChildNode = resNode->PrevSiblingNode;
-
-        parent->UldManager.UpdateDrawNodeList();
+        if (previous is not null) {
+            EmplaceBefore(newNode, previous);
+        }
     }
 
-    public static bool IsAddonReady(AtkUnitBase* addon)
-    {
+    private static void EmplaceAfterAll(IResNode newNode, AtkResNode* targetNode) {
+        var current = targetNode;
+        var previous = current;
+
+        while (current is not null) {
+            previous = current;
+            current = current->PrevSiblingNode;
+        }
+
+        if (previous is not null) {
+            EmplaceAfter(newNode, previous);
+        }
+    }
+    
+    public static void UnlinkNode(IResNode resNode) {
+        if (resNode.ResNode is null) return;
+        var node = resNode.ResNode;
+
+        if (node->ParentNode is null) return;
+        
+        // If we were the main child of the containing node, assign it to the next element in line.
+        if (node->ParentNode->ChildNode == node) {
+            // And we have a node after us, our parents child should be the next node in line.
+            if (node->PrevSiblingNode != null) {
+                node->ParentNode->ChildNode = node->PrevSiblingNode;
+            }
+            // else our parent is no longer pointing to any children.
+            else {
+                node->ParentNode->ChildNode = null;
+            }
+        }
+        
+        // If we have a node before us
+        if (node->NextSiblingNode != null) {
+            // and a node after us, link the one before to the one after
+            if (node->PrevSiblingNode != null) {
+                node->NextSiblingNode->PrevSiblingNode = node->PrevSiblingNode;
+            }
+            // else unlink it from us
+            else {
+                node->NextSiblingNode->PrevSiblingNode = null;
+            }
+        }
+        
+        // If we have a node after us
+        if (node->PrevSiblingNode != null) {
+            // and a node before us, link the one after to the one before
+            if (node->NextSiblingNode != null) {
+                node->PrevSiblingNode->NextSiblingNode = node->NextSiblingNode;
+            }
+            // else unlink it from us
+            else {
+                node->PrevSiblingNode->NextSiblingNode = null;
+            }
+        }
+    }
+
+    public static bool IsAddonReady(AtkUnitBase* addon) {
         if (addon is null) return false;
         if (addon->RootNode is null) return false;
         if (addon->RootNode->ChildNode is null) return false;
