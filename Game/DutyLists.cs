@@ -43,9 +43,9 @@ public class DutyLists
         .Select(t => t.TerritoryType.Row)
         .ToList();
 
-    public List<uint> Criterion => criterion ??= LuminaCache<ContentFinderCondition>.Instance
-        .Where(row => row.ContentType.Row is 30)
-        .Select(row => row.TerritoryType.Row)
+    public List<uint> Criterion => criterion ??= LuminaCache<TerritoryType>.Instance
+        .Where(r => r.TerritoryIntendedUse is 57 or 58)
+        .Select(r => r.RowId)
         .ToList();
 
     public List<uint> Alliance => alliance ??= LuminaCache<TerritoryType>.Instance
