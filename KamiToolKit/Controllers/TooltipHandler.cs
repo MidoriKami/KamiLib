@@ -8,39 +8,34 @@ using KamiLib.KamiToolKit.Interfaces;
 namespace KamiLib.KamiToolKit.Controllers;
 
 public sealed unsafe class TooltipHandler : NativeEventHandler<Func<SeString>> {
-    private readonly IResNode resNode;
-    private readonly AtkUnitBase* addon;
-
-    public TooltipHandler(IResNode node, AtkUnitBase* addon) {
-        this.addon = addon;
-        resNode = node;
-    }
+    public required IResNode ResNode { private get; init; }
+    public required AtkUnitBase* ParentAddon { private get; init; }
 
     public SeString? Text {
         set {
             if (value is null) {
-                InternalEvent = null;
+                OnEvent = null;
             }
             else {
-                InternalEvent = () => value;
+                OnEvent = () => value;
             }
         }
     }
     
     protected override IEnumerable<IAddonEventHandle?> RegisterEvents() => new List<IAddonEventHandle?> {
-        Service.EventManager.AddEvent((nint) addon, (nint) resNode.ResNode, AddonEventType.MouseOver, HandleEvent),
-        Service.EventManager.AddEvent((nint) addon, (nint) resNode.ResNode, AddonEventType.MouseOut, HandleEvent)
+        Service.EventManager.AddEvent((nint) ParentAddon, (nint) ResNode.ResNode, AddonEventType.MouseOver, HandleEvent),
+        Service.EventManager.AddEvent((nint) ParentAddon, (nint) ResNode.ResNode, AddonEventType.MouseOut, HandleEvent)
     };
 
     private void HandleEvent(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
         if (InternalEvent is not null) {
             switch (atkEventType) {
                 case AddonEventType.MouseOver:
-                    AtkStage.GetSingleton()->TooltipManager.ShowTooltip(addon->ID, (AtkResNode*) atkResNode, InternalEvent?.Invoke().Encode());
+                    AtkStage.GetSingleton()->TooltipManager.ShowTooltip(ParentAddon->ID, (AtkResNode*) atkResNode, InternalEvent?.Invoke().Encode());
                     break;
 
                 case AddonEventType.MouseOut:
-                    AtkStage.GetSingleton()->TooltipManager.HideTooltip(addon->ID);
+                    AtkStage.GetSingleton()->TooltipManager.HideTooltip(ParentAddon->ID);
                     break;
             }
         }

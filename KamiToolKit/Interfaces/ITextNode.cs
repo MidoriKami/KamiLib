@@ -16,7 +16,7 @@ public interface ITextNode : IResNode {
     
     AlignmentType TextAlignment { get; set; }
     TextFlags StyleFlags { get; set; }
-    
-    SeString? Tooltip { set; }
-    Action? OnClick { set; }
+
+    void AddTextFlags(TextFlags flags);
+    void RemoveTextFlags(TextFlags flags);
 }

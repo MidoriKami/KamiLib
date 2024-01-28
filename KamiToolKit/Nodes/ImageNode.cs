@@ -1,11 +1,6 @@
-﻿using System;
-using System.Numerics;
-using Dalamud.Game.Addon.Lifecycle;
-using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using Dalamud.Memory;
+﻿using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using KamiLib.KamiToolKit.Controllers;
 using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.KamiToolKit.Nodes;
@@ -14,18 +9,9 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
     public override AtkResNode* ResNode { get; protected set; }
     public override NodeType NodeType => NodeType.Image;
 
-    private readonly ClickHandler clickHandler;
-    private bool isDisposed;
+    public ImageNode() 
+        => AllocateImageNode();
 
-    public ImageNode(AtkUnitBase* addon) {
-        clickHandler = new ClickHandler(this, addon);
-
-        AllocateImageNode();
-        SetDefaults();
-        
-        Service.AddonLifecycle.RegisterListener(AddonEvent.PreFinalize, MemoryHelper.ReadStringNullTerminated((nint)addon->Name), AutoDispose);
-    }
-    
     private AtkImageNode* ContainedImageNode {
         get => (AtkImageNode*)ResNode; 
         set => ResNode = (AtkResNode*) value;
@@ -41,10 +27,6 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
         set => ContainedImageNode->Flags = (byte) value;
     }
 
-    public Action? OnClick {
-        set => clickHandler.OnClick = value;
-    }
-
     public void LoadTexture(string texturePath)
         => ContainedImageNode->LoadTexture(texturePath);
 
@@ -54,12 +36,6 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
     public void UnloadTexture()
         => ContainedImageNode->UnloadTexture();
 
-    private void SetDefaults() {
-        Color = Vector4.One;
-        WrapMode = 1;
-        Flags = ImageNodeFlags.AutoFit;
-    }
-    
     private void AllocateImageNode() {
         var newNode = IMemorySpace.GetUISpace()->Create<AtkImageNode>();
 
@@ -86,25 +62,20 @@ public unsafe class ImageNode : ResourceNode, IImageNode {
         newNode->AtkResNode.Type = NodeType.Image;
 
         ContainedImageNode = newNode;
+        
+        Color = Vector4.One;
+        WrapMode = 1;
+        Flags = ImageNodeFlags.AutoFit;
     }
     
     public override void Dispose() {
-        if (!isDisposed) {
-            Service.AddonLifecycle.UnregisterListener(AutoDispose);
-            
-            clickHandler.Dispose();
-            
-            IMemorySpace.Free(ContainedImageNode->PartsList->Parts->UldAsset, (ulong) sizeof(AtkUldAsset));
-            IMemorySpace.Free(ContainedImageNode->PartsList->Parts, (ulong) sizeof(AtkUldPart));
-            IMemorySpace.Free(ContainedImageNode->PartsList, (ulong) sizeof(AtkUldPartsList));
+        base.Dispose();
 
-            ContainedImageNode->AtkResNode.Destroy(false);
-            IMemorySpace.Free(ContainedImageNode, (ulong) sizeof(AtkImageNode));
+        IMemorySpace.Free(ContainedImageNode->PartsList->Parts->UldAsset, (ulong) sizeof(AtkUldAsset));
+        IMemorySpace.Free(ContainedImageNode->PartsList->Parts, (ulong) sizeof(AtkUldPart));
+        IMemorySpace.Free(ContainedImageNode->PartsList, (ulong) sizeof(AtkUldPartsList));
 
-            isDisposed = true;
-        }
+        ContainedImageNode->AtkResNode.Destroy(false);
+        IMemorySpace.Free(ContainedImageNode, (ulong) sizeof(AtkImageNode));
     }
-    
-    private void AutoDispose(AddonEvent type, AddonArgs args) 
-        => Dispose();
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Dalamud.Game.Text.SeStringHandling;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.KamiToolKit.Enums;
 using KamiLib.KamiToolKit.Nodes;
@@ -9,9 +10,11 @@ namespace KamiLib.KamiToolKit.Interfaces;
 public unsafe interface IResNode : IDisposable {
     AtkResNode* ResNode { get; }
     NodeType NodeType { get; }
+    
+    AtkUnitBase* ParentAddon { get; set; }
 
-    ITextNode AsTextNode() => (TextNode) this;
-    IImageNode AsImageNode() => (ImageNode) this;
+    TextNode AsTextNode() => (TextNode) this;
+    ImageNode AsImageNode() => (ImageNode) this;
     
     uint NodeId { get; set; }
 
@@ -37,4 +40,10 @@ public unsafe interface IResNode : IDisposable {
     float ScaleY { get; set; }
     Vector2 Scale { get; set; }
     float Rotation { get; set; }
+    
+    SeString? Tooltip { set; }
+    Action? OnClick { set; }
+
+    void AttachNode(AtkResNode* targetNode, NodePosition position);
+    void DetachNode();
 }

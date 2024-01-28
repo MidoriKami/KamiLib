@@ -1,7 +1,15 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Memory;
 using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using KamiLib.KamiToolKit.Controllers;
+using KamiLib.KamiToolKit.Enums;
 using KamiLib.KamiToolKit.Interfaces;
+using KamiLib.NativeUi;
 
 namespace KamiLib.KamiToolKit.Nodes;
 
@@ -10,7 +18,67 @@ public abstract unsafe class ResourceNode : IResNode {
 
     public virtual NodeType NodeType => NodeType.Res;
 
-    public abstract void Dispose();
+    private AtkUnitBase* internalParentAddon;
+    private bool autoDisposeRegistered;
+
+    private ClickHandler? clickHandler;
+    private TooltipHandler? tooltipHandler;
+    
+    public required AtkUnitBase* ParentAddon {
+        get => internalParentAddon;
+        set {
+            if (value is not null && !autoDisposeRegistered) {
+                Service.AddonLifecycle.RegisterListener(AddonEvent.PreFinalize, MemoryHelper.ReadStringNullTerminated((nint)value->Name), AutoDisposeHandler);
+                autoDisposeRegistered = true;
+            }
+            else {
+                if (autoDisposeRegistered) {
+                    Service.AddonLifecycle.UnregisterListener(AutoDisposeHandler);
+                    autoDisposeRegistered = false;
+                }
+            }
+
+            internalParentAddon = value;
+        }
+    }
+    
+    public SeString? Tooltip {
+        set {
+            tooltipHandler ??= new TooltipHandler {
+                ResNode = this,
+                ParentAddon = ParentAddon,
+            };
+
+            tooltipHandler.Text = value;
+        }
+    }
+
+    public Action? OnClick {
+        set {
+            clickHandler ??= new ClickHandler {
+                ResNode = this,
+                ParentAddon = ParentAddon,
+            };
+
+            clickHandler.OnEvent = value;
+        }
+    } 
+
+    private void AutoDisposeHandler(AddonEvent type, AddonArgs args) {
+        Dispose();
+    }
+
+    public virtual void Dispose() {
+        Service.AddonLifecycle.UnregisterListener(AutoDisposeHandler);
+        
+        clickHandler?.Dispose();
+        clickHandler = null;
+        
+        tooltipHandler?.Dispose();
+        tooltipHandler = null;
+        
+        DetachNode();
+    }
     
     public uint NodeId {
         get => ResNode->NodeID;
@@ -110,5 +178,19 @@ public abstract unsafe class ResourceNode : IResNode {
     public float Rotation {
         get => ResNode->Rotation;
         set => ResNode->Rotation = value;
+    }
+
+    public void AttachNode(AtkResNode* targetNode, NodePosition position) {
+        NodeHelper.InsertNode(this, targetNode, position);
+        
+        ParentAddon->UldManager.UpdateDrawNodeList();
+        ParentAddon->UpdateCollisionNodeList(false);
+    }
+
+    public void DetachNode() {
+        NodeHelper.UnlinkNode(this);
+        
+        ParentAddon->UldManager.UpdateDrawNodeList();
+        ParentAddon->UpdateCollisionNodeList(false);
     }
 }

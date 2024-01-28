@@ -1,15 +1,10 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Numerics;
-using Dalamud.Game.Addon.Lifecycle;
-using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
-using Dalamud.Memory;
 using Dalamud.Utility.Numerics;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using KamiLib.KamiToolKit.Controllers;
 using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.KamiToolKit.Nodes;
@@ -18,24 +13,13 @@ public unsafe class TextNode : ResourceNode, ITextNode {
     public override AtkResNode* ResNode { get; protected set; }
     public override NodeType NodeType => NodeType.Text;
 
-    private readonly TooltipHandler tooltipHandler;
-    private readonly ClickHandler clickHandler;
-    private bool isDisposed;
-
     private AtkTextNode* ContainedTextNode {
         get => (AtkTextNode*)ResNode; 
         set => ResNode = (AtkResNode*) value;
     }
     
-    public TextNode(AtkUnitBase* addon) {
-        tooltipHandler = new TooltipHandler(this, addon);
-        clickHandler = new ClickHandler(this, addon);
-
-        AllocateTextNode();
-        SetDefaults();
-
-        Service.AddonLifecycle.RegisterListener(AddonEvent.PreFinalize, MemoryHelper.ReadStringNullTerminated((nint)addon->Name), AutoDispose);
-    }
+    public TextNode() 
+        => AllocateTextNode();
 
     public SeString Text {
         get => SeString.Parse(ContainedTextNode->NodeText);
@@ -72,35 +56,21 @@ public unsafe class TextNode : ResourceNode, ITextNode {
         set => ContainedTextNode->TextFlags = (byte) value;
     }
 
-    public SeString? Tooltip {
-        set => tooltipHandler.Text = value;
-    }
+    public void AddTextFlags(TextFlags flags) 
+        => StyleFlags |= flags;
 
-    public Action? OnClick {
-        set => clickHandler.OnClick = value;
-    }
+    public void RemoveTextFlags(TextFlags flags) 
+        => StyleFlags &= ~flags;
     
     public override void Dispose() {
-        if (!isDisposed) {
-            Service.AddonLifecycle.UnregisterListener(AutoDispose);
-
-            tooltipHandler.Dispose();
-            clickHandler.Dispose();
-            
+        base.Dispose();
+        
+        if (ResNode is not null) {
             ResNode->Destroy(false);
             IMemorySpace.Free(ResNode, (ulong) sizeof(AtkTextNode));
-            isDisposed = true;
+
+            ResNode = null;
         }
-    }
-    
-    private void SetDefaults() {
-        Text = "Node Text Not Set";
-        FontSize = 12;
-        TextColor = KnownColor.White.Vector();
-        OutlineColor = Vector4.Zero;
-        BackgroundColor = KnownColor.White.Vector();
-        TextAlignment = AlignmentType.Left;
-        StyleFlags = TextFlags.AutoAdjustNodeSize | TextFlags.Bold | TextFlags.Edge;
     }
     
     private void AllocateTextNode() {
@@ -110,8 +80,14 @@ public unsafe class TextNode : ResourceNode, ITextNode {
         newNode->AtkResNode.Type = NodeType.Text;
 
         ContainedTextNode = newNode;
+        
+        StyleFlags = TextFlags.AutoAdjustNodeSize | TextFlags.Bold | TextFlags.Edge;
+        Text = "Node Text Not Set";
+        FontSize = 12;
+        Height = FontSize + 2.0f;
+        TextColor = KnownColor.White.Vector();
+        OutlineColor = Vector4.Zero;
+        BackgroundColor = KnownColor.White.Vector();
+        TextAlignment = AlignmentType.Left;
     }
-    
-    private void AutoDispose(AddonEvent type, AddonArgs args) 
-        => Dispose();
 }
