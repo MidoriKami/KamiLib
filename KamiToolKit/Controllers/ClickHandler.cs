@@ -1,60 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Dalamud.Game.Addon.Events;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.KamiToolKit.Controllers;
 
-public unsafe class ClickHandler : IDisposable {
-    private readonly List<IAddonEventHandle?> clickHandles = new();
-    private readonly IResNode resNode;
-    private readonly AtkUnitBase* addon;
-    private Action? internalOnClick;
-    
-    public ClickHandler(IResNode node, AtkUnitBase* addon) {
-        this.addon = addon;
-        resNode = node;
-    }
-    
-    public void Dispose() {
-        UnregisterClickEvents();
-        internalOnClick = null;
-    }
-    
-    public Action? OnClick {
-        set {
-            if (internalOnClick is null && value is not null) {
-                RegisterClickEvents();
-                internalOnClick = value;
-            }
-            else if (internalOnClick is not null && value is null) {
-                UnregisterClickEvents();
-                internalOnClick = null;
-            }
-        }
-    }
+public unsafe class ClickHandler : NativeEventHandler<Action> {
+    public required IResNode ResNode { private get; init; }
+    public required AtkUnitBase* ParentAddon { private get; init; }
 
-    private void RegisterClickEvents() {
-        clickHandles.AddRange(new List<IAddonEventHandle?>
-        {
-            Service.EventManager.AddEvent((nint) addon, (nint) resNode.ResNode, AddonEventType.MouseOver, HandleOnClick),
-            Service.EventManager.AddEvent((nint) addon, (nint) resNode.ResNode, AddonEventType.MouseOut, HandleOnClick),
-            Service.EventManager.AddEvent((nint) addon, (nint) resNode.ResNode, AddonEventType.MouseClick, HandleOnClick)
-        });
+    protected override IEnumerable<IAddonEventHandle?> RegisterEvents() => new List<IAddonEventHandle?> {
+        Service.EventManager.AddEvent((nint) ParentAddon, (nint) ResNode.ResNode, AddonEventType.MouseOver, HandleEvent),
+        Service.EventManager.AddEvent((nint) ParentAddon, (nint) ResNode.ResNode, AddonEventType.MouseOut, HandleEvent),
+        Service.EventManager.AddEvent((nint) ParentAddon, (nint) ResNode.ResNode, AddonEventType.MouseClick, HandleEvent)
+    };
 
-    }
-
-    private void UnregisterClickEvents() {
-        foreach (var clickHandle in clickHandles.OfType<IAddonEventHandle>()) {
-            Service.EventManager.RemoveEvent(clickHandle);
-        }
-        clickHandles.Clear();
-    }
-    
-    private void HandleOnClick(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
-        if (internalOnClick is not null) {
+    protected override void HandleEvent(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
+        if (InternalEvent is not null) {
             switch (atkEventType) {
                 case AddonEventType.MouseOver:
                     Service.EventManager.SetCursor(AddonCursorType.Clickable);
@@ -65,7 +28,7 @@ public unsafe class ClickHandler : IDisposable {
                     break;
 
                 case AddonEventType.MouseClick:
-                    internalOnClick.Invoke();
+                    InternalEvent.Invoke();
                     break;
             }
         }
