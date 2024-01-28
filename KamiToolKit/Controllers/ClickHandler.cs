@@ -6,7 +6,7 @@ using KamiLib.KamiToolKit.Interfaces;
 
 namespace KamiLib.KamiToolKit.Controllers;
 
-public unsafe class ClickHandler : NativeEventHandler<Action> {
+public sealed unsafe class ClickHandler : NativeEventHandler<Action> {
     public required IResNode ResNode { private get; init; }
     public required AtkUnitBase* ParentAddon { private get; init; }
 
@@ -16,7 +16,7 @@ public unsafe class ClickHandler : NativeEventHandler<Action> {
         Service.EventManager.AddEvent((nint) ParentAddon, (nint) ResNode.ResNode, AddonEventType.MouseClick, HandleEvent)
     };
 
-    protected override void HandleEvent(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
+    private void HandleEvent(AddonEventType atkEventType, IntPtr atkUnitBase, IntPtr atkResNode) {
         if (InternalEvent is not null) {
             switch (atkEventType) {
                 case AddonEventType.MouseOver:
