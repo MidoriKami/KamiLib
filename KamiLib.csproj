@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-    </PropertyGroup>
-
-    <Import Project="$(appdata)\XIVLauncher\addon\Hooks\dev\targets\Dalamud.Plugin.Bootstrap.targets"/>
+    <Import Project="Dalamud.Plugin.Bootstrap.targets"/>
     
     <ItemGroup>
         <None Remove="LICENSE"/>
