@@ -1,0 +1,16 @@
+{
+  "Author": "MidoriKami",
+  "Name": "KamiLib",
+  "InternalName": "KamiLib",
+  "AssemblyVersion": "1.0.0.0",
+  "Description": "Not a plugin, this is a code library.",
+  "ApplicableVersion": "any",
+  "RepoUrl": "https://github.com/MidoriKami/KamiLib",
+  "DalamudApiLevel": 9,
+  "LoadRequiredState": 0,
+  "LoadSync": false,
+  "CanUnloadAsync": false,
+  "LoadPriority": 0,
+  "Punchline": "Code Framework Developed by MidoriKami",
+  "AcceptsFeedback": false
+}
