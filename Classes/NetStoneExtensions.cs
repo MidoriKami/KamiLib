@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dalamud.Interface.Internal;
@@ -8,12 +6,10 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using KamiLib.Configuration;
 using NetStone;
-using NetStone.Model.Parseables.Character;
-using NetStone.Search.Character;
 
 namespace KamiLib.Classes;
 
-public static class NetStoneHelpers {
+public static class NetStoneExtensions {
     public static async Task<IDalamudTextureWrap?> TryGetProfilePicture(HttpClient httpClient, LodestoneClient lodestoneClient, DalamudPluginInterface pluginInterface, ITextureProvider textureProvider, CharacterConfiguration characterConfiguration) {
         // We had some error while loading character configuration and don't know what character this is.
         if (characterConfiguration.ContentId is 0) return null;
@@ -50,30 +46,4 @@ public static class NetStoneHelpers {
         // Somehow slipped into unknown territory, return null.
         return null;
     }
-    
-    private static async Task<LodestoneCharacter?> TryGetLodestoneCharacter(this LodestoneClient client, DalamudPluginInterface pluginInterface, CharacterConfiguration character) {
-        // If lodestone id is null, try and fetch it by searching for name and world.
-        if (character.LodestoneId is null) {
-            var searchResponse = await client.SearchCharacter(new CharacterSearchQuery {
-                CharacterName = character.CharacterName,
-                World = character.CharacterWorld,
-            });
-
-            character.LodestoneId = searchResponse
-                ?.Results
-                .FirstOrDefault(entry => string.Equals(entry.Name, character.CharacterName, StringComparison.OrdinalIgnoreCase))
-                ?.Id;
-            
-            pluginInterface.SaveCharacterFile(character.ContentId, "System.config.json", character);
-        }
-
-        // If it is still null, then we couldn't find it.
-        if (character.LodestoneId is null) return null;
-        
-        // Use lodestoneId to get character.
-        return await client.GetCharacter(character.LodestoneId);
-    }
-
-    public static FileInfo GetProfilePictureFileInfo(this DalamudPluginInterface pluginInterface, CharacterConfiguration characterConfiguration) 
-        => new(Path.Combine(pluginInterface.GetCharacterDirectoryInfo(characterConfiguration.ContentId).FullName, "profile.png"));
 }

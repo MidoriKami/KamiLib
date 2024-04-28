@@ -28,7 +28,7 @@ public class MultiSelectionWindow<T> : Window where T : class {
     
     private readonly WindowManager windowManager;
     
-    // We only need to read the collection, but we don't have a useable overload for ClippedDraw that accepts an IEnumerable.
+    // We only need to read the collection, but we don't have a usable overload for ClippedDraw that accepts an IEnumerable.
     // ReSharper disable once CollectionNeverUpdated.Global
     public required List<T> SelectionOptions { get; init; }
     

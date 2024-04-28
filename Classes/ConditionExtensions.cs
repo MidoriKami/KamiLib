@@ -4,7 +4,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.MJI;
 
 namespace KamiLib.Classes;
 
-public static class ConditionFlags {
+public static class ConditionExtensions {
     public static bool IsBoundByDuty(this ICondition condition) 
         => condition.Any(ConditionFlag.BoundByDuty, ConditionFlag.BoundByDuty56, ConditionFlag.BoundByDuty95);
 

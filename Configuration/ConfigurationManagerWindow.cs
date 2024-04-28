@@ -212,7 +212,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     private async void TryLoadCharacterProfilePicture(LodestoneClient lodestoneClient, HttpClient httpClient, CharacterConfiguration characterConfiguration) {
         if (characterConfiguration.ContentId is 0) return;
 
-        var texture = await NetStoneHelpers.TryGetProfilePicture(httpClient, lodestoneClient, pluginInterface, textureProvider, characterConfiguration);
+        var texture = await NetStoneExtensions.TryGetProfilePicture(httpClient, lodestoneClient, pluginInterface, textureProvider, characterConfiguration);
         characterProfiles.Add(characterConfiguration.ContentId, texture);
     }
 

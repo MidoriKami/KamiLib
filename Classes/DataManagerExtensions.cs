@@ -16,7 +16,7 @@ public enum DutyType {
     Alliance,
 }
 
-public static class DutyLists {
+public static class DataManagerExtensions {
     public static IEnumerable<ContentFinderCondition> GetSavageDuties(this IDataManager dataManager)
         => dataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)?
                .Where(cfc => cfc is { ContentType.Row: 5 })
