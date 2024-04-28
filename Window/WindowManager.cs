@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dalamud.Interface;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Common.Math;
+using ImGuiNET;
 
 namespace KamiLib.Window;
 
@@ -34,6 +37,12 @@ public class WindowManager : IDisposable {
             configWindow = window;
             pluginInterface.UiBuilder.OpenConfigUi += OpenConfigurationWindow;
         }
+        
+        window.TitleBarButtons.Add(new Dalamud.Interface.Windowing.Window.TitleBarButton {
+            Icon = FontAwesomeIcon.Question,
+            ShowTooltip = () => ImGui.SetTooltip($"Window by {pluginInterface.InternalName}{(window.AdditionalInfoTooltip is not null ? "\n\n" : "")}{window.AdditionalInfoTooltip}"),
+            IconOffset = new Vector2(3.0f, 1.0f),
+        });
         
         windowSystem.AddWindow(window);
         Windows.Add(window);

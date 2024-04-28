@@ -4,4 +4,8 @@
         <None Remove="LICENSE"/>
         <None Remove=".gitignore"/>
     </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="NetStone" Version="1.1.1" />
+    </ItemGroup>
 </Project>

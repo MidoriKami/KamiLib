@@ -1,21 +1,27 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
+using ImGuiNET;
 
 namespace KamiLib.Window;
 
 public abstract class Window : Dalamud.Interface.Windowing.Window {
     private bool isCollapsed;
+    
+    public string? AdditionalInfoTooltip { get; set; }
 
     protected Window(string windowName, Vector2 size, bool fixedSize = false) : base(windowName) {
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = size,
             MaximumSize = fixedSize ? size : new Vector2(float.PositiveInfinity),
         };
-    }
-    
-    public abstract void PrintOpenNotAllowed();
 
-    public abstract bool IsOpenAllowed();
+        if (fixedSize) {
+            Flags |= ImGuiWindowFlags.NoResize;
+        }
+    }
+
+    public virtual void PrintOpenNotAllowed() { }
+
+    public virtual bool IsOpenAllowed() => true;
 
     public virtual void Open() {
         TryOpen();
