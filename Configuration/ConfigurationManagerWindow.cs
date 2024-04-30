@@ -127,13 +127,13 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             ImGui.SetCursorPos(new Vector2(0.0f, ImGui.GetContentRegionMax().Y - 30.0f * ImGuiHelpers.GlobalScale));
             var keyComboHeld = ImGui.GetIO().KeyShift && ImGui.GetIO().KeyCtrl;
 
-            using (var _ = ImRaii.PushStyle(ImGuiStyleVar.Alpha, 0.5f, !keyComboHeld)) {
+            using (var _ = ImRaii.Disabled(!keyComboHeld)) {
                 if (ImGui.Button("Copy Configurations", new Vector2(ImGui.GetContentRegionAvail().X, 30.0f * ImGuiHelpers.GlobalScale)) && keyComboHeld) {
                     CopySelectedConfigurations();
                 }
             }
             
-            if (ImGui.IsItemHovered()) {
+            if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled)) {
                 ImGui.SetTooltip("Press to copy configuration from source character to all target characters\nThis can not be un-done");
             }
         }
@@ -168,7 +168,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     private void ShowCharacterSelectWindow() {
         windowManager.AddWindow(new SelectionWindow<CharacterConfiguration>(windowManager) {
             DrawSelection = DrawCharacter,
-            SelectionCallback = selectedCharacter => {
+            SingleSelectionCallback = selectedCharacter => {
                 selectedSourceCharacter = selectedCharacter;
                 if (selectedSourceCharacter != null && destinationCharacters is not null && destinationCharacters.Contains(selectedSourceCharacter)) {
                     destinationCharacters.Remove(selectedSourceCharacter);
@@ -181,9 +181,10 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     }
 
     private void ShowCharacterMultiSelectWindow() {
-        windowManager.AddWindow(new MultiSelectionWindow<CharacterConfiguration>(windowManager) {
+        windowManager.AddWindow(new SelectionWindow<CharacterConfiguration>(windowManager) {
             DrawSelection = DrawCharacter,
-            SelectionCallback = selectedCharacters => {
+            AllowMultiSelect = true,
+            MultiSelectionCallback = selectedCharacters => {
                 destinationCharacters = selectedCharacters;
 
                 if (selectedSourceCharacter != null && destinationCharacters is not null && destinationCharacters.Contains(selectedSourceCharacter)) {
@@ -192,6 +193,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             },
             SelectionHeight = 75.0f,
             SelectionOptions = characters.ToList(),
+            FilterResults = (character, searchTerm) => character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
         });
     }
     

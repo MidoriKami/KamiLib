@@ -20,16 +20,18 @@ public class SelectionWindow<T> : Window where T : class {
     }
 
     private readonly WindowManager windowManager;
-    
-    public required Action<T?> SelectionCallback { get; init; }
+
+    public bool AllowMultiSelect { get; init; }
+    public Action<List<T>>? MultiSelectionCallback { get; init; }
+    public Action<T?>? SingleSelectionCallback { get; init; }
     public required List<T> SelectionOptions { get; init; }
     public required Action<T> DrawSelection { get; init; }
     public required float SelectionHeight { get; init; }
     public Func<T, string, bool>? FilterResults { get; init; }
     
     private List<T>? filteredResults;
+    private readonly List<T> selected = [];
     private string searchString = string.Empty;
-    private T? selected;
 
     public override void Draw() {
         base.Draw();
@@ -53,10 +55,10 @@ public class SelectionWindow<T> : Window where T : class {
         
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
         if (ImGui.InputTextWithHint("##filterInput", "Search...", ref searchString, 500)) {
-            filteredResults = SelectionOptions.Where(option => FilterResults(option, searchString)).ToList();
+            RefreshSearchResults();
         }
     }
-
+    
     private void DrawResults() {
         var sectionSize = new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 40.0f * ImGuiHelpers.GlobalScale);
         
@@ -64,10 +66,6 @@ public class SelectionWindow<T> : Window where T : class {
         if (!searchResults) return;
         
         if (filteredResults is not null) {
-            if (selected != null && !filteredResults.Contains(selected)) {
-                filteredResults = filteredResults.Prepend(selected).ToList();
-            }
-
             if (filteredResults.Count != 0) {
                 ImGuiClip.ClippedDraw(filteredResults, DrawSelectable, SelectionHeight * ImGuiHelpers.GlobalScale);
             }
@@ -92,9 +90,10 @@ public class SelectionWindow<T> : Window where T : class {
         
         ImGuiHelpers.ScaledDummy(5.0f);
 
-        using (var _ = ImRaii.Disabled(selected is null)) {
+        using (var _ = ImRaii.Disabled(selected.Count is 0)) {
             if (ImGui.Button("Confirm", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
-                SelectionCallback(selected);
+                MultiSelectionCallback?.Invoke(selected);
+                SingleSelectionCallback?.Invoke(selected.FirstOrDefault());
                 Close();
             }
         }
@@ -102,7 +101,8 @@ public class SelectionWindow<T> : Window where T : class {
         ImGui.SameLine();
         ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
         if (ImGui.Button("Cancel", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
-            SelectionCallback(null);
+            MultiSelectionCallback?.Invoke([]);
+            SingleSelectionCallback?.Invoke(null);
             Close();
         }
     }
@@ -113,22 +113,35 @@ public class SelectionWindow<T> : Window where T : class {
 
         var cursorPosition = ImGui.GetCursorPos();
             
-        if (ImGui.Selectable($"##{selectable.GetHashCode()}", selectionOption == selected, ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
-            if (selectionOption == selected) {
-                selected = null;
+        if (ImGui.Selectable($"##{selectable.GetHashCode()}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
+            
+            // It was already selected, unselect it.
+            if (selected.Contains(selectionOption)) {
+                selected.Remove(selectionOption);
                 
-                // Refresh filters.
-                if (FilterResults is not null) {
-                    filteredResults = SelectionOptions.Where(option => FilterResults(option, searchString)).ToList();
-                }
+                RefreshSearchResults();
             }
             else {
-                selected = selectionOption;
+                if (AllowMultiSelect) {
+                    selected.Add(selectionOption);
+                }
+                else {
+                    selected.Clear();
+                    selected.Add(selectionOption);
+                }
             }
         }
             
         ImGui.SetCursorPos(cursorPosition);
 
         DrawSelection(selectionOption);
+    }
+    
+    private void RefreshSearchResults() {
+        if (FilterResults is null) return;
+        
+        filteredResults = SelectionOptions
+            .Where(option => FilterResults(option, searchString) && !selected.Contains(option))
+            .ToList();
     }
 }
