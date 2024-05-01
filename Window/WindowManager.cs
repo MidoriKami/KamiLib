@@ -32,18 +32,29 @@ public class WindowManager : IDisposable {
         windowSystem.RemoveAllWindows();
     }
 
-    public void AddWindow(Window window, bool isConfigWindow = false) {
-        if (isConfigWindow) {
-            configWindow = window;
-            pluginInterface.UiBuilder.OpenConfigUi += OpenConfigurationWindow;
-        }
+    public void AddWindow(Window window, bool openWindow = true, bool isConfigWindow = false) {
+        window.PluginInterface = pluginInterface;
+        window.ParentWindowManager = this;
         
+        pluginInterface.Inject(window);
+
         window.TitleBarButtons.Add(new Dalamud.Interface.Windowing.Window.TitleBarButton {
             Icon = FontAwesomeIcon.Question,
             ShowTooltip = () => ImGui.SetTooltip($"Window by {pluginInterface.InternalName}{(window.AdditionalInfoTooltip is not null ? "\n\n" : "")}{window.AdditionalInfoTooltip}"),
             IconOffset = new Vector2(3.0f, 1.0f),
         });
+
+        if (openWindow) {
+            window.Open();
+        }
         
+        if (isConfigWindow) {
+            configWindow = window;
+            pluginInterface.UiBuilder.OpenConfigUi += OpenConfigurationWindow;
+        }
+        
+        window.Load();
+
         windowSystem.AddWindow(window);
         Windows.Add(window);
     }
@@ -59,8 +70,14 @@ public class WindowManager : IDisposable {
     public IEnumerable<T> GetWindows<T>() where T : Window
         => Windows.OfType<T>();
 
-    public void ToggleWindow<T>() where T : Window
-        => GetWindow<T>()?.UnCollapseOrToggle();
+    public void ToggleWindow<T>(bool forceShow = false) where T : Window {
+        if (forceShow) {
+            GetWindow<T>()?.UnCollapseOrShow();
+        }
+        else {
+            GetWindow<T>()?.UnCollapseOrToggle();
+        }
+    }
 
     private void OpenConfigurationWindow() {
         if (configWindow is null) {

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using KamiLib.Configuration;
 using NetStone;
 using NetStone.Model.Parseables.Character;
@@ -10,7 +11,7 @@ using NetStone.Search.Character;
 namespace KamiLib.Classes;
 
 public static class LodestoneClientExtensions {
-    internal static async Task<LodestoneCharacter?> TryGetLodestoneCharacter(this LodestoneClient client, DalamudPluginInterface pluginInterface, CharacterConfiguration character) {
+    internal static async Task<LodestoneCharacter?> TryGetLodestoneCharacter(this LodestoneClient client, DalamudPluginInterface pluginInterface, IPluginLog log, CharacterConfiguration character) {
         try {
             // If lodestone id is null, try and fetch it by searching for name and world.
             if (character.LodestoneId is null) {
@@ -34,7 +35,8 @@ public static class LodestoneClientExtensions {
             return await client.GetCharacter(character.LodestoneId);
         }
         catch (Exception e) {
-            throw new Exception($"Exception trying to get lodestone information for {character.CharacterName}.", e);
+            log.Error(e, $"Exception trying to get lodestone data for {character.CharacterName}@{character.CharacterWorld}");
+            return null;
         }
     }
 }

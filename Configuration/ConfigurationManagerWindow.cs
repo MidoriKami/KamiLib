@@ -12,7 +12,7 @@ using Dalamud.Interface.Internal;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Plugin;
+using Dalamud.IoC;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
 using KamiLib.Classes;
@@ -22,26 +22,20 @@ using NetStone;
 namespace KamiLib.Configuration;
 
 public class ConfigurationManagerWindow : Window.Window, IDisposable {
-    private readonly DalamudPluginInterface pluginInterface;
-    private readonly ITextureProvider textureProvider;
-    private readonly WindowManager windowManager;
-    private readonly INotificationManager notificationManager;
+    [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
+    [PluginService] private INotificationManager NotificationManager { get; set; } = null!;
+    [PluginService] private IPluginLog Log { get; set; } = null!;
 
     private readonly Dictionary<ulong, IDalamudTextureWrap?> characterProfiles = [];
 
-    private readonly List<CharacterConfiguration> characters;
+    private List<CharacterConfiguration> characters = [];
 
     private CharacterConfiguration? selectedSourceCharacter;
     private List<CharacterConfiguration>? destinationCharacters;
 
     private readonly CancellationTokenSource cancellationTokenSource = new();
 
-    public ConfigurationManagerWindow(DalamudPluginInterface pluginInterface, ITextureProvider textureProvider, INotificationManager notificationManager, WindowManager windowManager) : base("Configuration Manager", new Vector2(750.0f, 500.0f)) {
-        this.pluginInterface = pluginInterface;
-        this.textureProvider = textureProvider;
-        this.windowManager = windowManager;
-        this.notificationManager = notificationManager;
-
+    public ConfigurationManagerWindow() : base("Configuration Manager", new Vector2(750.0f, 500.0f)) {
         AdditionalInfoTooltip = "Allows you to easily copy plugin configuration from one character to multiple characters";
         
         TitleBarButtons.Add(new TitleBarButton {
@@ -49,24 +43,24 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             ShowTooltip = () => ImGui.SetTooltip("Reload Profile Pictures"),
             IconOffset = new Vector2(1.5f, 2.0f),
             Click = _ => {
-                if (characters != null) {
-                    foreach (var character in characters) {
-                        character.PurgeProfilePicture = true;
-                    }
-                    characterProfiles.Clear();
-                    Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
+                foreach (var character in characters) {
+                    character.PurgeProfilePicture = true;
                 }
+                characterProfiles.Clear();
+                Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
             },
             Priority = 2,
         });
-
-        characters = pluginInterface.GetAllCharacterConfigurations().ToList();
-
-        Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
     }
     
     public void Dispose() {
         cancellationTokenSource.Cancel();
+    }
+
+    public override void Load() {
+        characters = PluginInterface.GetAllCharacterConfigurations().ToList();
+
+        Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
     }
 
     public override void Draw() {
@@ -82,8 +76,6 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         ImGui.SameLine();
         DrawTargetSelect(rightSize);
     }
-
-    
     
     private void DrawSourceSelect(Vector2 leftSize) {
         using var leftPane = ImRaii.Child("leftPane", leftSize);
@@ -166,7 +158,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     }
 
     private void ShowCharacterSelectWindow() {
-        windowManager.AddWindow(new SelectionWindow<CharacterConfiguration>(windowManager) {
+        ParentWindowManager.AddWindow(new SelectionWindow<CharacterConfiguration> {
             DrawSelection = DrawCharacter,
             SingleSelectionCallback = selectedCharacter => {
                 selectedSourceCharacter = selectedCharacter;
@@ -176,12 +168,14 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             },
             SelectionHeight = 75.0f,
             SelectionOptions = characters.ToList(),
-            FilterResults = (character, searchTerm) => character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
+            FilterResults = (character, searchTerm) =>                 
+                character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                character.CharacterWorld.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
         });
     }
 
     private void ShowCharacterMultiSelectWindow() {
-        windowManager.AddWindow(new SelectionWindow<CharacterConfiguration>(windowManager) {
+        ParentWindowManager.AddWindow(new SelectionWindow<CharacterConfiguration> {
             DrawSelection = DrawCharacter,
             AllowMultiSelect = true,
             MultiSelectionCallback = selectedCharacters => {
@@ -193,7 +187,9 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             },
             SelectionHeight = 75.0f,
             SelectionOptions = characters.ToList(),
-            FilterResults = (character, searchTerm) => character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
+            FilterResults = (character, searchTerm) => 
+                character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                character.CharacterWorld.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
         });
     }
     
@@ -214,7 +210,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     private async void TryLoadCharacterProfilePicture(LodestoneClient lodestoneClient, HttpClient httpClient, CharacterConfiguration characterConfiguration) {
         if (characterConfiguration.ContentId is 0) return;
 
-        var texture = await NetStoneExtensions.TryGetProfilePicture(httpClient, lodestoneClient, pluginInterface, textureProvider, characterConfiguration);
+        var texture = await NetStoneExtensions.TryGetProfilePicture(httpClient, lodestoneClient, PluginInterface, TextureProvider, Log, characterConfiguration);
         characterProfiles.Add(characterConfiguration.ContentId, texture);
     }
 
@@ -225,7 +221,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             ImGui.Image(texture.ImGuiHandle, texture.Size * sizeRatio);
         }
         else {
-            if (textureProvider.GetIcon(60042) is { ImGuiHandle: var handle } unknownTexture) {
+            if (TextureProvider.GetIcon(60042) is { ImGuiHandle: var handle } unknownTexture) {
                 var sizeRatio = ImGui.GetContentRegionAvail().X / unknownTexture.Width;
                 ImGui.Image(handle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f) * sizeRatio);
             }
@@ -249,7 +245,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
                     ImGui.Image(texture.ImGuiHandle, new Vector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
                 }
                 else {
-                    ImGui.Image(textureProvider.GetIcon(60042)?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
+                    ImGui.Image(TextureProvider.GetIcon(60042)?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
                 }
             }
         }
@@ -275,7 +271,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     
     private void CopySelectedConfigurations() {
         if (selectedSourceCharacter is null) {
-            notificationManager.AddNotification(new Notification {
+            NotificationManager.AddNotification(new Notification {
                 Type = NotificationType.Error,
                 Content = "No Source Character is Selected",
             });
@@ -283,22 +279,22 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         }
 
         if (destinationCharacters is null || destinationCharacters.Count == 0) {
-            notificationManager.AddNotification(new Notification {
+            NotificationManager.AddNotification(new Notification {
                 Type = NotificationType.Error,
                 Content = "No Destination Characters are Selected",
             });
             return;
         }
         
-        foreach (var file in pluginInterface.GetCharacterDirectoryInfo(selectedSourceCharacter.ContentId).GetFiles()) {
+        foreach (var file in PluginInterface.GetCharacterDirectoryInfo(selectedSourceCharacter.ContentId).GetFiles()) {
             if (file is { Exists: true, Name: var fileName } && fileName.Contains("config.json", StringComparison.OrdinalIgnoreCase) && !fileName.Contains("System", StringComparison.OrdinalIgnoreCase)) {
                 foreach (var targetCharacter in destinationCharacters) {
-                    file.CopyTo(pluginInterface.GetCharacterFileInfo(targetCharacter.ContentId, fileName).FullName, true);
+                    file.CopyTo(PluginInterface.GetCharacterFileInfo(targetCharacter.ContentId, fileName).FullName, true);
                 }
             }
         }
 
-        notificationManager.AddNotification(new Notification {
+        NotificationManager.AddNotification(new Notification {
             Type = NotificationType.Success,
             Content = "Configurations successfully copied"
         });

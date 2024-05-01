@@ -1,10 +1,13 @@
 ﻿using System.Numerics;
+using Dalamud.Plugin;
 using ImGuiNET;
 
 namespace KamiLib.Window;
 
 public abstract class Window : Dalamud.Interface.Windowing.Window {
     private bool isCollapsed;
+    public DalamudPluginInterface PluginInterface { get; set; } = null!;
+    public WindowManager ParentWindowManager { get; set; } = null!;
     
     public string? AdditionalInfoTooltip { get; set; }
 
@@ -22,6 +25,11 @@ public abstract class Window : Dalamud.Interface.Windowing.Window {
     public virtual void PrintOpenNotAllowed() { }
 
     public virtual bool IsOpenAllowed() => true;
+    
+    /// <summary>
+    /// For loading assets that depend on injected dalamud services.
+    /// </summary>
+    public virtual void Load() { }
 
     public virtual void Open() {
         TryOpen();

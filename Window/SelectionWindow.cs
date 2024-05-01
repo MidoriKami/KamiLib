@@ -11,15 +11,12 @@ using ImGuiNET;
 namespace KamiLib.Window;
 
 public class SelectionWindow<T> : Window where T : class {
-    public SelectionWindow(WindowManager windowManager) : this(windowManager, new Vector2(600.0f, 400.0f)) {
+    public SelectionWindow() : this(new Vector2(600.0f, 400.0f)) {
     }
 
-    public SelectionWindow(WindowManager windowManager, Vector2 size) : base($"{typeof(T).Name} Selection Window", size, true) {
-        this.windowManager = windowManager;
+    public SelectionWindow(Vector2 size) : base($"{typeof(T).Name} Selection Window", size, true) {
         UnCollapseOrShow();
     }
-
-    private readonly WindowManager windowManager;
 
     public bool AllowMultiSelect { get; init; }
     public Action<List<T>>? MultiSelectionCallback { get; init; }
@@ -44,7 +41,7 @@ public class SelectionWindow<T> : Window where T : class {
     public override void OnClose() {
         base.OnClose();
         
-        windowManager.RemoveWindow(this);
+        ParentWindowManager.RemoveWindow(this);
     }
 
     private void TryDrawSearchBox() {
@@ -118,7 +115,6 @@ public class SelectionWindow<T> : Window where T : class {
             // It was already selected, unselect it.
             if (selected.Contains(selectionOption)) {
                 selected.Remove(selectionOption);
-                
                 RefreshSearchResults();
             }
             else {
@@ -141,7 +137,7 @@ public class SelectionWindow<T> : Window where T : class {
         if (FilterResults is null) return;
         
         filteredResults = SelectionOptions
-            .Where(option => FilterResults(option, searchString) && !selected.Contains(option))
+            .Where(option => FilterResults(option, searchString) || selected.Contains(option))
             .ToList();
     }
 }
