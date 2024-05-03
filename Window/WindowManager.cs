@@ -45,7 +45,7 @@ public class WindowManager : IDisposable {
         });
 
         if (openWindow) {
-            window.Open();
+            window.UnCollapseOrShow();
         }
         
         if (isConfigWindow) {

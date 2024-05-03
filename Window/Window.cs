@@ -20,6 +20,9 @@ public abstract class Window : Dalamud.Interface.Windowing.Window {
         if (fixedSize) {
             Flags |= ImGuiWindowFlags.NoResize;
         }
+
+        Collapsed = false;
+        CollapsedCondition = ImGuiCond.Appearing;
     }
 
     public virtual void PrintOpenNotAllowed() { }
