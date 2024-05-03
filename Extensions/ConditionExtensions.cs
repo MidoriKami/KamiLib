@@ -37,4 +37,7 @@ public static class ConditionExtensions {
 
     public static bool IsInCutsceneOrQuestEvent(this ICondition condition)
         => condition.IsInCutscene() || condition.IsInQuestEvent();
+
+    public static bool IsDutyRecorderPlayback(this ICondition condition)
+        => condition.Any(ConditionFlag.DutyRecorderPlayback);
 }
