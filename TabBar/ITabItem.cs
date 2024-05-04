@@ -2,6 +2,6 @@
 
 public interface ITabItem {
     string Name { get; }
-    bool Enabled { get; set; }
+    bool Disabled { get; }
     void Draw();
 }
