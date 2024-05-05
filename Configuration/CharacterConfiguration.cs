@@ -10,7 +10,7 @@ using ImGuiNET;
 
 namespace KamiLib.Configuration;
 
-internal class CharacterConfiguration  : IPluginConfiguration {
+public class CharacterConfiguration  : IPluginConfiguration {
     public int Version { get; set; }
     public string CharacterName { get; set; } = string.Empty;
     public string CharacterWorld { get; set; } = string.Empty;
