@@ -11,6 +11,7 @@ namespace KamiLib.Classes;
 public static class Configuration {
     private static readonly JsonSerializerOptions SerializerOptions = new() {
         WriteIndented = true,
+        IncludeFields = true,
     };
 
     private static CharacterConfiguration LoadCharacterConfiguration(this DalamudPluginInterface pluginInterface, ulong contentId) {
@@ -29,7 +30,7 @@ public static class Configuration {
         if (fileInfo is { Exists: true }) {
             try {
                 var fileText = File.ReadAllText(fileInfo.FullName);
-                var dataObject = JsonSerializer.Deserialize<T>(fileText);
+                var dataObject = JsonSerializer.Deserialize<T>(fileText, SerializerOptions);
 
                 // If deserialize result is null, create a new instance instead and save it.
                 if (dataObject is null) {
