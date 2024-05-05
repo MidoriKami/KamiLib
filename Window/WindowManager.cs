@@ -33,6 +33,8 @@ public class WindowManager : IDisposable {
     }
 
     public void AddWindow(Window window, bool openWindow = true, bool isConfigWindow = false) {
+        if (Windows.Any(existingWindow => string.Equals(existingWindow.WindowName, window.WindowName, StringComparison.OrdinalIgnoreCase))) return;
+        
         window.PluginInterface = pluginInterface;
         window.ParentWindowManager = this;
         

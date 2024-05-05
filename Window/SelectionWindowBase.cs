@@ -10,25 +10,26 @@ using ImGuiNET;
 
 namespace KamiLib.Window;
 
-public class SelectionWindow<T> : Window where T : class {
-    public SelectionWindow() : this(new Vector2(600.0f, 400.0f)) {
+public abstract class SelectionWindowBase<T> : Window where T : class {
+    protected SelectionWindowBase() : this(new Vector2(600.0f, 400.0f)) {
     }
 
-    public SelectionWindow(Vector2 size) : base($"{typeof(T).Name} Selection Window", size, true) {
+    protected SelectionWindowBase(Vector2 size) : base($"{typeof(T).Name} Selection Window", size, true) {
         UnCollapseOrShow();
     }
 
-    public bool AllowMultiSelect { get; init; }
+    protected abstract bool AllowMultiSelect { get; }
     public Action<List<T>>? MultiSelectionCallback { get; init; }
     public Action<T?>? SingleSelectionCallback { get; init; }
-    public required List<T> SelectionOptions { get; init; }
-    public required Action<T> DrawSelection { get; init; }
-    public required float SelectionHeight { get; init; }
-    public Func<T, string, bool>? FilterResults { get; init; }
+    public List<T> SelectionOptions { get; init; } = [];
+    protected abstract float SelectionHeight { get; }
     
     private List<T>? filteredResults;
     private readonly List<T> selected = [];
     private string searchString = string.Empty;
+
+    protected abstract void DrawSelection(T option);
+    protected abstract bool FilterResults(T option, string filter);
 
     public override void Draw() {
         base.Draw();
@@ -45,13 +46,11 @@ public class SelectionWindow<T> : Window where T : class {
     }
 
     private void TryDrawSearchBox() {
-        if (FilterResults is null) return;
-        
         using var searchChild = ImRaii.Child("searchChild", new Vector2(ImGui.GetContentRegionAvail().X, 30.0f * ImGuiHelpers.GlobalScale));
         if (!searchChild) return;
         
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
-        if (ImGui.InputTextWithHint("##filterInput", "Search...", ref searchString, 500)) {
+        if (ImGui.InputTextWithHint("##filterInput", "Search...", ref searchString, 500, ImGuiInputTextFlags.AutoSelectAll)) {
             RefreshSearchResults();
         }
     }
@@ -133,11 +132,8 @@ public class SelectionWindow<T> : Window where T : class {
         DrawSelection(selectionOption);
     }
     
-    private void RefreshSearchResults() {
-        if (FilterResults is null) return;
-        
-        filteredResults = SelectionOptions
+    private void RefreshSearchResults() 
+        => filteredResults = SelectionOptions
             .Where(option => FilterResults(option, searchString) || selected.Contains(option))
             .ToList();
-    }
 }

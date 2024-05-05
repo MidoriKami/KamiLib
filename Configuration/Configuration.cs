@@ -66,7 +66,7 @@ public static class Configuration {
     public static FileInfo GetCharacterFileInfo(this DalamudPluginInterface pluginInterface, ulong contentId, string fileName) 
         => new(Path.Combine(pluginInterface.GetCharacterDirectoryInfo(contentId).FullName, fileName));
 
-    public static IEnumerable<CharacterConfiguration> GetAllCharacterConfigurations(this DalamudPluginInterface pluginInterface) 
+    internal static IEnumerable<CharacterConfiguration> GetAllCharacterConfigurations(this DalamudPluginInterface pluginInterface) 
         => pluginInterface.GetAllCharacterContentIds().Select(pluginInterface.LoadCharacterConfiguration);
 
     private static IEnumerable<ulong> GetAllCharacterContentIds(this DalamudPluginInterface pluginInterface) {

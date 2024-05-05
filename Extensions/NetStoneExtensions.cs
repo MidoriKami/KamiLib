@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dalamud.Interface.Internal;
@@ -12,7 +11,7 @@ using NetStone;
 namespace KamiLib.Classes;
 
 public static class NetStoneExtensions {
-    public static async Task<IDalamudTextureWrap?> TryGetProfilePicture(HttpClient httpClient, LodestoneClient lodestoneClient, DalamudPluginInterface pluginInterface, ITextureProvider textureProvider, IPluginLog log, CharacterConfiguration characterConfiguration) {
+    internal static async Task<IDalamudTextureWrap?> TryGetProfilePicture(HttpClient httpClient, LodestoneClient lodestoneClient, DalamudPluginInterface pluginInterface, ITextureProvider textureProvider, IPluginLog log, CharacterConfiguration characterConfiguration) {
         try {
             // We had some error while loading character configuration and don't know what character this is.
             if (characterConfiguration.ContentId is 0) return null;

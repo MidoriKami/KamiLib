@@ -8,7 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dalamud.Interface;
 using Dalamud.Interface.ImGuiNotification;
-using Dalamud.Interface.Internal;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -25,8 +24,6 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private INotificationManager NotificationManager { get; set; } = null!;
     [PluginService] private IPluginLog Log { get; set; } = null!;
-
-    private readonly Dictionary<ulong, IDalamudTextureWrap?> characterProfiles = [];
 
     private List<CharacterConfiguration> characters = [];
 
@@ -45,8 +42,8 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             Click = _ => {
                 foreach (var character in characters) {
                     character.PurgeProfilePicture = true;
+                    character.ProfilePicture = null;
                 }
-                characterProfiles.Clear();
                 Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
             },
             Priority = 2,
@@ -66,10 +63,10 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     public override void Draw() {
         base.Draw();
 
-        var leftSize = new Vector2(ImGui.GetContentRegionMax().X * 0.35f - ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetContentRegionAvail().Y);
-        var centerSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.30f - ImGui.GetStyle().ItemInnerSpacing.X * 2.0f, ImGui.GetContentRegionAvail().Y);
-        var rightSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.35f - ImGui.GetStyle().ItemInnerSpacing.X, ImGui.GetContentRegionAvail().Y);
-
+        var leftSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.35f, ImGui.GetContentRegionAvail().Y);
+        var centerSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.3025f - ImGui.GetStyle().ItemSpacing.X * 2.0f, ImGui.GetContentRegionAvail().Y);
+        var rightSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.35f, ImGui.GetContentRegionAvail().Y);
+        
         DrawSourceSelect(leftSize);
         ImGui.SameLine();
         DrawCenterPane(centerSize);
@@ -145,7 +142,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             using (var charactersFrame = ImRaii.Child("charactersFrame", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y - 35.0f * ImGuiHelpers.GlobalScale))) {
                 if (charactersFrame) {
                     foreach (var selectedTarget in destinationCharacters) {
-                        DrawCharacter(selectedTarget);
+                        selectedTarget.Draw(TextureProvider);
                     }
                 }
             }
@@ -158,26 +155,19 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     }
 
     private void ShowCharacterSelectWindow() {
-        ParentWindowManager.AddWindow(new SelectionWindow<CharacterConfiguration> {
-            DrawSelection = DrawCharacter,
+        ParentWindowManager.AddWindow(new CharacterSelectionWindow(false, TextureProvider) {
             SingleSelectionCallback = selectedCharacter => {
                 selectedSourceCharacter = selectedCharacter;
                 if (selectedSourceCharacter != null && destinationCharacters is not null && destinationCharacters.Contains(selectedSourceCharacter)) {
                     destinationCharacters.Remove(selectedSourceCharacter);
                 }
             },
-            SelectionHeight = 75.0f,
             SelectionOptions = characters.ToList(),
-            FilterResults = (character, searchTerm) =>                 
-                character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                character.CharacterWorld.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
         });
     }
 
     private void ShowCharacterMultiSelectWindow() {
-        ParentWindowManager.AddWindow(new SelectionWindow<CharacterConfiguration> {
-            DrawSelection = DrawCharacter,
-            AllowMultiSelect = true,
+        ParentWindowManager.AddWindow(new CharacterSelectionWindow(true, TextureProvider) {
             MultiSelectionCallback = selectedCharacters => {
                 destinationCharacters = selectedCharacters;
 
@@ -185,11 +175,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
                     destinationCharacters.Remove(selectedSourceCharacter);
                 }
             },
-            SelectionHeight = 75.0f,
             SelectionOptions = characters.ToList(),
-            FilterResults = (character, searchTerm) => 
-                character.CharacterName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
-                character.CharacterWorld.Contains(searchTerm, StringComparison.OrdinalIgnoreCase),
         });
     }
     
@@ -211,11 +197,11 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         if (characterConfiguration.ContentId is 0) return;
 
         var texture = await NetStoneExtensions.TryGetProfilePicture(httpClient, lodestoneClient, PluginInterface, TextureProvider, Log, characterConfiguration);
-        characterProfiles.Add(characterConfiguration.ContentId, texture);
+        characterConfiguration.ProfilePicture = texture;
     }
 
     private void DrawSelectedCharacter(CharacterConfiguration character) {
-        if (characterProfiles.TryGetValue(character.ContentId, out var texture) && texture is not null) {
+        if (character.ProfilePicture is {} texture) {
             var sizeRatio = ImGui.GetContentRegionAvail().X / texture.Width;
             
             ImGui.Image(texture.ImGuiHandle, texture.Size * sizeRatio);
@@ -228,7 +214,12 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         }
         
         ImGuiHelpers.ScaledDummy(5.0f);
-        PrintCharacterInfo(character);
+        ImGui.TextUnformatted(character.CharacterName);
+        ImGui.TextUnformatted(character.CharacterWorld);
+
+        using (ImRaii.PushColor(ImGuiCol.Text, Vector4.One * 0.75f)) {
+            ImGui.TextUnformatted(character.ContentId.ToString());
+        }
             
         ImGui.SetCursorPosY(ImGui.GetContentRegionMax().Y - 30.0f * ImGuiHelpers.GlobalScale);
         if (ImGui.Button("Change##source", new Vector2(ImGui.GetContentRegionAvail().X, 30.0f * ImGuiHelpers.GlobalScale))) {
@@ -236,39 +227,6 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         }
     }
 
-    private void DrawCharacter(CharacterConfiguration character) {
-        using var id = ImRaii.PushId(character.ContentId.ToString());
-
-        using (var portrait = ImRaii.Child("portrait", ImGuiHelpers.ScaledVector2(75.0f, 75.0f), false, ImGuiWindowFlags.NoInputs)) {
-            if (portrait) {
-                if (characterProfiles.TryGetValue(character.ContentId, out var texture) && texture is not null) {
-                    ImGui.Image(texture.ImGuiHandle, new Vector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
-                }
-                else {
-                    ImGui.Image(TextureProvider.GetIcon(60042)?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
-                }
-            }
-        }
-
-        ImGui.SameLine();
-
-        using (var info = ImRaii.Child("info", new Vector2(ImGui.GetContentRegionAvail().X, 75.0f * ImGuiHelpers.GlobalScale), false, ImGuiWindowFlags.NoInputs)) {
-            if (info) {
-                ImGuiHelpers.ScaledDummy(5.0f);
-                PrintCharacterInfo(character);
-            }
-        }
-    }
-    
-    private static void PrintCharacterInfo(CharacterConfiguration character) {
-        ImGui.TextUnformatted(character.CharacterName);
-        ImGui.TextUnformatted(character.CharacterWorld);
-
-        using (ImRaii.PushColor(ImGuiCol.Text, Vector4.One * 0.75f)) {
-            ImGui.TextUnformatted(character.ContentId.ToString());
-        }
-    }
-    
     private void CopySelectedConfigurations() {
         if (selectedSourceCharacter is null) {
             NotificationManager.AddNotification(new Notification {

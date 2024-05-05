@@ -3,6 +3,12 @@ using Dalamud.Interface.Utility.Raii;
 
 namespace KamiLib.TabBar;
 
+public interface ITabItem {
+    string Name { get; }
+    bool Disabled { get; }
+    void Draw();
+}
+
 public class TabBar(string name, List<ITabItem> tabs) {
     public void Draw() {
         using var tabBar = ImRaii.TabBar(name);
