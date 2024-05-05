@@ -14,7 +14,31 @@ public abstract class SelectionWindowBase<T> : Window where T : class {
     protected SelectionWindowBase() : this(new Vector2(600.0f, 400.0f)) {
     }
 
-    protected SelectionWindowBase(Vector2 size) : base($"{typeof(T).Name} Selection Window", size, true) {
+    protected SelectionWindowBase(Vector2 size, bool fixedSize = true) : base($"{typeof(T).Name} Selection Window", size, fixedSize) {
+        TitleBarButtons.Add(new TitleBarButton {
+            ShowTooltip = () => {
+                ImGui.SetTooltip("Deselect All");
+            },
+            Icon = FontAwesomeIcon.Minus,
+            Click = _ => selected.Clear(),
+            IconOffset = new Vector2(2.5f, 1.0f),
+        });
+        
+        TitleBarButtons.Add(new TitleBarButton {
+            ShowTooltip = () => {
+                ImGui.SetTooltip("Select All");
+            },
+            Icon = FontAwesomeIcon.Plus,
+            Click = _ => {
+                if (AllowMultiSelect) {
+                    foreach (var option in SelectionOptions.Where(option => !selected.Contains(option))) {
+                        selected.Add(option);
+                    }
+                }
+            },
+            IconOffset = new Vector2(2.5f, 1.0f),
+        });
+
         UnCollapseOrShow();
     }
 
