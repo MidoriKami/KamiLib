@@ -55,9 +55,7 @@ public abstract class SelectionWindowBase<T> : Window where T : class {
     protected abstract void DrawSelection(T option);
     protected abstract bool FilterResults(T option, string filter);
 
-    public override void Draw() {
-        base.Draw();
-
+    protected override void DrawContents() {
         TryDrawSearchBox();
         DrawResults();
         DrawConfirmCancel();

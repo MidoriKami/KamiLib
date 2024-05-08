@@ -60,9 +60,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
     }
 
-    public override void Draw() {
-        base.Draw();
-
+    protected override void DrawContents() {
         var leftSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.35f, ImGui.GetContentRegionAvail().Y);
         var centerSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.3025f - ImGui.GetStyle().ItemSpacing.X * 2.0f, ImGui.GetContentRegionAvail().Y);
         var rightSize = new Vector2(ImGui.GetContentRegionAvail().X * 0.35f, ImGui.GetContentRegionAvail().Y);
