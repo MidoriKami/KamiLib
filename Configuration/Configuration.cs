@@ -9,7 +9,7 @@ using KamiLib.Configuration;
 namespace KamiLib.Classes;
 
 public static class Configuration {
-    private static readonly JsonSerializerOptions SerializerOptions = new() {
+    public static readonly JsonSerializerOptions SerializerOptions = new() {
         WriteIndented = true,
         IncludeFields = true,
     };
