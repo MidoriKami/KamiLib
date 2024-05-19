@@ -9,10 +9,11 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using ImGuiNET;
+using KamiLib.Classes;
 using Lumina.Excel.GeneratedSheets2;
 using TerritoryType = Lumina.Excel.GeneratedSheets.TerritoryType;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public static class TerritoryTypeExtensions {
     private const float Width = 133.5f;

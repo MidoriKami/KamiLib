@@ -2,7 +2,7 @@
 using Dalamud.Plugin;
 using KamiLib.Configuration;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public static class PluginInterfaceExtensions {
     internal static FileInfo GetProfilePictureFileInfo(this DalamudPluginInterface pluginInterface, CharacterConfiguration characterConfiguration) 

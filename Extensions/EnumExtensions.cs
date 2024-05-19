@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public static class EnumExtensions {
     public static string GetDescription(this Enum value) {

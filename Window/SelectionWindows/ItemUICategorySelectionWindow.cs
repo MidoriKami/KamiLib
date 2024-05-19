@@ -9,7 +9,7 @@ using Dalamud.Utility;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Window;
+namespace KamiLib.Window.SelectionWindows;
 
 public class ItemUICategorySelectionWindow : SelectionWindowBase<ItemUICategory> {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;

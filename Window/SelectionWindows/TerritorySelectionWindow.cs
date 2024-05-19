@@ -5,10 +5,10 @@ using Dalamud.Interface.Utility;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using KamiLib.Classes;
+using KamiLib.Extensions;
 using TerritoryType = Lumina.Excel.GeneratedSheets.TerritoryType;
 
-namespace KamiLib.Window;
+namespace KamiLib.Window.SelectionWindows;
 
 public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
     [PluginService] private IDataManager DataManager { get; set; } = null!;

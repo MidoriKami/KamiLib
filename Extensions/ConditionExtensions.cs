@@ -2,7 +2,7 @@
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.MJI;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public static class ConditionExtensions {
     public static bool IsBoundByDuty(this ICondition condition) 

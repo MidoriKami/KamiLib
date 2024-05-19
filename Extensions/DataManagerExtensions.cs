@@ -4,7 +4,7 @@ using Dalamud;
 using Dalamud.Plugin.Services;
 using Lumina.Excel.GeneratedSheets2;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public enum DutyType {
     Unknown,

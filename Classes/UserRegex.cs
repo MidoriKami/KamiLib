@@ -5,7 +5,7 @@ using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using Newtonsoft.Json;
 
-namespace SortaKinda.Models;
+namespace KamiLib.Classes;
 
 /// <summary> A wrapper to combine a textual user input and a compiled regex. By Ottermandias.</summary>
 public struct UserRegex

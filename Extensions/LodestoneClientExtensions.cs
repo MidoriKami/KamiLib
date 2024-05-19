@@ -8,7 +8,7 @@ using NetStone;
 using NetStone.Model.Parseables.Character;
 using NetStone.Search.Character;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public static class LodestoneClientExtensions {
     internal static async Task<LodestoneCharacter?> TryGetLodestoneCharacter(this LodestoneClient client, DalamudPluginInterface pluginInterface, IPluginLog log, CharacterConfiguration character) {

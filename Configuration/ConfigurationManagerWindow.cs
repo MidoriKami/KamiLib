@@ -14,8 +14,8 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.IoC;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
-using KamiLib.Classes;
-using KamiLib.Window;
+using KamiLib.Extensions;
+using KamiLib.Window.SelectionWindows;
 using NetStone;
 
 namespace KamiLib.Configuration;

@@ -3,7 +3,7 @@ using Dalamud.Interface.Utility;
 using Dalamud.Plugin.Services;
 using KamiLib.Configuration;
 
-namespace KamiLib.Window;
+namespace KamiLib.Window.SelectionWindows;
 
 internal class CharacterSelectionWindow(bool multiSelect, ITextureProvider textureProvider) : SelectionWindowBase<CharacterConfiguration> {
     protected override bool AllowMultiSelect => multiSelect;

@@ -8,7 +8,7 @@ using Dalamud.Plugin.Services;
 using KamiLib.Configuration;
 using NetStone;
 
-namespace KamiLib.Classes;
+namespace KamiLib.Extensions;
 
 public static class NetStoneExtensions {
     internal static async Task<IDalamudTextureWrap?> TryGetProfilePicture(HttpClient httpClient, LodestoneClient lodestoneClient, DalamudPluginInterface pluginInterface, ITextureProvider textureProvider, IPluginLog log, CharacterConfiguration characterConfiguration) {
