@@ -66,44 +66,36 @@ public class CommandManager : IDisposable {
 
     private void DalamudCommandHandler(string command, string arguments) {
         Log.Verbose($"Received Command: {command}, Args: {arguments}");
+
+        var commandParts = arguments.Split(" ").Prepend("/").Where(part => !part.IsNullOrEmpty()).ToList();
+
+        var commandHandlers = registeredCommands.OrderBy(commandHandler => commandHandler.CommandLength).ToArray();
+        var commandLength = commandParts.Count;
         
         if (arguments is "help") {
             HelpCommandHandler(command, arguments);
             return;
         }
         
-        var argumentsList = arguments.Split(" ").ToList();
-        var currentPath = string.Empty;
-        
-        try {
-            // Try to Execute Base Command Handlers
-            TryExecuteCommand("/", argumentsList);
+        foreach (var index in Enumerable.Range(0, commandLength)) {
+            var currentCommandParts = commandParts[..(commandLength - index)].ToArray();
+            var currentArgumentParts = commandParts[(commandLength - index)..].ToArray();
             
-            foreach (var argument in argumentsList.ToArray()) {
-                currentPath += $"/{argument}";
-                argumentsList.Remove(argument);
-            
-                TryExecuteCommand(currentPath, argumentsList);
-            }
-        }
-        catch (Exception e) {
-            Log.Error(e, $"Exception processing commands, Command: {command}, Arguments: {arguments}");
-        }
-        finally {
-            registeredCommands.ForEach(handler => handler.Processed = false);
-        }
-    }
-    
-    private void TryExecuteCommand(string commandPath, List<string> argumentsList) {
-        var handlersForPath = registeredCommands
-            .Where(handler => !handler.Processed)
-            .Where(handler => string.Equals(handler.ActivationPath, commandPath, StringComparison.OrdinalIgnoreCase));
-        
-        foreach (var handler in handlersForPath) {
-            handler.Delegate(argumentsList.ToArray());
-            handler.Processed = true;
+            foreach (var handler in commandHandlers) {
+                if (handler.CommandMatches(Log, currentCommandParts)) {
+
+                    try {
+                        Log.Debug($"Invoking Command for {handler.ActivationPath}");
+                        handler.Delegate(currentArgumentParts);
+                    }
+                    catch (Exception e) {
+                        Log.Error(e, $"Exception trying to process command for {handler.ActivationPath}.");
+                        continue;
+                    }
                     
-            Log.Verbose($"Command Delegate Executed. {commandPath}, {string.Join(" ", argumentsList)}");
+                    return;
+                }
+            }
         }
     }
 
