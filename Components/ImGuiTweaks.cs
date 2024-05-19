@@ -3,7 +3,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
-namespace KamiLib.TabBar;
+namespace KamiLib.Components;
 
 public static class ImGuiTweaks {
     public static bool ColorEditWithDefault(string label, ref Vector4 color, Vector4 defaultColor) {
@@ -35,5 +35,10 @@ public static class ImGuiTweaks {
         }
 
         return result;
+    }
+
+    public static void TextColoredUnformatted(Vector4 color, string text) {
+        using var _ = ImRaii.PushColor(ImGuiCol.Text, color);
+        ImGui.TextUnformatted(text);
     }
 }
