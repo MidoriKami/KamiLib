@@ -10,7 +10,7 @@ using ImGuiNET;
 
 namespace KamiLib.Window;
 
-public abstract class SelectionWindowBase<T> : Window where T : class {
+public abstract class SelectionWindowBase<T> : Window where T : notnull {
     protected SelectionWindowBase() : this(new Vector2(600.0f, 400.0f)) {
     }
 
@@ -47,6 +47,7 @@ public abstract class SelectionWindowBase<T> : Window where T : class {
     public Action<T?>? SingleSelectionCallback { get; init; }
     public List<T> SelectionOptions { get; init; } = [];
     protected abstract float SelectionHeight { get; }
+    protected virtual bool ShowFilter { get; } = false;
     
     private List<T>? filteredResults;
     private readonly List<T> selected = [];
@@ -120,7 +121,7 @@ public abstract class SelectionWindowBase<T> : Window where T : class {
         ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
         if (ImGui.Button("Cancel", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
             MultiSelectionCallback?.Invoke([]);
-            SingleSelectionCallback?.Invoke(null);
+            SingleSelectionCallback?.Invoke(default);
             Close();
         }
     }
