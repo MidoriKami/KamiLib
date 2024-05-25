@@ -1,7 +1,10 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using KamiLib.Extensions;
 
 namespace KamiLib.Components;
 
@@ -22,11 +25,11 @@ public static class ImGuiTweaks {
         return valueChanged;
     }
 
-    public static bool IconButtonWithSize(FontAwesomeIcon icon, string id, Vector2 size, string? tooltip = null) {
+    public static bool IconButtonWithSize(IFontHandle font, FontAwesomeIcon icon, string id, Vector2 size, string? tooltip = null) {
         using var imRaiiId = ImRaii.PushId(id);
         bool result;
 
-        using (var _ = ImRaii.PushFont(UiBuilder.IconFont)) {
+        using (font.Push()) {
             result = ImGui.Button($"{icon.ToIconString()}", size);
         }
 
@@ -40,5 +43,19 @@ public static class ImGuiTweaks {
     public static void TextColoredUnformatted(Vector4 color, string text) {
         using var _ = ImRaii.PushColor(ImGuiCol.Text, color);
         ImGui.TextUnformatted(text);
+    }
+
+    public static bool EnumCombo<T>(string label, ref T refValue) where T : Enum {
+        using var combo = ImRaii.Combo(label, refValue.GetDescription());
+        if (!combo) return false;
+
+        foreach (Enum enumValue in Enum.GetValues(refValue.GetType())) {
+            if (ImGui.Selectable(enumValue.GetDescription(), enumValue.Equals(refValue))) {
+                refValue = (T)enumValue;
+                return true;
+            }
+        }
+
+        return false;
     }
 }
