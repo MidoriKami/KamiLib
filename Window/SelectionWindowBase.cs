@@ -52,6 +52,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     private List<T>? filteredResults;
     private readonly List<T> selected = [];
     private string searchString = string.Empty;
+    private bool resetFocus;
 
     protected abstract void DrawSelection(T option);
     protected abstract bool FilterResults(T option, string filter);
@@ -73,8 +74,25 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         if (!searchChild) return;
         
         ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+        
+        if (ImGui.IsWindowAppearing() || resetFocus) {
+            ImGui.SetKeyboardFocusHere();
+            resetFocus = false;
+        }
+        
         if (ImGui.InputTextWithHint("##filterInput", "Search...", ref searchString, 500, ImGuiInputTextFlags.AutoSelectAll)) {
             RefreshSearchResults();
+        }
+
+        if ((ImGui.IsKeyPressed(ImGuiKey.Enter) || ImGui.IsKeyPressed(ImGuiKey.KeypadEnter)) && filteredResults is not null && filteredResults.Count > 0) {
+            if (!selected.Contains(filteredResults.First())) {
+                selected.Add(filteredResults.First());
+            }
+            else {
+                selected.Remove(filteredResults.First());
+            }
+
+            resetFocus = true;
         }
     }
     
