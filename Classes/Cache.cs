@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace KamiLib.Classes;
 
 public abstract class Cache<T, TU> where T : notnull {
-    private readonly Dictionary<T, TU?> internalCache = [];
+    private readonly ConcurrentDictionary<T, TU?> internalCache = [];
 
     public TU? GetValue(T key) {
         // Do we already know this key? If so return value.
