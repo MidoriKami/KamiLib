@@ -59,4 +59,4 @@ public static class DataManagerExtensions {
                 .Where(instanceContent => instanceContent is { WeekRestriction: 1 })
                 .Select(instanceContent => instanceContent.RowId)
                 .Contains(cfc.Content.Row) ?? false) ?? [];
-};
+}
