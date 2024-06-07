@@ -20,7 +20,7 @@ public static class NetStoneExtensions {
         
             // If we already have a "profile.png" picture in this characters directory, simply load it.
             if (profilePictureFileInfo is { Exists: true } && !characterConfiguration.PurgeProfilePicture) {
-                return textureProvider.GetTextureFromFile(profilePictureFileInfo);
+                return textureProvider.GetFromFile(profilePictureFileInfo.FullName).GetWrapOrDefault();
             }
 
             // Else, try and get the LodestoneCharacter information that matches our name and world
@@ -36,7 +36,7 @@ public static class NetStoneExtensions {
                     profilePictureFileInfo.Refresh();
                     
                     // Saving of "Profile.png" should be complete here, load the image.
-                    return profilePictureFileInfo is { Exists: false } ? null : textureProvider.GetTextureFromFile(profilePictureFileInfo);
+                    return profilePictureFileInfo is { Exists: false } ? null : textureProvider.GetFromFile(profilePictureFileInfo.FullName).GetWrapOrDefault();
                 }
             }
             // Else, unrecoverable, we don't have a "profile.png" and we couldn't load it from Lodestone.

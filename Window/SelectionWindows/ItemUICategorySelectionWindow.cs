@@ -30,8 +30,8 @@ public class ItemUICategorySelectionWindow : SelectionWindowBase<ItemUICategory>
     protected override float SelectionHeight => 30.0f * ImGuiHelpers.GlobalScale;
     
     protected override void DrawSelection(ItemUICategory option) {
-        if (TextureProvider.GetIcon((uint)option.Icon) is { } texture) {
-            ImGui.Image(texture.ImGuiHandle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
+        if (TextureProvider.GetFromGameIcon((uint)option.Icon) is { } texture) {
+            ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
             ImGui.SameLine();
             ImGui.SetCursorPosY(ImGui.GetCursorPos().Y + 5.0f * ImGuiHelpers.GlobalScale);
             ImGui.Text(option.Name);

@@ -36,7 +36,7 @@ public class CharacterConfiguration  : IPluginConfiguration {
                     ImGui.Image(ProfilePicture.ImGuiHandle, new Vector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
                 }
                 else {
-                    ImGui.Image(textureProvider.GetIcon(60042)?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
+                    ImGui.Image(textureProvider.GetFromGameIcon(60042).GetWrapOrDefault()?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
                 }
             }
         }

@@ -204,7 +204,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             ImGui.Image(texture.ImGuiHandle, texture.Size * sizeRatio);
         }
         else {
-            if (TextureProvider.GetIcon(60042) is { ImGuiHandle: var handle } unknownTexture) {
+            if (TextureProvider.GetFromGameIcon(60042).GetWrapOrDefault() is { ImGuiHandle: var handle } unknownTexture) {
                 var sizeRatio = ImGui.GetContentRegionAvail().X / unknownTexture.Width;
                 ImGui.Image(handle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f) * sizeRatio);
             }
