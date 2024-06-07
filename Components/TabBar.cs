@@ -14,6 +14,8 @@ public interface ITabItem {
 public class TabBar(string name, List<ITabItem> tabs, bool allowScrolling = true) {
     public void Draw() {
         using var tabBar = ImRaii.TabBar(name);
+        if (!tabBar) return;
+        
         foreach (var tab in tabs) {
             using var disabled = ImRaii.Disabled(tab.Disabled);
             using var tabItem = ImRaii.TabItem(tab.Name);
