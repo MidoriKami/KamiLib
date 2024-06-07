@@ -47,8 +47,8 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     public Action<T?>? SingleSelectionCallback { get; init; }
     public List<T> SelectionOptions { get; init; } = [];
     protected abstract float SelectionHeight { get; }
-    protected virtual bool ShowFilter { get; } = false;
-    
+    protected virtual bool ShowFilter => false;
+
     private List<T>? filteredResults;
     private readonly List<T> selected = [];
     private string searchString = string.Empty;
@@ -172,7 +172,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
 
         DrawSelection(selectionOption);
     }
-    
+
     private void RefreshSearchResults() 
         => filteredResults = SelectionOptions
             .Where(option => FilterResults(option, searchString) || selected.Contains(option))
