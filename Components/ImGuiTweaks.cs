@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
@@ -50,12 +51,22 @@ public static class ImGuiTweaks {
         if (!combo) return false;
 
         foreach (Enum enumValue in Enum.GetValues(refValue.GetType())) {
-            if (ImGui.Selectable(enumValue.GetDescription(), enumValue.Equals(refValue))) {
-                refValue = (T)enumValue;
-                return true;
-            }
+            if (!ImGui.Selectable(enumValue.GetDescription(), enumValue.Equals(refValue))) continue;
+            
+            refValue = (T)enumValue;
+            return true;
         }
 
         return false;
+    }
+
+    public static bool Checkbox(string label, ref bool value, string? hintText) {
+        var result = ImGui.Checkbox(label, ref value);
+
+        if (hintText is not null) {
+            ImGuiComponents.HelpMarker(hintText);
+        }
+
+        return result;
     }
 }
