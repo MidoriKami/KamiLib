@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using Dalamud.Configuration;
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin.Services;
@@ -18,7 +18,7 @@ public class CharacterConfiguration  : IPluginConfiguration {
     public string? LodestoneId { get; set; }
 
     [JsonIgnore] public bool PurgeProfilePicture { get; set; }
-    [JsonIgnore] public IDalamudTextureWrap? ProfilePicture { get; set; }
+    [JsonIgnore] public ISharedImmediateTexture? ProfilePicture { get; set; }
 
     public void UpdateCharacterData(IClientState clientState) {
         if (clientState is { LocalPlayer: { Name: var playerName, HomeWorld.GameData.Name: var homeWorld } }) {
@@ -33,7 +33,7 @@ public class CharacterConfiguration  : IPluginConfiguration {
         using (var portrait = ImRaii.Child("portrait", ImGuiHelpers.ScaledVector2(75.0f, 75.0f), false, ImGuiWindowFlags.NoInputs)) {
             if (portrait) {
                 if (ProfilePicture is not null) {
-                    ImGui.Image(ProfilePicture.ImGuiHandle, new Vector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
+                    ImGui.Image(ProfilePicture.GetWrapOrEmpty().ImGuiHandle, new Vector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
                 }
                 else {
                     ImGui.Image(textureProvider.GetFromGameIcon(60042).GetWrapOrDefault()?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));

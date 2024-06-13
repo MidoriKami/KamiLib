@@ -11,11 +11,11 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace KamiLib.Window.SelectionWindows;
 
-public class ItemUICategorySelectionWindow : SelectionWindowBase<ItemUICategory> {
+public class ItemUiCategorySelectionWindow : SelectionWindowBase<ItemUICategory> {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private IDataManager DataManager { get; set; } = null!;
 
-    public ItemUICategorySelectionWindow(DalamudPluginInterface pluginInterface) : base(new Vector2(300.0f, 600.0f), false) {
+    public ItemUiCategorySelectionWindow(DalamudPluginInterface pluginInterface) : base(new Vector2(300.0f, 600.0f), false) {
         pluginInterface.Inject(this);
 
         SelectionOptions = DataManager

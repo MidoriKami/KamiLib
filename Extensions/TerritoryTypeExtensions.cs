@@ -51,7 +51,7 @@ public static class TerritoryTypeExtensions {
         using var table = ImRaii.Table("data_table", 2, ImGuiTableFlags.SizingStretchProp);
         if (!table) return;
         
-        ImGui.TableSetupColumn("##column1", ImGuiTableColumnFlags.None, 2.0f);
+        ImGui.TableSetupColumn("##column1", ImGuiTableColumnFlags.None, 1.0f);
         ImGui.TableSetupColumn("##column2", ImGuiTableColumnFlags.None, 1.0f);
 
         var placeName = option.PlaceName.Value?.Name ?? "Unknown PlaceName";
@@ -79,7 +79,7 @@ public static class TerritoryTypeExtensions {
         }
 
         ImGui.TableNextColumn();
-        ImGui.TextUnformatted($"{((TerritoryIntendedUseEnum)option.TerritoryIntendedUse).ToString()}");
+        ImGui.TextUnformatted($"{((TerritoryIntendedUseEnum)option.TerritoryIntendedUse).GetDescription()}");
         
         ImGui.TableNextColumn();
         if  (ContentFinderConditionMap.ContainsKey(option.RowId) && ContentFinderConditionMap.TryGetValue(option.RowId, out var cfc) && cfc is not null) {

@@ -198,7 +198,8 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     }
 
     private void DrawSelectedCharacter(CharacterConfiguration character) {
-        if (character.ProfilePicture is {} texture) {
+        if (character.ProfilePicture is {} immediateTexture) {
+            var texture = immediateTexture.GetWrapOrEmpty();
             var sizeRatio = ImGui.GetContentRegionAvail().X / texture.Width;
             
             ImGui.Image(texture.ImGuiHandle, texture.Size * sizeRatio);
