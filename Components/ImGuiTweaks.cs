@@ -3,7 +3,10 @@ using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using Dalamud.Plugin;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using ImGuiNET;
 using KamiLib.Extensions;
 
@@ -61,6 +64,8 @@ public static class ImGuiTweaks {
     }
 
     public static bool Checkbox(string label, ref bool value, string? hintText) {
+        using var group = ImRaii.Group();
+        
         var result = ImGui.Checkbox(label, ref value);
 
         if (hintText is not null) {
@@ -68,5 +73,32 @@ public static class ImGuiTweaks {
         }
 
         return result;
+    }
+
+    public static bool PriorityInt(DalamudPluginInterface pluginInterface, string label, ref int value) {
+        ImGui.SetNextItemWidth(22.0f * ImGuiHelpers.GlobalScale);
+        var valueChanged = ImGui.InputInt($"##{label}_input_int", ref value, 0, 0);
+        
+        using (pluginInterface.UiBuilder.IconFontFixedWidthHandle.Push()) {
+
+            ImGui.SameLine();
+            if (ImGui.Button(FontAwesomeIcon.ChevronUp.ToIconString())) {
+                value++;
+                valueChanged = true;
+            }
+            
+            ImGui.SameLine();
+            if (ImGui.Button(FontAwesomeIcon.ChevronDown.ToIconString())) {
+                value--;
+                valueChanged = true;
+            }
+
+            value = Math.Clamp(value, -9, 9);
+        }
+        
+        ImGui.SameLine();
+        ImGui.Text(label);
+        
+        return valueChanged;
     }
 }
