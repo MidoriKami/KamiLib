@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
@@ -6,9 +7,9 @@ using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using ImGuiNET;
 using KamiLib.Extensions;
+using Lumina.Excel.GeneratedSheets;
 
 namespace KamiLib.Components;
 
@@ -100,5 +101,25 @@ public static class ImGuiTweaks {
         ImGui.Text(label);
         
         return valueChanged;
+    }
+
+    public static bool UiColorPicker(string label, UIColor color) {
+        var cursorStart = ImGui.GetCursorScreenPos();
+
+        // Draw Rectangle
+        ImGui.GetWindowDrawList().AddRectFilled(cursorStart, cursorStart + ImGuiHelpers.ScaledVector2(24.0f, 24.0f), ImGui.GetColorU32(color.Foreground()), 5.0f);
+        ImGui.GetWindowDrawList().AddRect(cursorStart, cursorStart + ImGuiHelpers.ScaledVector2(24.0f, 24.0f), ImGui.GetColorU32(KnownColor.White.Vector() with { W = 0.33f }), 5.0f);
+
+        // Draw dummy over rectangle
+        ImGui.SetCursorScreenPos(cursorStart);
+        ImGuiHelpers.ScaledDummy(24.0f, 24.0f);
+        var result = ImGui.IsItemClicked();
+
+        // Draw label
+        ImGui.SameLine(ImGui.GetCursorPosX(), ImGui.GetStyle().ItemInnerSpacing.X);
+        ImGui.AlignTextToFramePadding();
+        ImGui.Text(label);
+
+        return result;
     }
 }
