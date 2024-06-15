@@ -90,7 +90,7 @@ public static class Configuration {
 
     private static void SaveFile<T>(DalamudPluginInterface pluginInterface, string filePath, T file) {
         try {
-            var fileText = JsonSerializer.Serialize(file, SerializerOptions);
+            var fileText = JsonSerializer.Serialize(file, file!.GetType(), SerializerOptions);
             Dalamud.Utility.Util.WriteAllTextSafe(filePath, fileText);
         }
         catch (Exception e) {
