@@ -70,6 +70,8 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     }
 
     private void TryDrawSearchBox() {
+        if (!ShowFilter) return;
+        
         using var searchChild = ImRaii.Child("searchChild", new Vector2(ImGui.GetContentRegionAvail().X, 30.0f * ImGuiHelpers.GlobalScale));
         if (!searchChild) return;
         
