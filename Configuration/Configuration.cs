@@ -81,8 +81,11 @@ public static class Configuration {
                 SaveFile(pluginInterface, filePath, createFunc());
             }
         }
+
+        var newFile = createFunc();
+        SaveFile(pluginInterface, filePath, newFile);
         
-        return createFunc();
+        return newFile;
     }
 
     private static void SaveFile<T>(DalamudPluginInterface pluginInterface, string filePath, T file) {
@@ -96,8 +99,17 @@ public static class Configuration {
         }
     } 
 
-    internal static DirectoryInfo GetCharacterDirectoryInfo(this DalamudPluginInterface pluginInterface, ulong contentId) 
-        => new(Path.Combine(pluginInterface.ConfigDirectory.FullName, contentId.ToString()));
+    internal static DirectoryInfo GetCharacterDirectoryInfo(this DalamudPluginInterface pluginInterface, ulong contentId) {
+        var directoryInfo = new DirectoryInfo(Path.Combine(pluginInterface.ConfigDirectory.FullName, contentId.ToString()));
+        
+        if (directoryInfo is { Exists: false }) {
+            directoryInfo.Create();
+        }
+        
+        directoryInfo.Refresh();
+
+        return directoryInfo;
+    }
 
     internal static FileInfo GetCharacterFileInfo(this DalamudPluginInterface pluginInterface, ulong contentId, string fileName) 
         => new(Path.Combine(pluginInterface.GetCharacterDirectoryInfo(contentId).FullName, fileName));
