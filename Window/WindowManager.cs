@@ -59,7 +59,12 @@ public class WindowManager : IDisposable {
         });
 
         if (window.WindowFlags.HasFlag(WindowFlags.OpenImmediately)) {
-            window.UnCollapseOrShow();
+            var isLoggedIn = ClientState.IsLoggedIn;
+            var requiresLoggedIn = window.WindowFlags.HasFlag(WindowFlags.RequireLoggedIn);
+
+            if (!requiresLoggedIn || (requiresLoggedIn && isLoggedIn)) {
+                window.UnCollapseOrShow();
+            }
         }
         
         if (window.WindowFlags.HasFlag(WindowFlags.IsConfigWindow)) {
