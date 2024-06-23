@@ -47,7 +47,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     public Action<T?>? SingleSelectionCallback { get; init; }
     public List<T> SelectionOptions { get; init; } = [];
     protected abstract float SelectionHeight { get; }
-    protected virtual bool ShowFilter => false;
+    protected virtual bool ShowFilter => true;
 
     private List<T>? filteredResults;
     private readonly List<T> selected = [];
