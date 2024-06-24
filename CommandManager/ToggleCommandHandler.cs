@@ -21,13 +21,13 @@ public class ToggleCommandHandler {
                 ToggleCommandSubCommand.Enable => EnableDelegate,
                 ToggleCommandSubCommand.Disable => DisableDelegate,
                 ToggleCommandSubCommand.Toggle => ToggleDelegate,
-                _ => throw new ArgumentOutOfRangeException(nameof(subCommand), subCommand, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(subCommand), subCommand, null),
             },
             ActivationPath = BaseActivationPath + subCommand switch {
                 ToggleCommandSubCommand.Enable => "/enable",
                 ToggleCommandSubCommand.Disable => "/disable",
                 ToggleCommandSubCommand.Toggle => "/toggle",
-                _ => throw new ArgumentOutOfRangeException(nameof(subCommand), subCommand, null)
+                _ => throw new ArgumentOutOfRangeException(nameof(subCommand), subCommand, null),
             },
             Hidden = Hidden,
         };

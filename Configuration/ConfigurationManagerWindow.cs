@@ -252,7 +252,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
 
         NotificationManager.AddNotification(new Notification {
             Type = NotificationType.Success,
-            Content = "Configurations successfully copied"
+            Content = "Configurations successfully copied",
         });
         
         Close();
