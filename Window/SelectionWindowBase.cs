@@ -177,6 +177,6 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
 
     private void RefreshSearchResults() 
         => filteredResults = SelectionOptions
-            .Where(option => FilterResults(option, searchString) || selected.Contains(option))
-            .ToList();
+               .Where(option => FilterResults(option, searchString) || selected.Contains(option))
+               .ToList();
 }
