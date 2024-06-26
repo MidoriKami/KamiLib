@@ -132,4 +132,16 @@ public static class ImGuiTweaks {
         ImGui.TableNextColumn();
         ImGui.Text(rightColumn);
     }
+
+    public static bool SliderUint(string label, ref uint value, uint minValue, uint maxValue) {
+        var intValue = (int) value;
+
+        var result = ImGui.SliderInt(label, ref intValue, (int) minValue, (int) maxValue);
+
+        if (result) {
+            value = (uint) intValue;
+        }
+
+        return result;
+    }
 }
