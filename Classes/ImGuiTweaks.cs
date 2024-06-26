@@ -12,7 +12,7 @@ using ImGuiNET;
 using KamiLib.Extensions;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Components;
+namespace KamiLib.Classes;
 
 public static class ImGuiTweaks {
     public static bool ColorEditWithDefault(string label, ref Vector4 color, Vector4 defaultColor) {

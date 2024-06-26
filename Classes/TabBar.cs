@@ -3,7 +3,7 @@ using System.Numerics;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
-namespace KamiLib.Components;
+namespace KamiLib.Classes;
 
 public interface ITabItem {
     string Name { get; }
