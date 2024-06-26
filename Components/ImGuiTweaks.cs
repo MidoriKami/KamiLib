@@ -22,6 +22,7 @@ public static class ImGuiTweaks {
         
         if (ImGui.Button($"Default##{label}")) {
             color = defaultColor;
+            valueChanged = true;
         }
 
         ImGui.SameLine();
