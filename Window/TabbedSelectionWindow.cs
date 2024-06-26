@@ -2,7 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using KamiLib.Components;
+using KamiLib.Classes;
 
 namespace KamiLib.Window;
 
