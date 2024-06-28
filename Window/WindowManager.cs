@@ -61,8 +61,13 @@ public class WindowManager : IDisposable {
         if (window.WindowFlags.HasFlag(WindowFlags.OpenImmediately)) {
             var isLoggedIn = ClientState.IsLoggedIn;
             var requiresLoggedIn = window.WindowFlags.HasFlag(WindowFlags.RequireLoggedIn);
+            var disallowInPvP = !window.WindowFlags.HasFlag(WindowFlags.AllowInPvP);
+            var isInPvP = ClientState.IsPvP;
 
-            if (!requiresLoggedIn || (requiresLoggedIn && isLoggedIn)) {
+            var loginCheckPass = !requiresLoggedIn || (requiresLoggedIn && isLoggedIn);
+            var pvpCheckPass = !disallowInPvP || (disallowInPvP && isInPvP);
+
+            if (loginCheckPass && pvpCheckPass) {
                 window.UnCollapseOrShow();
             }
         }
