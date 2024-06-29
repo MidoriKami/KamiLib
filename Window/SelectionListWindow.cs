@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
@@ -19,6 +20,7 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
     protected virtual bool AllowChildScrollbar => false;
     protected virtual bool AllowChildScroll => true;
     protected virtual bool ShowListButton => false;
+    protected virtual bool FilterOptions(T option) => true;
 
     protected override void DrawContents() {
         using var table = ImRaii.Table("selectionListWindowTable", 2, ImGuiTableFlags.Resizable, ImGui.GetContentRegionAvail());
@@ -43,7 +45,7 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
                 using var headerHoverColor = ImRaii.PushColor(ImGuiCol.HeaderHovered, ImGui.GetStyle().Colors[(int) ImGuiCol.HeaderHovered] with { W = 0.1f });
                 using var textSelectedColor = ImRaii.PushColor(ImGuiCol.Header, ImGui.GetStyle().Colors[(int) ImGuiCol.Header] with { W = 0.1f });
 
-                ImGuiClip.ClippedDraw(Options, DrawOptionClipped, SelectionItemHeight * ImGuiHelpers.GlobalScale);
+                ImGuiClip.ClippedDraw(Options.Where(FilterOptions).ToList(), DrawOptionClipped, SelectionItemHeight * ImGuiHelpers.GlobalScale);
             }
         }
         

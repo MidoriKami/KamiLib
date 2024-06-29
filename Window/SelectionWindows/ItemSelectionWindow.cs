@@ -12,7 +12,6 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace KamiLib.Window.SelectionWindows;
 
-
 public class ItemSelectionWindow : SelectionWindowBase<Item> {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private IDataManager DataManager { get; set; } = null!;

@@ -4,7 +4,6 @@ using Dalamud.Utility;
 
 namespace KamiLib.CommandManager;
 
-
 public class CommandHandler {
     public required string ActivationPath { get; init; }
     public required CommandHandlerDelegate Delegate { get; init; }

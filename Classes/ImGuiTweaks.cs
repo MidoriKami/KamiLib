@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
+using System.Resources;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -11,7 +12,7 @@ using ImGuiNET;
 using KamiLib.Extensions;
 using Lumina.Excel.GeneratedSheets;
 
-namespace KamiLib.Components;
+namespace KamiLib.Classes;
 
 public static class ImGuiTweaks {
     public static bool ColorEditWithDefault(string label, ref Vector4 color, Vector4 defaultColor) {
@@ -21,6 +22,7 @@ public static class ImGuiTweaks {
         
         if (ImGui.Button($"Default##{label}")) {
             color = defaultColor;
+            valueChanged = true;
         }
 
         ImGui.SameLine();
@@ -50,12 +52,12 @@ public static class ImGuiTweaks {
         ImGui.TextUnformatted(text);
     }
 
-    public static bool EnumCombo<T>(string label, ref T refValue) where T : Enum {
-        using var combo = ImRaii.Combo(label, refValue.GetDescription());
+    public static bool EnumCombo<T>(string label, ref T refValue, ResourceManager? resourceManager = null) where T : Enum {
+        using var combo = ImRaii.Combo(label, refValue.GetDescription(resourceManager));
         if (!combo) return false;
 
         foreach (Enum enumValue in Enum.GetValues(refValue.GetType())) {
-            if (!ImGui.Selectable(enumValue.GetDescription(), enumValue.Equals(refValue))) continue;
+            if (!ImGui.Selectable(enumValue.GetDescription(resourceManager), enumValue.Equals(refValue))) continue;
             
             refValue = (T)enumValue;
             return true;
@@ -119,6 +121,26 @@ public static class ImGuiTweaks {
         ImGui.SameLine(ImGui.GetCursorPosX(), ImGui.GetStyle().ItemInnerSpacing.X);
         ImGui.AlignTextToFramePadding();
         ImGui.Text(label);
+
+        return result;
+    }
+
+    public static void TableRow(string leftColumn, string rightColumn) {
+        ImGui.TableNextColumn();
+        ImGui.Text(leftColumn);
+
+        ImGui.TableNextColumn();
+        ImGui.Text(rightColumn);
+    }
+
+    public static bool SliderUint(string label, ref uint value, uint minValue, uint maxValue) {
+        var intValue = (int) value;
+
+        var result = ImGui.SliderInt(label, ref intValue, (int) minValue, (int) maxValue);
+
+        if (result) {
+            value = (uint) intValue;
+        }
 
         return result;
     }
