@@ -16,7 +16,7 @@ public enum WindowFlags {
 
 public abstract class Window : Dalamud.Interface.Windowing.Window {
     private bool isCollapsed;
-    public DalamudPluginInterface PluginInterface { get; set; } = null!;
+    public IDalamudPluginInterface PluginInterface { get; set; } = null!;
     public WindowManager ParentWindowManager { get; set; } = null!;
     
     public string? AdditionalInfoTooltip { get; set; }

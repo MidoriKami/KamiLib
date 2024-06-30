@@ -78,7 +78,7 @@ public static class ImGuiTweaks {
         return result;
     }
 
-    public static bool PriorityInt(DalamudPluginInterface pluginInterface, string label, ref int value) {
+    public static bool PriorityInt(IDalamudPluginInterface pluginInterface, string label, ref int value) {
         ImGui.SetNextItemWidth(22.0f * ImGuiHelpers.GlobalScale);
         var valueChanged = ImGui.InputInt($"##{label}_input_int", ref value, 0, 0);
         

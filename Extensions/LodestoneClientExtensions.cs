@@ -11,7 +11,7 @@ using NetStone.Search.Character;
 namespace KamiLib.Extensions;
 
 public static class LodestoneClientExtensions {
-    internal static async Task<LodestoneCharacter?> TryGetLodestoneCharacter(this LodestoneClient client, DalamudPluginInterface pluginInterface, IPluginLog log, CharacterConfiguration character) {
+    internal static async Task<LodestoneCharacter?> TryGetLodestoneCharacter(this LodestoneClient client, IDalamudPluginInterface pluginInterface, IPluginLog log, CharacterConfiguration character) {
         try {
             // If lodestone id is null, try and fetch it by searching for name and world.
             if (character.LodestoneId is null) {

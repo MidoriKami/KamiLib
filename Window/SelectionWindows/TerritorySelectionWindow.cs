@@ -14,7 +14,7 @@ public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
     [PluginService] private IDataManager DataManager { get; set; } = null!;
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
 
-    public TerritorySelectionWindow(DalamudPluginInterface pluginInterface) :base(new Vector2(600.0f, 600.0f)) {
+    public TerritorySelectionWindow(IDalamudPluginInterface pluginInterface) :base(new Vector2(600.0f, 600.0f)) {
         pluginInterface.Inject(this);
 
         SelectionOptions = DataManager.GetExcelSheet<TerritoryType>()!

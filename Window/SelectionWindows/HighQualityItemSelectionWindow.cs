@@ -16,7 +16,7 @@ public class HighQualityItemSelectionWindow : SelectionWindowBase<Item> {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private IDataManager DataManager { get; set; } = null!;
     
-    public HighQualityItemSelectionWindow(DalamudPluginInterface pluginInterface) : base(new Vector2(300.0f, 600.0f), false) {
+    public HighQualityItemSelectionWindow(IDalamudPluginInterface pluginInterface) : base(new Vector2(300.0f, 600.0f), false) {
         pluginInterface.Inject(this);
 
         SelectionOptions = DataManager

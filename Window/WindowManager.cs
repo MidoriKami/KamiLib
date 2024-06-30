@@ -13,7 +13,7 @@ namespace KamiLib.Window;
 
 public class WindowManager : IDisposable {
     private readonly WindowSystem windowSystem;
-    private readonly DalamudPluginInterface pluginInterface;
+    private readonly IDalamudPluginInterface pluginInterface;
 
     [PluginService] private IClientState ClientState { get; set; } = null!;
 
@@ -23,7 +23,7 @@ public class WindowManager : IDisposable {
 
     private List<Window> Windows { get; } = [];
     
-    public WindowManager(DalamudPluginInterface pluginInterface) {
+    public WindowManager(IDalamudPluginInterface pluginInterface) {
         windowSystem = new WindowSystem(pluginInterface.Manifest.InternalName);
         
         this.pluginInterface = pluginInterface;

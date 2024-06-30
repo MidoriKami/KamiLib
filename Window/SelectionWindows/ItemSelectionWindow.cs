@@ -16,7 +16,7 @@ public class ItemSelectionWindow : SelectionWindowBase<Item> {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private IDataManager DataManager { get; set; } = null!;
 
-    public ItemSelectionWindow(DalamudPluginInterface pluginInterface) : base(new Vector2(300.0f, 600.0f), false) {
+    public ItemSelectionWindow(IDalamudPluginInterface pluginInterface) : base(new Vector2(300.0f, 600.0f), false) {
         pluginInterface.Inject(this);
 
         SelectionOptions = DataManager

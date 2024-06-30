@@ -11,7 +11,7 @@ using NetStone;
 namespace KamiLib.Extensions;
 
 public static class NetStoneExtensions {
-    internal static async Task<ISharedImmediateTexture?> TryGetProfilePicture(HttpClient httpClient, LodestoneClient lodestoneClient, DalamudPluginInterface pluginInterface, ITextureProvider textureProvider, IPluginLog log, CharacterConfiguration characterConfiguration) {
+    internal static async Task<ISharedImmediateTexture?> TryGetProfilePicture(HttpClient httpClient, LodestoneClient lodestoneClient, IDalamudPluginInterface pluginInterface, ITextureProvider textureProvider, IPluginLog log, CharacterConfiguration characterConfiguration) {
         try {
             // We had some error while loading character configuration and don't know what character this is.
             if (characterConfiguration.ContentId is 0) return null;

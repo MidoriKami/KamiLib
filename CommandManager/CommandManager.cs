@@ -19,12 +19,12 @@ public class CommandManager : IDisposable {
     [PluginService] private IPluginLog Log { get; set; } = null!;
     [PluginService] private IChatGui ChatGui { get; set; } = null!;
     
-    private readonly DalamudPluginInterface pluginInterface;
+    private readonly IDalamudPluginInterface pluginInterface;
 
     private readonly List<CommandHandler> registeredCommands = [];
     private readonly List<string> registeredBaseCommands = [];
 
-    public CommandManager(DalamudPluginInterface pluginInterface, params string[] baseCommands) {
+    public CommandManager(IDalamudPluginInterface pluginInterface, params string[] baseCommands) {
         this.pluginInterface = pluginInterface;
         this.pluginInterface.Inject(this);
         

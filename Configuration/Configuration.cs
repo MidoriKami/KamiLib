@@ -23,7 +23,7 @@ public static class Configuration {
     /// <param name="createFunc">A function to create that file if loading fails.</param>
     /// <typeparam name="T">Type of file to load, needed for serialization.</typeparam>
     /// <returns>Either a loaded config file, or a new'd file of type T.</returns>
-    public static T LoadCharacterFile<T>(this DalamudPluginInterface pluginInterface, ulong contentId, string fileName, Func<T> createFunc) where T : new() 
+    public static T LoadCharacterFile<T>(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName, Func<T> createFunc) where T : new() 
         => LoadFile(pluginInterface, pluginInterface.GetCharacterFileInfo(contentId, fileName).FullName, createFunc);
 
     /// <summary>
@@ -34,7 +34,7 @@ public static class Configuration {
     /// <param name="createFunc">A function to create the file if loading fails.</param>
     /// <typeparam name="T">Type of file to load, needed for serialization.</typeparam>
     /// <returns>Either a loaded config file, or a new'd file of type T.</returns>
-    public static T LoadConfigFile<T>(this DalamudPluginInterface pluginInterface, string fileName, Func<T> createFunc) where T : new() 
+    public static T LoadConfigFile<T>(this IDalamudPluginInterface pluginInterface, string fileName, Func<T> createFunc) where T : new() 
         => LoadFile(pluginInterface, Path.Combine(pluginInterface.ConfigDirectory.FullName, fileName), createFunc);
 
     /// <summary>
@@ -45,7 +45,7 @@ public static class Configuration {
     /// <param name="fileName">Specific name of the file you wish to save.</param>
     /// <param name="file">The object to write to a file.</param>
     /// <typeparam name="T">Type of file to load, needed for serialization.</typeparam>
-    public static void SaveCharacterFile<T>(this DalamudPluginInterface pluginInterface, ulong contentId, string fileName, T file) 
+    public static void SaveCharacterFile<T>(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName, T file) 
         => SaveFile(pluginInterface, pluginInterface.GetCharacterFileInfo(contentId, fileName).FullName, file);
 
     /// <summary>
@@ -55,10 +55,10 @@ public static class Configuration {
     /// <param name="fileName">Specific name of the file you wish to save.</param>
     /// <param name="file">The object to write to a file.</param>
     /// <typeparam name="T">Type of file to load, needed for serialization.</typeparam>
-    public static void SaveConfigFile<T>(this DalamudPluginInterface pluginInterface, string fileName, T file)
+    public static void SaveConfigFile<T>(this IDalamudPluginInterface pluginInterface, string fileName, T file)
         => SaveFile(pluginInterface, Path.Combine(pluginInterface.GetPluginConfigDirectory(), fileName), file);
 
-    private static T LoadFile<T>(DalamudPluginInterface pluginInterface, string filePath, Func<T> createFunc) where T : new() {
+    private static T LoadFile<T>(IDalamudPluginInterface pluginInterface, string filePath, Func<T> createFunc) where T : new() {
         var fileInfo = new FileInfo(filePath);
         if (fileInfo is { Exists: true }) {
             try {
@@ -88,7 +88,7 @@ public static class Configuration {
         return newFile;
     }
 
-    private static void SaveFile<T>(DalamudPluginInterface pluginInterface, string filePath, T file) {
+    private static void SaveFile<T>(IDalamudPluginInterface pluginInterface, string filePath, T file) {
         try {
             var fileText = JsonSerializer.Serialize(file, file!.GetType(), SerializerOptions);
             Dalamud.Utility.Util.WriteAllTextSafe(filePath, fileText);
@@ -99,7 +99,7 @@ public static class Configuration {
         }
     } 
 
-    internal static DirectoryInfo GetCharacterDirectoryInfo(this DalamudPluginInterface pluginInterface, ulong contentId) {
+    internal static DirectoryInfo GetCharacterDirectoryInfo(this IDalamudPluginInterface pluginInterface, ulong contentId) {
         var directoryInfo = new DirectoryInfo(Path.Combine(pluginInterface.ConfigDirectory.FullName, contentId.ToString()));
         
         if (directoryInfo is { Exists: false }) {
@@ -111,13 +111,13 @@ public static class Configuration {
         return directoryInfo;
     }
 
-    internal static FileInfo GetCharacterFileInfo(this DalamudPluginInterface pluginInterface, ulong contentId, string fileName) 
+    internal static FileInfo GetCharacterFileInfo(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName) 
         => new(Path.Combine(pluginInterface.GetCharacterDirectoryInfo(contentId).FullName, fileName));
 
-    internal static IEnumerable<CharacterConfiguration> GetAllCharacterConfigurations(this DalamudPluginInterface pluginInterface) 
+    internal static IEnumerable<CharacterConfiguration> GetAllCharacterConfigurations(this IDalamudPluginInterface pluginInterface) 
         => pluginInterface.GetAllCharacterContentIds().Select(pluginInterface.LoadCharacterConfiguration);
 
-    private static CharacterConfiguration LoadCharacterConfiguration(this DalamudPluginInterface pluginInterface, ulong contentId) {
+    private static CharacterConfiguration LoadCharacterConfiguration(this IDalamudPluginInterface pluginInterface, ulong contentId) {
         var loadedConfiguration = pluginInterface.LoadCharacterFile(contentId, "System.config.json", () => CreateNewCharacterConfig(contentId));
         if (loadedConfiguration is { Version: not 2, ContentId: 0 }) {
             loadedConfiguration.Version = 2;
@@ -128,7 +128,7 @@ public static class Configuration {
         return loadedConfiguration;
     }
     
-    private static IEnumerable<ulong> GetAllCharacterContentIds(this DalamudPluginInterface pluginInterface) {
+    private static IEnumerable<ulong> GetAllCharacterContentIds(this IDalamudPluginInterface pluginInterface) {
         if (pluginInterface.ConfigDirectory is { Exists: true } directoryInfo) {
             foreach (var directory in directoryInfo.EnumerateDirectories()) {
                 if (ulong.TryParse(directory.Name, out var contentId)) {
