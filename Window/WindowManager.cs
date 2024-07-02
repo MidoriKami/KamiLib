@@ -65,7 +65,7 @@ public class WindowManager : IDisposable {
             var isInPvP = ClientState.IsPvP;
 
             var loginCheckPass = !requiresLoggedIn || (requiresLoggedIn && isLoggedIn);
-            var pvpCheckPass = !disallowInPvP || (disallowInPvP && isInPvP);
+            var pvpCheckPass = disallowInPvP || (!disallowInPvP && isInPvP);
 
             if (loginCheckPass && pvpCheckPass) {
                 window.UnCollapseOrShow();
