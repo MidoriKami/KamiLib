@@ -44,6 +44,7 @@ public class WindowManager : IDisposable {
         
         window.PluginInterface = pluginInterface;
         window.ParentWindowManager = this;
+        window.WindowName += $"##{pluginInterface.InternalName}";
 
         if (windowFlags is { } flags) {
             window.WindowFlags = flags;
