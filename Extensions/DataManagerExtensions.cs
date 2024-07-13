@@ -29,7 +29,8 @@ public static class DataManagerExtensions {
 
 	public static IEnumerable<ContentFinderCondition> GetExtremeDuties(this IDataManager dataManager)
 		=> dataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)?
-			   .Where(cfc => cfc is { ContentType.Row: 4, HighEndDuty: false }) ?? [];
+			   .Where(cfc => cfc is { ContentType.Row: 4, HighEndDuty: false })
+			   .Where(cfc => cfc.Name.RawString.Contains("Extreme")) ?? [];
 
 	public static IEnumerable<ContentFinderCondition> GetUnrealDuties(this IDataManager dataManager)
 		=> dataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)?
@@ -67,7 +68,7 @@ public static class DataManagerExtensions {
 		return englishCfc switch {
 			{ ContentType.Row: 5 } when englishCfc.Name.ToString().Contains("Savage") => DutyType.Savage,
 			{ ContentType.Row: 28 } => DutyType.Ultimate,
-			{ ContentType.Row: 4, HighEndDuty: false } => DutyType.Extreme,
+			{ ContentType.Row: 4, HighEndDuty: false } when englishCfc.Name.ToString().Contains("Extreme") => DutyType.Extreme,
 			{ ContentType.Row: 4, HighEndDuty: true } => DutyType.Unreal,
 			{ ContentType.Row: 30, AllowUndersized: false } => DutyType.Criterion,
 			{ ContentType.Row: 5, ContentMemberType.Row: 4 } => DutyType.Alliance,
