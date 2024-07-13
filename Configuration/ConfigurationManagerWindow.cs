@@ -23,6 +23,8 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private INotificationManager NotificationManager { get; set; } = null!;
     [PluginService] private IPluginLog Log { get; set; } = null!;
+    [PluginService] private IClientState ClientState { get; set; } = null!;
+    [PluginService] private IChatGui ChatGui { get; set; } = null!;
 
     private List<CharacterConfiguration> characters = [];
 
@@ -169,9 +171,19 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             MultiSelectionCallback = selectedCharacters => {
                 destinationCharacters = selectedCharacters;
 
-                if (selectedSourceCharacter != null && destinationCharacters is not null && destinationCharacters.Contains(selectedSourceCharacter)) {
-                    destinationCharacters.Remove(selectedSourceCharacter);
-                }
+                destinationCharacters.RemoveAll(character => {
+                    if (character == selectedSourceCharacter) {
+                        ChatGui.PrintError("Unable to select same source and target character.", PluginInterface.InternalName, 45);
+                        return true;
+                    }
+
+                    if (character.ContentId == ClientState.LocalContentId) {
+                        ChatGui.PrintError("Unable to select currently logged in character as target.", PluginInterface.InternalName, 45);
+                        return true;
+                    }
+
+                    return false;
+                });
             },
             SelectionOptions = characters.ToList(),
         });
