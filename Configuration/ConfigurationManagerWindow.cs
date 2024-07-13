@@ -42,6 +42,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
                 foreach (var character in characters) {
                     character.PurgeProfilePicture = true;
                     character.ProfilePicture = null;
+                    character.LodestoneId = null;
                 }
                 Task.Run(LoadCharacterPortraits, cancellationTokenSource.Token);
             },
