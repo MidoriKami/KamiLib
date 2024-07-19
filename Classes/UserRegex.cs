@@ -12,8 +12,12 @@ public struct UserRegex {
 	/// <summary> Default options optimized for efficiency. Compiled is always set. </summary>
 	public const RegexOptions DefaultOptions = RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Multiline | RegexOptions.NonBacktracking;
 
+	[JsonIgnore] private string text = string.Empty;
 	/// <summary> The user-supplied text. </summary>
-	public string Text { get; set; } = string.Empty;
+	public string Text {
+		get { return this.text; }
+		set { this.UpdateText(value); }
+	}
 
 	/// <summary> The compiled regex, if text is valid regex. </summary>
 	[JsonIgnore] public Regex? Regex { get; set; }
@@ -33,13 +37,13 @@ public struct UserRegex {
 
 	/// <summary> Update the filter via text. </summary>
 	public void UpdateText(string text, RegexOptions options = DefaultOptions) {
-		Text = text;
+		this.text = text;
 		Regex = BuildRegex(text, options);
 	}
 
 	/// <summary> Update the filter via regex. </summary>
 	public void UpdateText(Regex? regex) {
-		Text  = regex?.ToString() ?? string.Empty;
+		this.text = regex?.ToString() ?? string.Empty;
 		Regex = regex;
 	}
 
