@@ -10,13 +10,14 @@ namespace KamiLib.Classes;
 /// <summary> A wrapper to combine a textual user input and a compiled regex. By Ottermandias.</summary>
 public struct UserRegex {
 	/// <summary> Default options optimized for efficiency. Compiled is always set. </summary>
-	public const RegexOptions DefaultOptions = RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Multiline | RegexOptions.NonBacktracking;
+	private const RegexOptions DefaultOptions = RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture | RegexOptions.Multiline | RegexOptions.NonBacktracking;
 
-	[JsonIgnore] private string text = string.Empty;
+	[JsonIgnore] private string internalText = string.Empty;
+
 	/// <summary> The user-supplied text. </summary>
 	public string Text {
-		get { return this.text; }
-		set { this.UpdateText(value); }
+		get => internalText;
+		set => UpdateText(value);
 	}
 
 	/// <summary> The compiled regex, if text is valid regex. </summary>
@@ -37,18 +38,18 @@ public struct UserRegex {
 
 	/// <summary> Update the filter via text. </summary>
 	public void UpdateText(string text, RegexOptions options = DefaultOptions) {
-		this.text = text;
+		this.internalText = text;
 		Regex = BuildRegex(text, options);
 	}
 
 	/// <summary> Update the filter via regex. </summary>
 	public void UpdateText(Regex? regex) {
-		this.text = regex?.ToString() ?? string.Empty;
+		this.internalText = regex?.ToString() ?? string.Empty;
 		Regex = regex;
 	}
 
 	/// <summary> If the filter matches the given text. Empty filters match everything. </summary>
-	public readonly bool Match(string text) => Text.Length == 0 || (Regex?.IsMatch(text) ?? text.Contains(Text, StringComparison.OrdinalIgnoreCase));
+	public bool Match(string text) => Text.Length == 0 || (Regex?.IsMatch(text) ?? text.Contains(Text, StringComparison.OrdinalIgnoreCase));
 
 	private static Regex? BuildRegex(string text, RegexOptions options) {
 		if (text.Length == 0)
