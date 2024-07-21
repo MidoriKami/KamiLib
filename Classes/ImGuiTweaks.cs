@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
-using System.Resources;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -52,12 +51,12 @@ public static class ImGuiTweaks {
         ImGui.TextUnformatted(text);
     }
 
-    public static bool EnumCombo<T>(string label, ref T refValue, ResourceManager? resourceManager = null) where T : Enum {
-        using var combo = ImRaii.Combo(label, refValue.GetDescription(resourceManager));
+    public static bool EnumCombo<T>(string label, ref T refValue) where T : Enum {
+        using var combo = ImRaii.Combo(label, refValue.GetDescription());
         if (!combo) return false;
 
         foreach (Enum enumValue in Enum.GetValues(refValue.GetType())) {
-            if (!ImGui.Selectable(enumValue.GetDescription(resourceManager), enumValue.Equals(refValue))) continue;
+            if (!ImGui.Selectable(enumValue.GetDescription(), enumValue.Equals(refValue))) continue;
             
             refValue = (T)enumValue;
             return true;
