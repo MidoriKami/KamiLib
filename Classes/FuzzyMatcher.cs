@@ -1,9 +1,8 @@
 ﻿using System;
-
-namespace KamiLib.Classes;
-
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+
+namespace KamiLib.Classes;
 
 internal enum MatchMode {
     Simple,

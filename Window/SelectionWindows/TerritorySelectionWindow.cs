@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Utility;
@@ -27,7 +27,7 @@ public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
     
     protected override void DrawSelection(TerritoryType option)
         => option.Draw(DataManager, TextureProvider);
-   
-    protected override bool FilterResults(TerritoryType territory, string filter)
-        => territory.PlaceName?.Value?.Name.ToString().Contains(filter, StringComparison.OrdinalIgnoreCase) ?? false;
+
+    protected override IEnumerable<string> GetFilterStrings(TerritoryType option)
+        => [option.PlaceName?.Value?.Name.ToString() ?? string.Empty];
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Textures;
@@ -41,7 +41,7 @@ public class ItemSelectionWindow : SelectionWindowBase<Item> {
             ImGui.Text(option.Name);
         }
     }
-    
-    protected override bool FilterResults(Item option, string filter)
-        => option.Name.ToString().Contains(filter, StringComparison.OrdinalIgnoreCase);
+
+    protected override IEnumerable<string> GetFilterStrings(Item option)
+        => [option.Name];
 }

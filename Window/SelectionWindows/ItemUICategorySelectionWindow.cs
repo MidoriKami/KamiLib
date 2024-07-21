@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Utility;
@@ -37,7 +37,7 @@ public class ItemUiCategorySelectionWindow : SelectionWindowBase<ItemUICategory>
             ImGui.Text(option.Name);
         }
     }
-    
-    protected override bool FilterResults(ItemUICategory option, string filter)
-        => option.Name.ToString().Contains(filter, StringComparison.OrdinalIgnoreCase);
+
+    protected override IEnumerable<string> GetFilterStrings(ItemUICategory option)
+        => [option.Name];
 }
