@@ -54,6 +54,12 @@ public static class DataManagerExtensions {
 		=> dataManager.GetLimitedDuties()
 			.Where(cfc => cfc is { ContentType.Row: 5 })
 			.Where(cfc => cfc.Name.RawString.Contains("Savage"));
+	
+	// Warning, expensive operation, as this has to cross-reference multiple data sets.
+	public static IEnumerable<ContentFinderCondition> GetLimitedNormalRaidDuties(this IDataManager dataManager)
+		=> dataManager.GetLimitedDuties()
+			.Where(cfc => cfc is { ContentType.Row: 5 })
+			.Where(cfc => !cfc.Name.RawString.Contains("Savage"));
     
 	private static IEnumerable<ContentFinderCondition> GetLimitedDuties(this IDataManager dataManager)
 		=> dataManager.GetExcelSheet<ContentFinderCondition>()?
