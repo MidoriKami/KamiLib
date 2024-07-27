@@ -45,12 +45,12 @@ public static class DataManagerExtensions {
 			   .Where(cfc => cfc is { ContentType.Row: 5, ContentMemberType.Row: 4 }) ?? [];
 
 	// Warning, expensive operation, as this has to cross-reference multiple data sets.
-	public static IEnumerable<ContentFinderCondition> GetLimitedAllianceDuties(this IDataManager dataManager)
+	public static IEnumerable<ContentFinderCondition> GetLimitedAllianceRaidDuties(this IDataManager dataManager)
 		=> dataManager.GetLimitedDuties()
 			.Where(cfc => cfc is { ContentType.Row: 5, ContentMemberType.Row: 4 });
 
 	// Warning, expensive operation, as this has to cross-reference multiple data sets.
-	public static IEnumerable<ContentFinderCondition> GetLimitedSavageDuties(this IDataManager dataManager)
+	public static IEnumerable<ContentFinderCondition> GetLimitedSavageRaidDuties(this IDataManager dataManager)
 		=> dataManager.GetLimitedDuties()
 			.Where(cfc => cfc is { ContentType.Row: 5 })
 			.Where(cfc => cfc.Name.RawString.Contains("Savage"));
