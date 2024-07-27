@@ -14,6 +14,7 @@ public class ToggleCommandHandler {
     public required CommandHandlerDelegate DisableDelegate { get; init; }
     public required CommandHandlerDelegate ToggleDelegate { get; init; }
     public bool Hidden { get; set; }
+    public bool UseShowHideText { get; set; }
 
     public CommandHandler GetCommandHandler(ToggleCommandSubCommand subCommand)
         => new CommandHandler {
@@ -24,8 +25,8 @@ public class ToggleCommandHandler {
                 _ => throw new ArgumentOutOfRangeException(nameof(subCommand), subCommand, null),
             },
             ActivationPath = BaseActivationPath + subCommand switch {
-                ToggleCommandSubCommand.Enable => "/enable",
-                ToggleCommandSubCommand.Disable => "/disable",
+                ToggleCommandSubCommand.Enable => UseShowHideText ? "/show" : "/enable",
+                ToggleCommandSubCommand.Disable => UseShowHideText ? "/hide" : "/disable",
                 ToggleCommandSubCommand.Toggle => "/toggle",
                 _ => throw new ArgumentOutOfRangeException(nameof(subCommand), subCommand, null),
             },
