@@ -76,7 +76,7 @@ public static class Configuration {
             catch (Exception e) {
                 // If there is any kind of error loading the file, generate a new one instead and save it.
                 var localLog = pluginInterface.Create<LogWrapper>();
-                localLog?.Log.Error($"Error trying to load file {filePath}, creating a new one instead.", e);
+                localLog?.Log.Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
                 
                 SaveFile(pluginInterface, filePath, createFunc());
             }
@@ -95,7 +95,7 @@ public static class Configuration {
         }
         catch (Exception e) {
             var localLog = pluginInterface.Create<LogWrapper>();
-            localLog?.Log.Error($"Error trying to save file {filePath}", e);
+            localLog?.Log.Error(e, $"Error trying to save file {filePath}");
         }
     } 
 
