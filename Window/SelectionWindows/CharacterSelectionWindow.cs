@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Dalamud.Interface.Utility;
 using Dalamud.Plugin.Services;
 using KamiLib.Configuration;
@@ -12,7 +12,6 @@ internal class CharacterSelectionWindow(bool multiSelect, ITextureProvider textu
     protected override void DrawSelection(CharacterConfiguration character) 
         => character.Draw(textureProvider);
 
-    protected override bool FilterResults(CharacterConfiguration option, string filter) 
-        => option.CharacterName.Contains(filter, StringComparison.OrdinalIgnoreCase) ||
-           option.CharacterWorld.Contains(filter, StringComparison.OrdinalIgnoreCase);
+    protected override IEnumerable<string> GetFilterStrings(CharacterConfiguration option)
+        => [option.CharacterName, option.CharacterWorld];
 }
