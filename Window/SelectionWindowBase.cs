@@ -55,7 +55,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     private bool resetFocus;
 
     protected abstract void DrawSelection(T option);
-    protected abstract bool FilterResults(T option, string filter);
+    protected abstract IEnumerable<string> GetFilterStrings(T option);
 
     protected override void DrawContents() {
         TryDrawSearchBox();
@@ -177,6 +177,6 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
 
     private void RefreshSearchResults() 
         => filteredResults = SelectionOptions
-               .Where(option => FilterResults(option, searchString) || selected.Contains(option))
+               .Where(option => GetFilterStrings(option).Any(stringOption => stringOption.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)) || selected.Contains(option))
                .ToList();
 }

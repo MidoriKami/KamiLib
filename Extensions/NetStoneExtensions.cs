@@ -41,7 +41,7 @@ public static class NetStoneExtensions {
             }
             // Else, unrecoverable, we don't have a "profile.png" and we couldn't load it from Lodestone.
             else {
-                return null;
+                return null; 
             }
 
             // Somehow slipped into unknown territory, return null.

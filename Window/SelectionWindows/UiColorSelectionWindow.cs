@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Utility;
 using Dalamud.Plugin.Services;
@@ -26,6 +27,6 @@ public class UiColorSelectionWindow: SelectionWindowBase<UIColor> {
 		ImGuiHelpers.ScaledDummy(32.0f);
 	}
 
-	protected override bool FilterResults(UIColor option, string filter)
-		=> true;
+	protected override IEnumerable<string> GetFilterStrings(UIColor option)
+		=> [];
 }
