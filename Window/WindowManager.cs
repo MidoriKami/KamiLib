@@ -18,6 +18,8 @@ public class WindowManager : IDisposable {
     [PluginService] private IClientState ClientState { get; set; } = null!;
 
     [PluginService] private IChatGui ChatGui { get; set; } = null!;
+
+    [PluginService] private IPluginLog PluginLog { get; set; } = null!;
     
     private Window? configWindow;
 
@@ -40,7 +42,7 @@ public class WindowManager : IDisposable {
     }
 
     public void AddWindow(Window window, WindowFlags? windowFlags = null) {
-        if (Windows.Any(existingWindow => string.Equals(existingWindow.WindowName, window.WindowName, StringComparison.OrdinalIgnoreCase))) return;
+        if (Windows.Any(existingWindow => string.Equals($"{window.WindowName}##{windowSystem.Namespace}", existingWindow.WindowName, StringComparison.OrdinalIgnoreCase))) return;
         
         window.PluginInterface = pluginInterface;
         window.ParentWindowManager = this;
