@@ -118,7 +118,7 @@ public static class ImGuiTweaks {
         var result = ImGui.IsItemClicked();
 
         // Draw label
-        ImGui.SameLine(ImGui.GetCursorPosX(), ImGui.GetStyle().ItemInnerSpacing.X);
+        ImGui.SameLine();
         ImGui.AlignTextToFramePadding();
         ImGui.Text(label);
 
@@ -143,5 +143,12 @@ public static class ImGuiTweaks {
         }
 
         return result;
+    }
+
+    public static void Header(string label) {
+        ImGuiHelpers.ScaledDummy(10.0f);
+        ImGui.Text(label);
+        ImGui.Separator();
+        ImGuiHelpers.ScaledDummy(5.0f);
     }
 }
