@@ -18,8 +18,6 @@ public class WindowManager : IDisposable {
     [PluginService] private IClientState ClientState { get; set; } = null!;
 
     [PluginService] private IChatGui ChatGui { get; set; } = null!;
-
-    [PluginService] private IPluginLog PluginLog { get; set; } = null!;
     
     private Window? configWindow;
 
