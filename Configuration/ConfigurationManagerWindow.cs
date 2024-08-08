@@ -270,4 +270,10 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         
         Close();
     }
+
+    public override void OnClose() {
+        base.OnClose();
+        
+        ParentWindowManager.RemoveWindow(this);
+    }
 }
