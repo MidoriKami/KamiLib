@@ -144,9 +144,14 @@ public static class ImGuiTweaks {
         return result;
     }
 
-    public static void Header(string label) {
+    public static void Header(string label, bool center = false) {
         ImGuiHelpers.ScaledDummy(10.0f);
-        ImGui.Text(label);
+        if (center) {
+            ImGuiHelpers.CenteredText(label);
+        }
+        else {
+            ImGui.Text(label);
+        }
         ImGui.Separator();
         ImGuiHelpers.ScaledDummy(5.0f);
     }
