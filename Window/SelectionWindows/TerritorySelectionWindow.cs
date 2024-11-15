@@ -6,7 +6,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using KamiLib.Extensions;
-using TerritoryType = Lumina.Excel.GeneratedSheets.TerritoryType;
+using Lumina.Excel.Sheets;
 
 namespace KamiLib.Window.SelectionWindows;
 
@@ -17,8 +17,8 @@ public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
     public TerritorySelectionWindow(IDalamudPluginInterface pluginInterface) :base(new Vector2(600.0f, 600.0f)) {
         pluginInterface.Inject(this);
 
-        SelectionOptions = DataManager.GetExcelSheet<TerritoryType>()!
-            .Where(territory => territory is { PlaceName.Row: not 0, LoadingImage: not 0 })
+        SelectionOptions = DataManager.GetExcelSheet<TerritoryType>()
+            .Where(territory => territory is { PlaceName.RowId: not 0, LoadingImage.RowId: not 0 })
             .ToList();
     }
 
@@ -29,5 +29,5 @@ public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
         => option.Draw(DataManager, TextureProvider);
 
     protected override IEnumerable<string> GetFilterStrings(TerritoryType option)
-        => [option.PlaceName?.Value?.Name.ToString() ?? string.Empty];
+        => [option.PlaceName.Value.Name.ExtractText()];
 }

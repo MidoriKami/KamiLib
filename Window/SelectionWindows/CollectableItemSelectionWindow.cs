@@ -8,7 +8,7 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace KamiLib.Window.SelectionWindows;
 
@@ -20,7 +20,7 @@ public class CollectableItemSelectionWindow : SelectionWindowBase<Item> {
         pluginInterface.Inject(this);
 
         SelectionOptions = DataManager
-            .GetExcelSheet<Item>()!
+            .GetExcelSheet<Item>()
             .Where(item => !item.Name.ToString().IsNullOrEmpty())
             .Where(item => item.IsCollectable)
             .OrderBy(item => item.Name.ToString())
@@ -39,10 +39,10 @@ public class CollectableItemSelectionWindow : SelectionWindowBase<Item> {
             ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
             ImGui.SameLine();
             ImGui.SetCursorPosY(ImGui.GetCursorPos().Y + 5.0f * ImGuiHelpers.GlobalScale);
-            ImGui.Text(option.Name);
+            ImGui.Text(option.Name.ExtractText());
         }
     }
 
     protected override IEnumerable<string> GetFilterStrings(Item option)
-        => [option.Name];
+        => [option.Name.ExtractText()];
 }

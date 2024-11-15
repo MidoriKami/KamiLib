@@ -10,8 +10,8 @@ using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using ImGuiNET;
 using KamiLib.Classes;
-using Lumina.Excel.GeneratedSheets2;
-using TerritoryType = Lumina.Excel.GeneratedSheets.TerritoryType;
+using Lumina.Excel.Sheets;
+using TerritoryType = Lumina.Excel.Sheets.TerritoryType;
 
 namespace KamiLib.Extensions;
 
@@ -32,7 +32,7 @@ public static class TerritoryTypeExtensions {
         using var imageFrame = ImRaii.Child($"image_frame{option}", ImGuiHelpers.ScaledVector2(Width * ImGuiHelpers.GlobalScale, Height), false, ImGuiWindowFlags.NoInputs);
         if (!imageFrame) return;
         
-        if (dataManager.GetExcelSheet<LoadingImage>()!.GetRow(option.LoadingImage) is { } loadingImageInfo) {
+        if (dataManager.GetExcelSheet<LoadingImage>().GetRow(option.LoadingImage.RowId) is var loadingImageInfo) {
             if (textureProvider.GetFromGame($"ui/loadingimage/{loadingImageInfo.Unknown0}_hr1.tex").GetWrapOrDefault() is {  } texture) {
                 ImGui.Image(texture.ImGuiHandle, ImGuiHelpers.ScaledVector2(Width, Height), new Vector2(0.15f, 0.15f), new Vector2(0.85f, 0.85f));
             }
@@ -54,9 +54,9 @@ public static class TerritoryTypeExtensions {
         ImGui.TableSetupColumn("##column1", ImGuiTableColumnFlags.None, 1.0f);
         ImGui.TableSetupColumn("##column2", ImGuiTableColumnFlags.None, 1.0f);
 
-        var placeName = option.PlaceName.Value?.Name ?? "Unknown PlaceName";
-        var zoneName = option.PlaceNameZone.Value?.Name;
-        var regionName = option.PlaceNameRegion.Value?.Name;
+        var placeName = option.PlaceName.Value.Name.ExtractText();
+        var zoneName = option.PlaceNameZone.Value.Name.ExtractText();
+        var regionName = option.PlaceNameRegion.Value.Name.ExtractText();
         
         ImGui.TableNextColumn();
         ImGui.TextUnformatted(placeName);
@@ -68,25 +68,25 @@ public static class TerritoryTypeExtensions {
         ImGui.TableNextColumn();
 
         using var grayColor = ImRaii.PushColor(ImGuiCol.Text, KnownColor.DarkGray.Vector());
-        if (zoneName is not null && !zoneName.ToString().IsNullOrEmpty() && regionName is not null && !regionName.ToString().IsNullOrEmpty()) {
+        if (!zoneName.IsNullOrEmpty() && !regionName.IsNullOrEmpty()) {
             ImGui.TextUnformatted($"{regionName}, {zoneName}");
         }
-        else if (zoneName is not null && !zoneName.ToString().IsNullOrEmpty()) {
+        else if (!zoneName.IsNullOrEmpty()) {
             ImGui.TextUnformatted($"{zoneName}");
         }
-        else if (regionName is not null && !regionName.ToString().IsNullOrEmpty()) {
+        else if (!regionName.IsNullOrEmpty()) {
             ImGui.TextUnformatted($"{regionName}");
         }
 
         ImGui.TableNextColumn();
-        ImGui.TextUnformatted($"{((TerritoryIntendedUseEnum)option.TerritoryIntendedUse).GetDescription()}");
+        ImGui.TextUnformatted($"{((TerritoryIntendedUseEnum)option.TerritoryIntendedUse.RowId).GetDescription()}");
         
         ImGui.TableNextColumn();
         if  (ContentFinderConditionMap.ContainsKey(option.RowId) && ContentFinderConditionMap.TryGetValue(option.RowId, out var cfc) && cfc is not null) {
-            ImGui.TextUnformatted($"{CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cfc.Name)}");
+            ImGui.TextUnformatted($"{CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cfc.Value.Name.ExtractText())}");
         }
         else if (!ContentFinderConditionMap.ContainsKey(option.RowId)) {
-            ContentFinderConditionMap.TryAdd(option.RowId, dataManager.GetExcelSheet<ContentFinderCondition>()!.FirstOrDefault(contentFinderCondition => contentFinderCondition.TerritoryType.Row == option.RowId));
+            ContentFinderConditionMap.TryAdd(option.RowId, dataManager.GetExcelSheet<ContentFinderCondition>().FirstOrDefault(contentFinderCondition => contentFinderCondition.TerritoryType.RowId == option.RowId));
         }
     }
 }

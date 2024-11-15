@@ -5,6 +5,8 @@ using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
 
@@ -20,10 +22,10 @@ public class CharacterConfiguration  : IPluginConfiguration {
     [JsonIgnore] public bool PurgeProfilePicture { get; set; }
     [JsonIgnore] public ISharedImmediateTexture? ProfilePicture { get; set; }
 
-    public void UpdateCharacterData(IClientState clientState) {
-        if (clientState is { LocalPlayer: { Name: var playerName, HomeWorld.GameData.Name: var homeWorld } }) {
-            CharacterName = playerName.ToString();
-            CharacterWorld = homeWorld.ToString();
+    public unsafe void UpdateCharacterData() {
+        if (AgentLobby.Instance()->IsLoggedIn) {
+            CharacterName = PlayerState.Instance()->CharacterNameString;
+            CharacterWorld = AgentLobby.Instance()->LobbyData.HomeWorldName.ToString();
         }
     }
 

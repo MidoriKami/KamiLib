@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace KamiLib.Extensions;
 
