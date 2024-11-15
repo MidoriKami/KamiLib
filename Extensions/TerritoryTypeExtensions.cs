@@ -18,7 +18,7 @@ namespace KamiLib.Extensions;
 public static class TerritoryTypeExtensions {
     private const float Width = 133.5f;
     private const float Height = 75.0f;
-    private static readonly Dictionary<uint, ContentFinderCondition?> ContentFinderConditionMap = [];
+    private static readonly Dictionary<uint, ContentFinderCondition> ContentFinderConditionMap = [];
     
     public static void Draw(this TerritoryType territoryType, IDataManager dataManager, ITextureProvider textureProvider) {
         using var id = ImRaii.PushId(territoryType.RowId.ToString());
@@ -82,8 +82,8 @@ public static class TerritoryTypeExtensions {
         ImGui.TextUnformatted($"{((TerritoryIntendedUseEnum)option.TerritoryIntendedUse.RowId).GetDescription()}");
         
         ImGui.TableNextColumn();
-        if  (ContentFinderConditionMap.ContainsKey(option.RowId) && ContentFinderConditionMap.TryGetValue(option.RowId, out var cfc) && cfc is not null) {
-            ImGui.TextUnformatted($"{CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cfc.Value.Name.ExtractText())}");
+        if  (ContentFinderConditionMap.ContainsKey(option.RowId) && ContentFinderConditionMap.TryGetValue(option.RowId, out var cfc) && cfc.RowId is not 0) {
+            ImGui.TextUnformatted($"{CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cfc.Name.ExtractText())}");
         }
         else if (!ContentFinderConditionMap.ContainsKey(option.RowId)) {
             ContentFinderConditionMap.TryAdd(option.RowId, dataManager.GetExcelSheet<ContentFinderCondition>().FirstOrDefault(contentFinderCondition => contentFinderCondition.TerritoryType.RowId == option.RowId));
