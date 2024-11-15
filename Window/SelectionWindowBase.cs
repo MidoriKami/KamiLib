@@ -147,12 +147,9 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     }
 
     private void DrawSelectable(T selectionOption) {
-        using var selectable = ImRaii.Child($"{selectionOption.GetHashCode()}", new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale));
-        if (!selectable) return;
-
         var cursorPosition = ImGui.GetCursorPos();
             
-        if (ImGui.Selectable($"##{selectable.GetHashCode()}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
+        if (ImGui.Selectable($"##{selectionOption.GetHashCode()}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
             
             // It was already selected, unselect it.
             if (selected.Contains(selectionOption)) {
