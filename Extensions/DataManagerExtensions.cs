@@ -71,9 +71,9 @@ public static class DataManagerExtensions {
 	// Helper to check the duty type of entry that is already in english.
 	private static DutyType GetDutyType(ContentFinderCondition cfc)
 		=> cfc switch {
+			{ ContentType.RowId: 5, ContentMemberType.RowId: 4 } => DutyType.Alliance,
 			{ ContentType.RowId: 5 } when cfc.Name.ExtractText().Contains("Savage") => DutyType.Savage,
 			{ ContentType.RowId: 5 } when !cfc.Name.ExtractText().Contains("Savage") => DutyType.NormalRaid,
-			{ ContentType.RowId: 5, ContentMemberType.RowId: 4 } => DutyType.Alliance,
 			{ ContentType.RowId: 28 } => DutyType.Ultimate,
 			{ ContentType.RowId: 4 } when cfc.Name.ExtractText().Contains("Extreme") || cfc.Name.ExtractText().Contains("Minstrel") => DutyType.Extreme,
 			{ ContentType.RowId: 4 } => DutyType.Unreal,
