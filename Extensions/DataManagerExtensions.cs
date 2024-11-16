@@ -29,12 +29,12 @@ public static class DataManagerExtensions {
 
 	public static IEnumerable<ContentFinderCondition> GetExtremeDuties(this IDataManager dataManager)
 		=> dataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)
-			.Where(cfc => cfc is { ContentType.RowId: 4, HighEndDuty: false })
-			.Where(cfc => cfc.Name.ExtractText().Contains("Extreme"));
+			.Where(cfc => cfc is { ContentType.RowId: 4 })
+			.Where(cfc => cfc.Name.ExtractText().Contains("Extreme") || englishCfc.Name.ExtractText().Contains("Minstrel"));
 
 	public static IEnumerable<ContentFinderCondition> GetUnrealDuties(this IDataManager dataManager)
 		=> dataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English)
-			.Where(cfc => cfc is { ContentType.RowId: 4, HighEndDuty: true });
+			.Where(cfc => cfc is { ContentType.RowId: 4 });
 
 	public static IEnumerable<ContentFinderCondition> GetCriterionDuties(this IDataManager dataManager)
 		=> dataManager.GetExcelSheet<ContentFinderCondition>()
