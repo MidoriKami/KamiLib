@@ -72,10 +72,10 @@ public static class DataManagerExtensions {
 		var englishCfc = dataManager.GetExcelSheet<ContentFinderCondition>(ClientLanguage.English).GetRow(cfc.RowId);
 
 		return englishCfc switch {
-			{ ContentType.RowId: 5 } when englishCfc.Name.ToString().Contains("Savage") => DutyType.Savage,
+			{ ContentType.RowId: 5 } when englishCfc.Name.ExtractText().Contains("Savage") => DutyType.Savage,
 			{ ContentType.RowId: 28 } => DutyType.Ultimate,
-			{ ContentType.RowId: 4, HighEndDuty: false } when englishCfc.Name.ToString().Contains("Extreme") => DutyType.Extreme,
-			{ ContentType.RowId: 4, HighEndDuty: true } => DutyType.Unreal,
+			{ ContentType.RowId: 4 } when englishCfc.Name.ExtractText().Contains("Extreme") || englishCfc.Name.ExtractText().Contains("Minstrel") => DutyType.Extreme,
+			{ ContentType.RowId: 4 } => DutyType.Unreal,
 			{ ContentType.RowId: 30, AllowUndersized: false } => DutyType.Criterion,
 			{ ContentType.RowId: 5, ContentMemberType.RowId: 4 } => DutyType.Alliance,
 			_ => DutyType.Unknown,
