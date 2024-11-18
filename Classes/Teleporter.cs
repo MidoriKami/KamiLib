@@ -1,16 +1,28 @@
 ﻿using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.IoC;
+using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
 namespace KamiLib.Classes;
 
-public static unsafe class Teleporter {
-	public static void Teleport(IDataManager dataManager, IChatGui chatGui, uint aetheryteId, string pluginName) {
-		var aetheryte = dataManager.GetExcelSheet<Aetheryte>().GetRow(aetheryteId);
+public unsafe class Teleporter {
+	[PluginService] private IDataManager DataManager { get; set; } = null!;
+	[PluginService] private IChatGui ChatGui { get; set; } = null!;
+
+	private readonly string pluginName;
+
+	public Teleporter(IDalamudPluginInterface pluginInterface) {
+		pluginInterface.Inject(this);
+		pluginName = pluginInterface.InternalName;
+	}
+	 
+	public void Teleport(uint aetheryteId) {
+		var aetheryte = DataManager.GetExcelSheet<Aetheryte>().GetRow(aetheryteId);
 		Telepo.Instance()->Teleport(aetheryteId, 0);
-		chatGui.Print(new XivChatEntry {
+		ChatGui.Print(new XivChatEntry {
 			Message = new SeStringBuilder()
 				.AddUiForeground($"[{pluginName}] ", 45)
 				.AddUiForeground("[Teleport] ", 62)
