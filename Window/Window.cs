@@ -7,11 +7,10 @@ namespace KamiLib.Window;
 
 [Flags]
 public enum WindowFlags {
-    None,
-    OpenImmediately,
-    IsConfigWindow,
-    AllowInPvP,
-    RequireLoggedIn,
+    None = 0,
+    OpenImmediately = 1,
+    IsConfigWindow = 2,
+    RequireLoggedIn = 4,
 }
 
 public abstract class Window : Dalamud.Interface.Windowing.Window {

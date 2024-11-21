@@ -62,13 +62,8 @@ public class WindowManager : IDisposable {
         if (window.WindowFlags.HasFlag(WindowFlags.OpenImmediately)) {
             var isLoggedIn = ClientState.IsLoggedIn;
             var requiresLoggedIn = window.WindowFlags.HasFlag(WindowFlags.RequireLoggedIn);
-            var disallowInPvP = !window.WindowFlags.HasFlag(WindowFlags.AllowInPvP);
-            var isInPvP = ClientState.IsPvP;
 
-            var loginCheckPass = !requiresLoggedIn || (requiresLoggedIn && isLoggedIn);
-            var pvpCheckPass = disallowInPvP || (!disallowInPvP && isInPvP);
-
-            if (loginCheckPass && pvpCheckPass) {
+            if ( !requiresLoggedIn || (requiresLoggedIn && isLoggedIn)) {
                 window.UnCollapseOrShow();
             }
         }
@@ -108,11 +103,6 @@ public class WindowManager : IDisposable {
         if (configWindow is null) {
             pluginInterface.UiBuilder.OpenConfigUi -= OpenConfigurationWindow;
             throw new Exception("Configuration Window Was Null, disabling ConfigUI Callback.");
-        }
-
-        if (!configWindow.WindowFlags.HasFlag(WindowFlags.AllowInPvP) && ClientState.IsPvP) {
-            ChatGui.PrintError("The configuration menu cannot be opened while in a PvP area", pluginInterface.InternalName, 45);
-            return;
         }
 
         if (configWindow.WindowFlags.HasFlag(WindowFlags.RequireLoggedIn) && !ClientState.IsLoggedIn) {
