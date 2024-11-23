@@ -30,4 +30,8 @@ public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
 
     protected override IEnumerable<string> GetFilterStrings(TerritoryType option)
         => [option.PlaceName.Value.Name.ExtractText()];
+    
+    protected override string GetElementKey(TerritoryType element)
+        => element.RowId.ToString();
+
 }

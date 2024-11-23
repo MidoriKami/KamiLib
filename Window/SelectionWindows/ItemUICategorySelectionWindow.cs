@@ -25,7 +25,7 @@ public class ItemUiCategorySelectionWindow : SelectionWindowBase<ItemUICategory>
             .ThenBy(item => item.OrderMinor)
             .ToList();
     }
-    
+
     protected override bool AllowMultiSelect => true;
     protected override float SelectionHeight => 30.0f * ImGuiHelpers.GlobalScale;
     
@@ -40,4 +40,7 @@ public class ItemUiCategorySelectionWindow : SelectionWindowBase<ItemUICategory>
 
     protected override IEnumerable<string> GetFilterStrings(ItemUICategory option)
         => [option.Name.ExtractText()];
+
+    protected override string GetElementKey(ItemUICategory element)
+        => $"{element.Name.ExtractText()}{element.RowId}";
 }

@@ -29,4 +29,7 @@ public class UiColorSelectionWindow: SelectionWindowBase<UIColor> {
 
 	protected override IEnumerable<string> GetFilterStrings(UIColor option)
 		=> [];
+
+	protected override string GetElementKey(UIColor element)
+		=> element.RowId.ToString();
 }

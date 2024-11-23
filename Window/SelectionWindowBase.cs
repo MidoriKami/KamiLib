@@ -146,10 +146,12 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         }
     }
 
+    protected abstract string GetElementKey(T element);
+
     private void DrawSelectable(T selectionOption) {
         var cursorPosition = ImGui.GetCursorPos();
             
-        if (ImGui.Selectable($"##{selectionOption.GetHashCode()}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
+        if (ImGui.Selectable($"##{GetElementKey(selectionOption)}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
             
             // It was already selected, unselect it.
             if (selected.Contains(selectionOption)) {
