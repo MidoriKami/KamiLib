@@ -14,7 +14,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     protected SelectionWindowBase() : this(new Vector2(600.0f, 400.0f)) {
     }
 
-    protected SelectionWindowBase(Vector2 size, bool fixedSize = true) : base($"{typeof(T).Name} Selection Window", size, fixedSize) {
+    protected SelectionWindowBase(Vector2 size, bool fixedSize = true, string? alternativeName = null) : base(alternativeName ?? $"{typeof(T).Name} Selection Window", size, fixedSize) {
         TitleBarButtons.Add(new TitleBarButton {
             ShowTooltip = () => {
                 ImGui.SetTooltip("Deselect All");
