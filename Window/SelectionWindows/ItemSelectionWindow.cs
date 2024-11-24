@@ -25,7 +25,7 @@ public class ItemSelectionWindow : SelectionWindowBase<Item> {
             .OrderBy(item => item.Name.ToString())
             .ToList();
     }
-    
+
     protected override bool AllowMultiSelect => true;
     protected override float SelectionHeight => 30.0f * ImGuiHelpers.GlobalScale;
     
@@ -44,4 +44,8 @@ public class ItemSelectionWindow : SelectionWindowBase<Item> {
 
     protected override IEnumerable<string> GetFilterStrings(Item option)
         => [option.Name.ExtractText()];
+
+    protected override string GetElementKey(Item element)
+        => $"{element.Name.ExtractText()}{element.RowId}";
+
 }

@@ -14,4 +14,7 @@ internal class CharacterSelectionWindow(bool multiSelect, ITextureProvider textu
 
     protected override IEnumerable<string> GetFilterStrings(CharacterConfiguration option)
         => [option.CharacterName, option.CharacterWorld];
+    
+    protected override string GetElementKey(CharacterConfiguration element)
+        => element.ContentId.ToString();
 }
