@@ -106,7 +106,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         
         if (filteredResults is not null) {
             if (filteredResults.Count != 0) {
-                ImGuiClip.ClippedDraw(filteredResults, DrawSelectable, SelectionHeight * ImGuiHelpers.GlobalScale);
+                ImGuiClip.ClippedDraw(filteredResults, DrawSelectable, SelectionHeight);
             }
             else {
                 var position = ImGui.GetContentRegionAvail() / 2.0f;
@@ -119,7 +119,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
             }
         }
         else {
-            ImGuiClip.ClippedDraw(SelectionOptions, DrawSelectable, SelectionHeight * ImGuiHelpers.GlobalScale);
+            ImGuiClip.ClippedDraw(SelectionOptions, DrawSelectable, SelectionHeight);
         }
     }
 
@@ -151,7 +151,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     private void DrawSelectable(T selectionOption) {
         var cursorPosition = ImGui.GetCursorPos();
             
-        if (ImGui.Selectable($"##{GetElementKey(selectionOption)}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight * ImGuiHelpers.GlobalScale))) {
+        if (ImGui.Selectable($"##{GetElementKey(selectionOption)}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight))) {
             
             // It was already selected, unselect it.
             if (selected.Contains(selectionOption)) {
