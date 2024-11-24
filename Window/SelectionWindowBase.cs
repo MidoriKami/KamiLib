@@ -53,6 +53,7 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
     private readonly List<T> selected = [];
     private string searchString = string.Empty;
     private bool resetFocus;
+    private DateTime lastSelectionTime = DateTime.MinValue;
 
     protected abstract void DrawSelection(T option);
     protected abstract IEnumerable<string> GetFilterStrings(T option);
@@ -129,20 +130,16 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         
         ImGuiHelpers.ScaledDummy(5.0f);
 
-        using (var _ = ImRaii.Disabled(selected.Count is 0)) {
+        using (ImRaii.Disabled(selected.Count is 0)) {
             if (ImGui.Button("Confirm", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
-                MultiSelectionCallback?.Invoke(selected);
-                SingleSelectionCallback?.Invoke(selected.FirstOrDefault());
-                Close();
+                ConfirmSelection();
             }
         }
             
         ImGui.SameLine();
         ImGui.SetCursorPosX(ImGui.GetContentRegionMax().X - 100.0f * ImGuiHelpers.GlobalScale);
         if (ImGui.Button("Cancel", ImGuiHelpers.ScaledVector2(100.0f, 25.0f))) {
-            MultiSelectionCallback?.Invoke([]);
-            SingleSelectionCallback?.Invoke(default);
-            Close();
+            CancelSelection();
         }
     }
 
@@ -153,10 +150,19 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
             
         if (ImGui.Selectable($"##{GetElementKey(selectionOption)}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight))) {
             
-            // It was already selected, unselect it.
+            // It was already selected
             if (selected.Contains(selectionOption)) {
-                selected.Remove(selectionOption);
-                RefreshSearchResults();
+                
+                // And we just tried selecting it again recently, and multiselect is disabled
+                if (DateTime.Now - lastSelectionTime < TimeSpan.FromMilliseconds(500) && !AllowMultiSelect) {
+                    ConfirmSelection();
+                }
+                
+                // Else, unselect it
+                else {
+                    selected.Remove(selectionOption);
+                    RefreshSearchResults();
+                }
             }
             else {
                 if (AllowMultiSelect) {
@@ -167,10 +173,11 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
                     selected.Add(selectionOption);
                 }
             }
+            
+            lastSelectionTime = DateTime.Now;
         }
             
         ImGui.SetCursorPos(cursorPosition);
-
         DrawSelection(selectionOption);
     }
 
@@ -178,4 +185,16 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         => filteredResults = SelectionOptions
                .Where(option => GetFilterStrings(option).Any(stringOption => stringOption.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)) || selected.Contains(option))
                .ToList();
+
+    private void ConfirmSelection() {
+        MultiSelectionCallback?.Invoke(selected);
+        SingleSelectionCallback?.Invoke(selected.FirstOrDefault());
+        Close();              
+    }
+
+    private void CancelSelection() {
+        MultiSelectionCallback?.Invoke([]);
+        SingleSelectionCallback?.Invoke(default);
+        Close();
+    }
 }
