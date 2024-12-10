@@ -6,7 +6,6 @@ namespace KamiLib.Classes;
 
 public interface IComboItem {
 	string Label { get; }
-
 	void Draw();
 }
 
@@ -22,7 +21,6 @@ public class Combo(string name, List<IComboItem> items) {
 						if (ImGui.Selectable(item.Label, selectedItem == item)) {
 							selectedItem = item;
 						}
-					
 					}
 				}
 			}
