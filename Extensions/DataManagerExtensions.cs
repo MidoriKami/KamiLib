@@ -73,7 +73,7 @@ public static class DataManagerExtensions {
 	private static DutyType GetDutyType(ContentFinderCondition cfc)
 		=> cfc switch {
 			{ ContentType.RowId: 5, ContentMemberType.RowId: 4 } => DutyType.Alliance,
-			{ ContentType.RowId: 36 } => DutyType.ChaoticAlliance,
+			{ ContentType.RowId: 37 } => DutyType.ChaoticAlliance,
 			{ ContentType.RowId: 5 } when cfc.Name.ExtractText().Contains("Savage") => DutyType.Savage,
 			{ ContentType.RowId: 5 } when !cfc.Name.ExtractText().Contains("Savage") => DutyType.NormalRaid,
 			{ ContentType.RowId: 28 } => DutyType.Ultimate,
