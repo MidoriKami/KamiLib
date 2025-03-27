@@ -5,10 +5,10 @@ namespace KamiLib.Extensions;
 
 public static class UiColorExtensions {
 	public static Vector4 Foreground(this UIColor color)
-		=> ConvertToVector4(color.UIForeground);
+		=> ConvertToVector4(color.Dark);
 
 	public static Vector4 Glow(this UIColor color)
-		=> ConvertToVector4(color.UIGlow);
+		=> ConvertToVector4(color.Light);
 	
 	private static Vector4 ConvertToVector4(uint color) {
 		var r = (byte)(color >> 24);
