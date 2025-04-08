@@ -91,6 +91,8 @@ public static class Configuration {
     private static void SaveFile<T>(IDalamudPluginInterface pluginInterface, string filePath, T file) {
         try {
             var fileText = JsonSerializer.Serialize(file, file!.GetType(), SerializerOptions);
+            
+            // We have to deal with this warning for now, the new function doesn't exist in Dalamud Stable yet.
             Dalamud.Utility.Util.WriteAllTextSafe(filePath, fileText);
         }
         catch (Exception e) {
