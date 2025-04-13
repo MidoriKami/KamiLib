@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using Dalamud.Plugin;
+using Dalamud.Utility;
 using KamiLib.Classes;
 
 namespace KamiLib.Configuration;
@@ -91,9 +92,7 @@ public static class Configuration {
     private static void SaveFile<T>(IDalamudPluginInterface pluginInterface, string filePath, T file) {
         try {
             var fileText = JsonSerializer.Serialize(file, file!.GetType(), SerializerOptions);
-            
-            // We have to deal with this warning for now, the new function doesn't exist in Dalamud Stable yet.
-            Dalamud.Utility.Util.WriteAllTextSafe(filePath, fileText);
+            FilesystemUtil.WriteAllTextSafe(filePath, fileText);
         }
         catch (Exception e) {
             var localLog = pluginInterface.Create<LogWrapper>();
