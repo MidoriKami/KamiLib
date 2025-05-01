@@ -6,6 +6,7 @@ using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using KamiLib.Extensions;
 
 namespace KamiLib.Window;
 
@@ -30,7 +31,7 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
         ImGui.TableSetupColumn("##selectionContents", ImGuiTableColumnFlags.WidthStretch);
 
         ImGui.TableNextColumn();
-        using var frameBg = ImRaii.PushColor(ImGuiCol.FrameBg, ImGui.GetStyle().Colors[(int) ImGuiCol.FrameBg] with { W = 0.10f });
+        using var frameBg = ImRaii.PushColor(ImGuiCol.FrameBg, ImGui.GetStyle().GetFadedColor(ImGuiCol.FrameBg, 0.10f));
         using var scrollBarSize = ImRaii.PushStyle(ImGuiStyleVar.ScrollbarSize, 0.0f);
 
         var extraButtonSize = new Vector2(ImGui.GetContentRegionAvail().X, 28.0f * ImGuiHelpers.GlobalScale);
@@ -42,8 +43,8 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
         
         using (var listBox = ImRaii.ListBox("##selectableListBox", listBoxSize)) {
             if (listBox) {
-                using var headerHoverColor = ImRaii.PushColor(ImGuiCol.HeaderHovered, ImGui.GetStyle().Colors[(int) ImGuiCol.HeaderHovered] with { W = 0.1f });
-                using var textSelectedColor = ImRaii.PushColor(ImGuiCol.Header, ImGui.GetStyle().Colors[(int) ImGuiCol.Header] with { W = 0.1f });
+                using var headerHoverColor = ImRaii.PushColor(ImGuiCol.HeaderHovered, ImGui.GetStyle().GetFadedColor(ImGuiCol.HeaderHovered, 0.10f));
+                using var textSelectedColor = ImRaii.PushColor(ImGuiCol.Header, ImGui.GetStyle().GetFadedColor(ImGuiCol.Header, 0.1f));
 
                 ImGuiClip.ClippedDraw(Options.Where(FilterOptions).ToList(), DrawOptionClipped, SelectionItemHeight * ImGuiHelpers.GlobalScale);
             }
