@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -181,10 +182,13 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         DrawSelection(selectionOption);
     }
 
-    private void RefreshSearchResults() 
-        => filteredResults = SelectionOptions
-               .Where(option => GetFilterStrings(option).Any(stringOption => stringOption.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)) || selected.Contains(option))
-               .ToList();
+    private void RefreshSearchResults() {
+        Task.Run(() => {
+            filteredResults = SelectionOptions
+                .Where(option => GetFilterStrings(option).Any(stringOption => stringOption.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)) || selected.Contains(option))
+                .ToList();
+        });
+    }
 
     private void ConfirmSelection() {
         MultiSelectionCallback?.Invoke(selected);
