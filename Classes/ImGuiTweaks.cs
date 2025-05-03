@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.ManagedFontAtlas;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin;
@@ -154,5 +156,20 @@ public static class ImGuiTweaks {
         }
         ImGui.Separator();
         ImGuiHelpers.ScaledDummy(5.0f);
+    }
+    
+    public enum AnimationDirection {
+        FadeIn,
+        FadeOut,
+    }
+
+    public static void AnimatedImage(IDalamudTextureWrap texture, float scale, Stopwatch stopwatch, float period, AnimationDirection direction) {
+        var alpha = direction switch {
+            AnimationDirection.FadeIn => stopwatch.ElapsedMilliseconds / period,
+            AnimationDirection.FadeOut => 1.0f - stopwatch.ElapsedMilliseconds / period,
+            _ => throw new IndexOutOfRangeException(),
+        };
+        
+        ImGui.Image(texture.ImGuiHandle, texture.Size * scale, Vector2.Zero, Vector2.One, new Vector4(1.0f, 1.0f, 1.0f, alpha));
     }
 }
