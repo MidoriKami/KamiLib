@@ -18,13 +18,13 @@ public static class ConditionExtensions {
         => condition.Any(ConditionFlag.BetweenAreas, ConditionFlag.BetweenAreas51);
 
     public static bool IsCrafting(this ICondition condition)
-        => condition.Any(ConditionFlag.Crafting, ConditionFlag.Crafting40, ConditionFlag.PreparingToCraft);
+        => condition.Any(ConditionFlag.Crafting, ConditionFlag.ExecutingCraftingAction, ConditionFlag.PreparingToCraft);
 
     public static bool IsCrossWorld(this ICondition condition)
         => condition.Any(ConditionFlag.ParticipatingInCrossWorldPartyOrAlliance);
 
     public static bool IsGathering(this ICondition condition)
-        => condition.Any(ConditionFlag.Gathering, ConditionFlag.Gathering42);
+        => condition.Any(ConditionFlag.Gathering, ConditionFlag.ExecutingGatheringAction);
 
     public static bool IsInBardPerformance(this ICondition condition)
         => condition.Any(ConditionFlag.Performing);
