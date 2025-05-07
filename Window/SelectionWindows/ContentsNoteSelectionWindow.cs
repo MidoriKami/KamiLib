@@ -18,7 +18,7 @@ public class ContentsNoteSelectionWindow : SelectionWindowBase<ContentsNote> {
 	[PluginService] private IDataManager DataManager { get; set; } = null!;
 	[PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
 
-	public ContentsNoteSelectionWindow(IDalamudPluginInterface pluginInterface) : base(new Vector2(500.0f, 400.0f)) {
+	public ContentsNoteSelectionWindow(IDalamudPluginInterface pluginInterface) : base(new Vector2(500.0f, 600.0f)) {
 		pluginInterface.Inject(this);
 
 		SelectionOptions = DataManager.GetExcelSheet<ContentsNote>()
