@@ -12,6 +12,7 @@ using Dalamud.Plugin;
 using ImGuiNET;
 using KamiLib.Extensions;
 using Lumina.Excel.Sheets;
+using Action = System.Action;
 
 namespace KamiLib.Classes;
 
@@ -171,5 +172,25 @@ public static class ImGuiTweaks {
         };
         
         ImGui.Image(texture.ImGuiHandle, texture.Size * scale, Vector2.Zero, Vector2.One, new Vector4(1.0f, 1.0f, 1.0f, alpha));
+    }
+
+    public static void DisabledButton(string label, Action onClick) {
+        using (ImRaii.Disabled(!(ImGui.GetIO().KeyShift && ImGui.GetIO().KeyCtrl))) {
+            if (ImGui.Button(label, new Vector2(ImGui.GetContentRegionAvail().X, 23.0f * ImGuiHelpers.GlobalScale))) {
+                onClick();
+            }
+
+            using (ImRaii.PushStyle(ImGuiStyleVar.Alpha, 1.0f)) {
+                if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled)) {
+                    ImGui.SetTooltip("Hold Shift + Control while clicking activate button");
+                }
+            }
+        }
+    }
+
+    public static void CenteredWarning(string text) {
+        using (ImRaii.PushColor(ImGuiCol.Text, KnownColor.Orange.Vector())) {
+            ImGuiHelpers.CenteredText(text);
+        }
     }
 }
