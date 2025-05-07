@@ -148,8 +148,11 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
 
     private void DrawSelectable(T selectionOption) {
         var cursorPosition = ImGui.GetCursorPos();
+        var selectableSize = new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight);
+        
+        using var id = ImRaii.PushId(GetElementKey(selectionOption));
             
-        if (ImGui.Selectable($"##{GetElementKey(selectionOption)}", selected.Contains(selectionOption), ImGuiSelectableFlags.None, new Vector2(ImGui.GetContentRegionAvail().X, SelectionHeight))) {
+        if (ImGui.Selectable("##selectable", selected.Contains(selectionOption), ImGuiSelectableFlags.AllowItemOverlap, selectableSize)) {
             
             // It was already selected
             if (selected.Contains(selectionOption)) {
@@ -179,7 +182,9 @@ public abstract class SelectionWindowBase<T> : Window where T : notnull {
         }
             
         ImGui.SetCursorPos(cursorPosition);
-        DrawSelection(selectionOption);
+        using (ImRaii.Child("selection_child", selectableSize, false, ImGuiWindowFlags.NoInputs)) {
+            DrawSelection(selectionOption);
+        }
     }
 
     private void RefreshSearchResults() {
