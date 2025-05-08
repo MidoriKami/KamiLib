@@ -2,6 +2,7 @@
 using System.Numerics;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
+using Action = System.Action;
 
 namespace KamiLib.Classes;
 
@@ -9,6 +10,14 @@ public interface ITabItem {
     string Name { get; }
     bool Disabled { get; }
     void Draw();
+}
+
+public class SimpleTabItem(string label, Action drawAction) : ITabItem {
+    public string Name => label;
+    public bool Disabled => false;
+    
+    public void Draw()
+        => drawAction();
 }
 
 public class TabBar(string name, List<ITabItem> tabs, bool allowScrolling = true) {
