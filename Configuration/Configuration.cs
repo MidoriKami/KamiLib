@@ -112,7 +112,7 @@ public static class Configuration {
         return directoryInfo;
     }
 
-    internal static FileInfo GetCharacterFileInfo(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName) 
+    public static FileInfo GetCharacterFileInfo(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName) 
         => new(Path.Combine(pluginInterface.GetCharacterDirectoryInfo(contentId).FullName, fileName));
 
     internal static IEnumerable<CharacterConfiguration> GetAllCharacterConfigurations(this IDalamudPluginInterface pluginInterface) 
