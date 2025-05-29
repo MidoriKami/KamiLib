@@ -37,6 +37,15 @@ public class WindowManager : IDisposable {
         windowSystem.RemoveAllWindows();
     }
 
+    public void OpenOrCreateUnique<T>(WindowFlags? flags = null) where T : Window, new() {
+        if (!GetWindows<T>().Any()) {
+            AddWindow(new T(), flags);
+        }
+        else {
+            GetWindow<T>()?.UnCollapseOrToggle();
+        }
+    }
+
     public void AddWindow(Window window, WindowFlags? windowFlags = null) {
         if (Windows.Any(existingWindow => string.Equals($"{window.WindowName}##{windowSystem.Namespace}", existingWindow.WindowName, StringComparison.OrdinalIgnoreCase))) return;
         
