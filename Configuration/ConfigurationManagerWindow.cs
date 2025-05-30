@@ -256,7 +256,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         }
         
         foreach (var file in PluginInterface.GetCharacterDirectoryInfo(selectedSourceCharacter.ContentId).GetFiles()) {
-            if (file is { Exists: true, Name: var fileName } && fileName.Contains("config.json", StringComparison.OrdinalIgnoreCase) && !fileName.Contains("System", StringComparison.OrdinalIgnoreCase)) {
+            if (file is { Exists: true, Name: var fileName } && IsAllowedFileType(fileName) && !fileName.Contains("System", StringComparison.OrdinalIgnoreCase)) {
                 foreach (var targetCharacter in destinationCharacters) {
                     file.CopyTo(PluginInterface.GetCharacterFileInfo(targetCharacter.ContentId, fileName).FullName, true);
                 }
@@ -275,5 +275,12 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
         base.OnClose();
         
         ParentWindowManager.RemoveWindow(this);
+    }
+
+    private bool IsAllowedFileType(string fileName) {
+        if (fileName.Contains("config.json", StringComparison.OrdinalIgnoreCase)) return true;
+        if (fileName.Contains("style.json", StringComparison.OrdinalIgnoreCase)) return true;
+
+        return false;
     }
 }
