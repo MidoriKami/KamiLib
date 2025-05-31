@@ -164,6 +164,9 @@ public static class ImGuiTweaks {
         FadeOut,
     }
 
+    public static void SetFullWidth()
+        => ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+
     public static void AnimatedImage(IDalamudTextureWrap texture, float scale, Stopwatch stopwatch, float period, AnimationDirection direction) {
         var alpha = direction switch {
             AnimationDirection.FadeIn => stopwatch.ElapsedMilliseconds / period,
