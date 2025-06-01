@@ -193,4 +193,7 @@ public static class ImGuiTweaks {
             ImGuiHelpers.CenteredText(text);
         }
     }
+
+    public static void SetFullWidth()
+        => ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
 }
