@@ -34,6 +34,10 @@ public class WindowManager : IDisposable {
         pluginInterface.UiBuilder.Draw -= windowSystem.Draw;
         pluginInterface.UiBuilder.OpenConfigUi -= OpenConfigurationWindow;
 
+        foreach (var window in windowSystem.Windows) {
+            window.OnClose();
+        }
+        
         windowSystem.RemoveAllWindows();
     }
 
