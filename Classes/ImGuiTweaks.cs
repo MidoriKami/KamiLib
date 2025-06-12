@@ -9,6 +9,7 @@ using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 using KamiLib.Extensions;
 using Lumina.Excel.Sheets;
@@ -196,4 +197,10 @@ public static class ImGuiTweaks {
 
     public static void SetFullWidth()
         => ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+
+    public static bool GameIconButton(ITextureProvider textureProvider, uint iconId) {
+        var iconTexture = textureProvider.GetFromGameIcon(iconId);
+        
+        return ImGui.ImageButton(iconTexture.GetWrapOrEmpty().ImGuiHandle, new Vector2(48.0f, 48.0f));
+    }
 }
