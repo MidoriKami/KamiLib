@@ -14,12 +14,19 @@ public abstract class TabbedSelectionWindow<T>(string windowName, Vector2 size, 
     protected virtual bool AllowTabScrollBar => true;
     protected virtual bool AllowTabScroll => true;
     
+    private string selectedTab = string.Empty;
+    
     protected override void DrawContents() {
         using var windowTabBar = ImRaii.TabBar("tabbedSelectionTabBar", ImGuiTabBarFlags.Reorderable);
         if (!windowTabBar) return;
 
         using (var selectionListTab = ImRaii.TabItem(SelectionListTabName)) {
             if (selectionListTab) {
+                if (selectedTab != SelectionListTabName) {
+                    OnTabChanged();
+                    selectedTab = SelectionListTabName;
+                }
+                
                 base.DrawContents();
             }
         }
@@ -29,6 +36,11 @@ public abstract class TabbedSelectionWindow<T>(string windowName, Vector2 size, 
             using var tabItem = ImRaii.TabItem(tab.Name);
             
             if (tabItem) {
+                if (selectedTab != tab.Name) {
+                    OnTabChanged();
+                    selectedTab = tab.Name;
+                }
+                
                 var flags = ImGuiWindowFlags.None;
                 flags |= AllowTabScrollBar ? ImGuiWindowFlags.None : ImGuiWindowFlags.NoScrollbar;
                 flags |= AllowTabScroll ? ImGuiWindowFlags.None : ImGuiWindowFlags.NoScrollWithMouse;
@@ -38,4 +50,6 @@ public abstract class TabbedSelectionWindow<T>(string windowName, Vector2 size, 
             }
         }
     }
+    
+    public virtual void OnTabChanged() { }
 }
