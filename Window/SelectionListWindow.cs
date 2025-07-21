@@ -14,7 +14,7 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
     private T? selectedOption;
     
     protected abstract List<T> Options { get; }
-    protected abstract float SelectionListWidth { get; set; }
+    protected abstract float SelectionListWidth { get; }
     protected abstract float SelectionItemHeight { get; }
     protected abstract void DrawListOption(T option);
     protected abstract void DrawSelectedOption(T option);
