@@ -32,29 +32,33 @@ public class CharacterConfiguration  : IPluginConfiguration {
     public void Draw(ITextureProvider textureProvider) {
         using var id = ImRaii.PushId(ContentId.ToString());
 
-        using (var portrait = ImRaii.Child("portrait", ImGuiHelpers.ScaledVector2(75.0f, 75.0f), false, ImGuiWindowFlags.NoInputs)) {
-            if (portrait) {
-                if (ProfilePicture is not null) {
-                    ImGui.Image(ProfilePicture.GetWrapOrEmpty().ImGuiHandle, new Vector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
-                }
-                else {
-                    ImGui.Image(textureProvider.GetFromGameIcon(60042).GetWrapOrDefault()?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
-                }
-            }
-        }
-
+        DrawPortrait(textureProvider);
         ImGui.SameLine();
+        DrawCharacterInfo();
+    }
 
-        using (var info = ImRaii.Child("info", new Vector2(ImGui.GetContentRegionAvail().X, 75.0f * ImGuiHelpers.GlobalScale), false, ImGuiWindowFlags.NoInputs)) {
-            if (info) {
-                ImGuiHelpers.ScaledDummy(5.0f);
-                ImGui.TextUnformatted(CharacterName);
-                ImGui.TextUnformatted(CharacterWorld);
+    private void DrawPortrait(ITextureProvider textureProvider) {
+        using var portrait = ImRaii.Child("portrait", ImGuiHelpers.ScaledVector2(75.0f, 75.0f), false, ImGuiWindowFlags.NoInputs);
+        if (!portrait) return;
 
-                using (ImRaii.PushColor(ImGuiCol.Text, Vector4.One * 0.75f)) {
-                    ImGui.TextUnformatted(ContentId.ToString());
-                }
-            }
+        if (ProfilePicture is not null) {
+            ImGui.Image(ProfilePicture.GetWrapOrEmpty().ImGuiHandle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
+        }
+        else {
+            ImGui.Image(textureProvider.GetFromGameIcon(60042).GetWrapOrDefault()?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
+        }
+    }
+    
+    private void DrawCharacterInfo() {
+        using var info = ImRaii.Child("info", new Vector2(ImGui.GetContentRegionAvail().X, 75.0f * ImGuiHelpers.GlobalScale), false, ImGuiWindowFlags.NoInputs);
+        if (!info) return;
+
+        ImGuiHelpers.ScaledDummy(5.0f);
+        ImGui.TextUnformatted(CharacterName);
+        ImGui.TextUnformatted(CharacterWorld);
+
+        using (ImRaii.PushColor(ImGuiCol.Text, Vector4.One * 0.75f)) {
+            ImGui.TextUnformatted(ContentId.ToString());
         }
     }
 }
