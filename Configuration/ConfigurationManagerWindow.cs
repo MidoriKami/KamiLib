@@ -162,7 +162,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
                     destinationCharacters.Remove(selectedSourceCharacter);
                 }
             },
-            SelectionOptions = characters.ToList(),
+            SelectionOptions = characters.Where(character => character.ContentId is not 0).ToList(),
         });
     }
 
@@ -185,7 +185,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
                     return false;
                 });
             },
-            SelectionOptions = characters.ToList(),
+            SelectionOptions = characters.Where(character => character.ContentId is not 0).ToList(),
         });
     }
     
@@ -199,15 +199,20 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             }
         }
         catch (Exception e) {
-            throw new Exception("Exception retrieving character portraits.", e);
+            Log.Error(e, "Exception retrieving character portraits.");
         }
     }
 
     private async void TryLoadCharacterProfilePicture(LodestoneClient lodestoneClient, HttpClient httpClient, CharacterConfiguration characterConfiguration) {
-        if (characterConfiguration.ContentId is 0) return;
+        try {
+            if (characterConfiguration.ContentId is 0) return;
 
-        var texture = await NetStoneExtensions.TryGetProfilePicture(httpClient, lodestoneClient, PluginInterface, TextureProvider, Log, characterConfiguration);
-        characterConfiguration.ProfilePicture = texture;
+            var texture = await NetStoneExtensions.TryGetProfilePicture(httpClient, lodestoneClient, PluginInterface, TextureProvider, Log, characterConfiguration);
+            characterConfiguration.ProfilePicture = texture;
+        }
+        catch (Exception e) {
+            Log.Error(e, "Exception retrieving character portraits.");
+        }
     }
 
     private void DrawSelectedCharacter(CharacterConfiguration character) {
