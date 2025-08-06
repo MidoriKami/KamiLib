@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Configuration;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
@@ -8,7 +8,6 @@ using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Common.Math;
-using ImGuiNET;
 
 namespace KamiLib.Configuration;
 
@@ -42,10 +41,10 @@ public class CharacterConfiguration  : IPluginConfiguration {
         if (!portrait) return;
 
         if (ProfilePicture is not null) {
-            ImGui.Image(ProfilePicture.GetWrapOrEmpty().ImGuiHandle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
+            ImGui.Image(ProfilePicture.GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f), new Vector2(0.25f, 0.10f), new Vector2(0.75f, 0.47f));
         }
         else {
-            ImGui.Image(textureProvider.GetFromGameIcon(60042).GetWrapOrDefault()?.ImGuiHandle ?? IntPtr.Zero, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
+            ImGui.Image(textureProvider.GetFromGameIcon(60042).GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f));
         }
     }
     

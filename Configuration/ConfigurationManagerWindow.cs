@@ -6,13 +6,13 @@ using System.Net.Http;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.IoC;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
 using KamiLib.Extensions;
 using KamiLib.Window.SelectionWindows;
 using NetStone;
@@ -220,10 +220,10 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
             var texture = immediateTexture.GetWrapOrEmpty();
             var sizeRatio = ImGui.GetContentRegionAvail().X / texture.Width;
             
-            ImGui.Image(texture.ImGuiHandle, texture.Size * sizeRatio);
+            ImGui.Image(texture.Handle, texture.Size * sizeRatio);
         }
         else {
-            if (TextureProvider.GetFromGameIcon(60042).GetWrapOrDefault() is { ImGuiHandle: var handle } unknownTexture) {
+            if (TextureProvider.GetFromGameIcon(60042).GetWrapOrDefault() is { Handle: var handle } unknownTexture) {
                 var sizeRatio = ImGui.GetContentRegionAvail().X / unknownTexture.Width;
                 ImGui.Image(handle, ImGuiHelpers.ScaledVector2(75.0f, 75.0f) * sizeRatio);
             }

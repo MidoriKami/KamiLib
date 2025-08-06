@@ -8,6 +8,12 @@
         "resolved": "1.2.25",
         "contentHash": "xCXiw7BCxHJ8pF6wPepRUddlh2dlQlbr81gXA72hdk4FLHkKXas7EH/n+fk5UCA/YfMqG1Z6XaPiUjDbUNBUzg=="
       },
+      "Microsoft.Extensions.ObjectPool": {
+        "type": "Direct",
+        "requested": "[10.0.0-preview.6.25358.103, )",
+        "resolved": "10.0.0-preview.6.25358.103",
+        "contentHash": "r49n6FoNDeCC0G/KPLHHxg/VneYlpRNVmpzWyAiKAJ3wfpSOsbXB84Owyt3loATmO5aP20th0xGmKavdgDItDA=="
+      },
       "NetStone": {
         "type": "Direct",
         "requested": "[1.1.1, )",

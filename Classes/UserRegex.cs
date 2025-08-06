@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 
 namespace KamiLib.Classes;
 

@@ -3,12 +3,12 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
-using ImGuiNET;
 using KamiLib.Classes;
 using Lumina.Excel.Sheets;
 using TerritoryType = Lumina.Excel.Sheets.TerritoryType;
@@ -34,7 +34,7 @@ public static class TerritoryTypeExtensions {
         
         if (dataManager.GetExcelSheet<LoadingImage>().GetRow(option.LoadingImage.RowId) is var loadingImageInfo) {
             if (textureProvider.GetFromGame($"ui/loadingimage/{loadingImageInfo.FileName}_hr1.tex").GetWrapOrDefault() is {  } texture) {
-                ImGui.Image(texture.ImGuiHandle, ImGuiHelpers.ScaledVector2(Width, Height), new Vector2(0.15f, 0.15f), new Vector2(0.85f, 0.85f));
+                ImGui.Image(texture.Handle, ImGuiHelpers.ScaledVector2(Width, Height), new Vector2(0.15f, 0.15f), new Vector2(0.85f, 0.85f));
             }
             else {
                 ImGuiHelpers.ScaledDummy(Width, Height);

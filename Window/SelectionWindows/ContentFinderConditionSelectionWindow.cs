@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Utility;
@@ -10,7 +11,6 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
 using Lumina.Excel.Sheets;
 
 namespace KamiLib.Window.SelectionWindows;
@@ -74,7 +74,7 @@ public class ContentFinderConditionSelectionWindow : SelectionWindowBase<Content
 
 		ImGui.SetCursorPosY(1.0f);
 		var image = TextureProvider.GetFromGameIcon(new GameIconLookup { IconId = option.Image }).GetWrapOrEmpty();
-		ImGui.Image(image.ImGuiHandle, ImGuiHelpers.ScaledVector2(Width, Height - 1.0f));
+		ImGui.Image(image.Handle, ImGuiHelpers.ScaledVector2(Width, Height - 1.0f));
 	}
 
 	protected override IEnumerable<string> GetFilterStrings(ContentFinderCondition option)

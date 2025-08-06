@@ -2,12 +2,12 @@
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
 using KamiLib.Extensions;
 using Lumina.Excel.Sheets;
 
@@ -35,7 +35,7 @@ public class ContentsNoteSelectionWindow : IconItemSelectionWindow<ContentsNote>
 	protected override void DrawText(ContentsNote option) {
 		ImGui.Text(option.Name.ExtractText());
 		ImGui.Spacing();
-		ImGuiHelpers.SafeTextColoredWrapped(KnownColor.Gray.Vector().Lighten(0.20f), option.Description.ExtractText());
+		ImGui.TextColoredWrapped(KnownColor.Gray.Vector().Lighten(0.20f), option.Description.ExtractText());
 	}
 
 	protected override IEnumerable<string> GetFilterStrings(ContentsNote option)

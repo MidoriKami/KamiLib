@@ -126,6 +126,6 @@ public class CommandManager : IDisposable {
             stringBuilder.Append("\n");
         }
         
-        ChatGui.Print(stringBuilder.ToSeString().ToDalamudString());
+        ChatGui.Print(stringBuilder.ToReadOnlySeString().ToDalamudString());
     }
 }

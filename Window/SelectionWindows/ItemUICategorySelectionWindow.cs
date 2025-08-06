@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
-using ImGuiNET;
 using Lumina.Excel.Sheets;
 
 namespace KamiLib.Window.SelectionWindows;
@@ -31,7 +31,7 @@ public class ItemUiCategorySelectionWindow : SelectionWindowBase<ItemUICategory>
     
     protected override void DrawSelection(ItemUICategory option) {
         if (TextureProvider.GetFromGameIcon((uint)option.Icon) is { } texture) {
-            ImGui.Image(texture.GetWrapOrEmpty().ImGuiHandle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
+            ImGui.Image(texture.GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
             ImGui.SameLine();
             ImGui.SetCursorPosY(ImGui.GetCursorPos().Y + 5.0f * ImGuiHelpers.GlobalScale);
             ImGui.Text(option.Name.ExtractText());

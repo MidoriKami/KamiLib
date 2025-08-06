@@ -7,7 +7,7 @@ namespace KamiLib.Extensions;
 
 public static class GameGuiExtensions {
     public static unsafe T* GetAddonByName<T>(this IGameGui gameGui, string addonName) where T : unmanaged
-        => (T*) gameGui.GetAddonByName(addonName);
+        => (T*) gameGui.GetAddonByName(addonName).Address;
 
     public static unsafe T* GetAddon<T>(this IGameGui gameGui) where T : unmanaged {
         var type = typeof(T);
@@ -15,6 +15,6 @@ public static class GameGuiExtensions {
         var addonName = attribute?.AddonIdentifiers.FirstOrDefault();
         
         if (addonName is null) return null;
-        return (T*) gameGui.GetAddonByName(addonName);
+        return (T*) gameGui.GetAddonByName(addonName).Address;
     }
 }

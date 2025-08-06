@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -10,7 +11,6 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using ImGuiNET;
 using KamiLib.Extensions;
 using Lumina.Excel.Sheets;
 using Action = System.Action;
@@ -83,7 +83,7 @@ public static class ImGuiTweaks {
 
     public static bool PriorityInt(IDalamudPluginInterface pluginInterface, string label, ref int value) {
         ImGui.SetNextItemWidth(22.0f * ImGuiHelpers.GlobalScale);
-        var valueChanged = ImGui.InputInt($"##{label}_input_int", ref value, 0, 0);
+        var valueChanged = ImGui.InputInt($"##{label}_input_int", ref value);
         
         using (pluginInterface.UiBuilder.IconFontFixedWidthHandle.Push()) {
 
@@ -172,7 +172,7 @@ public static class ImGuiTweaks {
             _ => throw new IndexOutOfRangeException(),
         };
         
-        ImGui.Image(texture.ImGuiHandle, texture.Size * scale, Vector2.Zero, Vector2.One, new Vector4(1.0f, 1.0f, 1.0f, alpha));
+        ImGui.Image(texture.Handle, texture.Size * scale, Vector2.Zero, Vector2.One, new Vector4(1.0f, 1.0f, 1.0f, alpha));
     }
 
     public static void DisabledButton(string label, Action onClick) {
@@ -201,6 +201,6 @@ public static class ImGuiTweaks {
     public static bool GameIconButton(ITextureProvider textureProvider, uint iconId) {
         var iconTexture = textureProvider.GetFromGameIcon(iconId);
         
-        return ImGui.ImageButton(iconTexture.GetWrapOrEmpty().ImGuiHandle, new Vector2(48.0f, 48.0f));
+        return ImGui.ImageButton(iconTexture.GetWrapOrEmpty().Handle, new Vector2(48.0f, 48.0f));
     }
 }
