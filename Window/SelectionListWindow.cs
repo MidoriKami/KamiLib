@@ -32,7 +32,8 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
 
         ImGui.TableNextColumn();
         using var frameBg = ImRaii.PushColor(ImGuiCol.FrameBg, ImGui.GetStyle().GetFadedColor(ImGuiCol.FrameBg, 0.10f));
-        using var scrollBarSize = ImRaii.PushStyle(ImGuiStyleVar.ScrollbarSize, 0.0f);
+        using var scrollBarColor = ImRaii.PushColor(ImGuiCol.ScrollbarGrab, Vector4.Zero);
+        using var scrollBarSize = ImRaii.PushStyle(ImGuiStyleVar.ScrollbarSize, 0.001f);
 
         var extraButtonSize = new Vector2(ImGui.GetContentRegionAvail().X, 28.0f * ImGuiHelpers.GlobalScale);
         var listBoxSize = ImGui.GetContentRegionAvail() - ImGui.GetStyle().ItemInnerSpacing;
@@ -57,6 +58,7 @@ public abstract class SelectionListWindow<T>(string windowName, Vector2 size, bo
         
         frameBg.Pop();
         scrollBarSize.Pop();
+        scrollBarColor.Pop();
         
         ImGui.TableNextColumn();
         var flags = ImGuiWindowFlags.None;
