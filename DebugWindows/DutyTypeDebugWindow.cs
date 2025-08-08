@@ -34,7 +34,7 @@ public class DutyTypeDebugWindow(IDataManager dataManager) : Window.Window("Duty
 		public void Draw() {
 			if (Duties.Any()) {
 				foreach (var entry in Duties) {
-					ImGui.Text(entry.Name.ExtractText());
+					ImGui.Text(entry.Name.ToString());
 				}
 			}
 			else {

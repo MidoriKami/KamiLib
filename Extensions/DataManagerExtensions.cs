@@ -74,10 +74,10 @@ public static class DataManagerExtensions {
 		=> cfc switch {
 			{ ContentType.RowId: 5, ContentMemberType.RowId: 4 } => DutyType.Alliance,
 			{ ContentType.RowId: 37 } => DutyType.ChaoticAlliance,
-			{ ContentType.RowId: 5 } when cfc.Name.ExtractText().Contains("Savage") => DutyType.Savage,
-			{ ContentType.RowId: 5 } when !cfc.Name.ExtractText().Contains("Savage") => DutyType.NormalRaid,
+			{ ContentType.RowId: 5 } when cfc.Name.ToString().Contains("Savage") => DutyType.Savage,
+			{ ContentType.RowId: 5 } when !cfc.Name.ToString().Contains("Savage") => DutyType.NormalRaid,
 			{ ContentType.RowId: 28 } => DutyType.Ultimate,
-			{ ContentType.RowId: 4 } when cfc.Name.ExtractText().Contains("Extreme") || cfc.Name.ExtractText().Contains("Minstrel") => DutyType.Extreme,
+			{ ContentType.RowId: 4 } when cfc.Name.ToString().Contains("Extreme") || cfc.Name.ToString().Contains("Minstrel") => DutyType.Extreme,
 			{ ContentType.RowId: 4 } => DutyType.Unreal,
 			{ ContentType.RowId: 30, AllowUndersized: false } => DutyType.Criterion,
 			_ => DutyType.Unknown,

@@ -34,13 +34,13 @@ public class ItemUiCategorySelectionWindow : SelectionWindowBase<ItemUICategory>
             ImGui.Image(texture.GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
             ImGui.SameLine();
             ImGui.SetCursorPosY(ImGui.GetCursorPos().Y + 5.0f * ImGuiHelpers.GlobalScale);
-            ImGui.Text(option.Name.ExtractText());
+            ImGui.Text(option.Name.ToString());
         }
     }
 
     protected override IEnumerable<string> GetFilterStrings(ItemUICategory option)
-        => [option.Name.ExtractText()];
+        => [option.Name.ToString()];
 
     protected override string GetElementKey(ItemUICategory element)
-        => $"{element.Name.ExtractText()}{element.RowId}";
+        => $"{element.Name.ToString()}{element.RowId}";
 }

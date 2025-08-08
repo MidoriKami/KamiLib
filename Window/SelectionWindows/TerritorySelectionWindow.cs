@@ -29,7 +29,7 @@ public class TerritorySelectionWindow : SelectionWindowBase<TerritoryType> {
         => option.Draw(DataManager, TextureProvider);
 
     protected override IEnumerable<string> GetFilterStrings(TerritoryType option)
-        => [option.PlaceName.Value.Name.ExtractText()];
+        => [option.PlaceName.Value.Name.ToString()];
     
     protected override string GetElementKey(TerritoryType element)
         => element.RowId.ToString();

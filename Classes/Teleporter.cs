@@ -27,7 +27,7 @@ public unsafe class Teleporter {
 				.AddUiForeground($"[{pluginName}] ", 45)
 				.AddUiForeground("[Teleport] ", 62)
 				.AddText("Teleporting to ")
-				.AddUiForeground(aetheryte.PlaceName.Value.Name.ExtractText(), 576)
+				.AddUiForeground(aetheryte.PlaceName.Value.Name.ToString(), 576)
 				.Build(),
 		});
 	}

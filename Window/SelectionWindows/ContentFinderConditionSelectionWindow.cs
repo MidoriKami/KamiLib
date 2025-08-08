@@ -56,16 +56,16 @@ public class ContentFinderConditionSelectionWindow : SelectionWindowBase<Content
 		ImGui.TableSetupColumn("##column2", ImGuiTableColumnFlags.None, 1.0f);
 		
 		ImGui.TableNextColumn();
-		ImGui.TextUnformatted(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(option.Name.ExtractText()));
+		ImGui.TextUnformatted(CultureInfo.CurrentCulture.TextInfo.ToTitleCase(option.Name.ToString()));
         
 		ImGui.TableNextColumn();
 		ImGui.TextUnformatted(option.RowId.ToString());
 
 		ImGui.TableNextColumn();
-		ImGui.TextColored(KnownColor.Gray.Vector(), option.TerritoryType.Value.PlaceNameZone.Value.Name.ExtractText());
+		ImGui.TextColored(KnownColor.Gray.Vector(), option.TerritoryType.Value.PlaceNameZone.Value.Name.ToString());
 		
 		ImGui.TableNextColumn();
-		ImGui.Text(option.ContentType.Value.Name.ExtractText());
+		ImGui.Text(option.ContentType.Value.Name.ToString());
 	}
 
 	private void DrawImage(ContentFinderCondition option) {
@@ -78,7 +78,7 @@ public class ContentFinderConditionSelectionWindow : SelectionWindowBase<Content
 	}
 
 	protected override IEnumerable<string> GetFilterStrings(ContentFinderCondition option)
-		=> [ option.Name.ExtractText(), option.ContentType.Value.Name.ExtractText() ];
+		=> [ option.Name.ToString(), option.ContentType.Value.Name.ToString() ];
 
 	protected override string GetElementKey(ContentFinderCondition element)
 		=> element.RowId.ToString();

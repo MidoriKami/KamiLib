@@ -33,13 +33,13 @@ public class ContentsNoteSelectionWindow : IconItemSelectionWindow<ContentsNote>
 		=> TextureProvider.DrawGameIcon(option.Icon);
 
 	protected override void DrawText(ContentsNote option) {
-		ImGui.Text(option.Name.ExtractText());
+		ImGui.Text(option.Name.ToString());
 		ImGui.Spacing();
-		ImGui.TextColoredWrapped(KnownColor.Gray.Vector().Lighten(0.20f), option.Description.ExtractText());
+		ImGui.TextColoredWrapped(KnownColor.Gray.Vector().Lighten(0.20f), option.Description.ToString());
 	}
 
 	protected override IEnumerable<string> GetFilterStrings(ContentsNote option)
-		=> [option.Name.ExtractText(), option.Description.ExtractText()];
+		=> [option.Name.ToString(), option.Description.ToString()];
 
 	protected override string GetElementKey(ContentsNote element)
 		=> element.RowId.ToString();

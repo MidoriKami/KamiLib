@@ -39,12 +39,12 @@ public class CollectableItemSelectionWindow : SelectionWindowBase<Item> {
             ImGui.Image(texture.GetWrapOrEmpty().Handle, ImGuiHelpers.ScaledVector2(30.0f, 30.0f));
             ImGui.SameLine();
             ImGui.SetCursorPosY(ImGui.GetCursorPos().Y + 5.0f * ImGuiHelpers.GlobalScale);
-            ImGui.Text(option.Name.ExtractText());
+            ImGui.Text(option.Name.ToString());
         }
     }
 
     protected override IEnumerable<string> GetFilterStrings(Item option)
-        => [option.Name.ExtractText()];
+        => [option.Name.ToString()];
 
     protected override string GetElementKey(Item element)
         => $"{element.Name.ToString()}{element.RowId}";

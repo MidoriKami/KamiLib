@@ -54,9 +54,9 @@ public static class TerritoryTypeExtensions {
         ImGui.TableSetupColumn("##column1", ImGuiTableColumnFlags.None, 1.0f);
         ImGui.TableSetupColumn("##column2", ImGuiTableColumnFlags.None, 1.0f);
 
-        var placeName = option.PlaceName.Value.Name.ExtractText();
-        var zoneName = option.PlaceNameZone.Value.Name.ExtractText();
-        var regionName = option.PlaceNameRegion.Value.Name.ExtractText();
+        var placeName = option.PlaceName.Value.Name.ToString();
+        var zoneName = option.PlaceNameZone.Value.Name.ToString();
+        var regionName = option.PlaceNameRegion.Value.Name.ToString();
         
         ImGui.TableNextColumn();
         ImGui.TextUnformatted(placeName);
@@ -83,7 +83,7 @@ public static class TerritoryTypeExtensions {
         
         ImGui.TableNextColumn();
         if  (ContentFinderConditionMap.ContainsKey(option.RowId) && ContentFinderConditionMap.TryGetValue(option.RowId, out var cfc) && cfc.RowId is not 0) {
-            ImGui.TextUnformatted($"{CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cfc.Name.ExtractText())}");
+            ImGui.TextUnformatted($"{CultureInfo.CurrentCulture.TextInfo.ToTitleCase(cfc.Name.ToString())}");
         }
         else if (!ContentFinderConditionMap.ContainsKey(option.RowId)) {
             ContentFinderConditionMap.TryAdd(option.RowId, dataManager.GetExcelSheet<ContentFinderCondition>().FirstOrDefault(contentFinderCondition => contentFinderCondition.TerritoryType.RowId == option.RowId));
