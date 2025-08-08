@@ -1,0 +1,127 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Dalamud.Plugin.Services;
+using Lumina.Excel.Sheets;
+
+namespace KamiLib.Classes;
+
+public static class WondrousTailsResolver {
+    private static IEnumerable<InstanceContent> GetInstancesForOrderData(this IDataManager dataManager, uint orderId) {
+        var orderData = dataManager.GetExcelSheet<WeeklyBingoOrderData>().GetRow(orderId);
+
+        switch (orderData.Type) {
+            // Data is InstanceContent directly
+            case 0:
+                return [orderData.Data.GetValueOrDefault<InstanceContent>() ?? throw new Exception("Tried to parse non-instance content data.")];
+
+            // Data is specific duty level
+            case 1:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc.ContentType.RowId is 2)                        // Dungeons type
+                    .Where(cfc => cfc.ClassJobLevelRequired == orderData.Data.RowId) // Matches duty level specifically
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+
+            // Dungeons by Range
+            case 2:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc.ContentType.RowId is 2)                        // Dungeons type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)   // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId) // Below maximum level
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+
+            // Data is InstanceContentType
+            case 3:
+                return dataManager.GetExcelSheet<InstanceContent>()
+                    .Where(instance => instance.InstanceContentType.RowId == orderData.Data.RowId);
+
+            // Data is WeeklyBingoMultipleOrder
+            case 4:
+                return dataManager.GetExcelSheet<WeeklyBingoMultipleOrder>().GetRow(orderData.Data.RowId)
+                    .Content
+                    .Where(content => content is { IsValid: true, RowId: not 0 })
+                    .Select(content => content.Value);
+
+            // Leveling, excludes levels divisible by 10
+            case 5:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc.ContentType.RowId is 2)                                                // Dungeons type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)                           // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)                         // Below maximum level
+                    .Where(cfc => !(cfc.ClassJobLevelRequired >= 50 && cfc.ClassJobLevelRequired % 10 is 0)) // Not an even multiple of 10, over 50
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+
+            // High Level Dungeons, specifically divisible by 10
+            case 6:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc.ContentType.RowId is 2)                        // Dungeons type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)   // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId) // Below maximum level
+                    .Where(cfc => cfc.ClassJobLevelRequired % 10 is 0)               // Is an even multiple of 10
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+
+            // Trials in Range
+            case 7:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc.ContentType.RowId is 4)                        // Trials type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)   // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId) // Below maximum level
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+
+            // Alliance Raids in Range
+            case 8:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc is { ContentType.RowId: 5, ContentMemberType.RowId: 4 }) // Alliance Raids type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)             // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)           // Below maximum level
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+
+            // Normal Raids in Range
+            case 9:
+                return dataManager.GetExcelSheet<ContentFinderCondition>()
+                    .Where(cfc => cfc is { ContentType.RowId: 5, ContentMemberType.RowId: 3, NormalRaidRoulette: true }) // Normal Raids type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)                                       // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)                                     // Below maximum level
+                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+                    .Where(instanceContent => instanceContent.HasValue)
+                    .OfType<InstanceContent>();
+        }
+
+        return [];
+    }
+
+    public static IEnumerable<ContentFinderCondition> GetDutiesForOrderData(this IDataManager dataManager, uint orderId) {
+        foreach (var instanceContent in GetInstancesForOrderData(dataManager, orderId)) {
+            var duty = dataManager.GetExcelSheet<ContentFinderCondition>().Where(cfc => MatchInstanceContent(cfc, instanceContent));
+            foreach (var dutyContent in duty) {
+                yield return dutyContent;
+            }
+        }
+    }
+
+    public static IEnumerable<TerritoryType> GetTerritoriesForOrderData(this IDataManager dataManager, uint orderId) {
+        foreach (var duty in GetDutiesForOrderData(dataManager, orderId)) {
+            if (duty.TerritoryType.IsValid) {
+                yield return duty.TerritoryType.Value;
+            }
+        }
+    }
+
+    private static bool MatchInstanceContent(ContentFinderCondition cfc, InstanceContent instanceContent) {
+        if (cfc.Content.GetValueOrDefault<InstanceContent>() is not { } cfcInstanceContent) return false;
+
+        return cfcInstanceContent.RowId == instanceContent.RowId;
+    }
+}
