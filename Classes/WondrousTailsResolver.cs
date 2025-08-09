@@ -60,10 +60,10 @@ public static class WondrousTailsResolver {
             // High Level Dungeons, specifically divisible by 10
             case 6:
                 return dataManager.GetExcelSheet<ContentFinderCondition>()
-                    .Where(cfc => cfc.ContentType.RowId is 2)                        // Dungeons type
-                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)   // Above minimum level
-                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId) // Below maximum level
-                    .Where(cfc => cfc.ClassJobLevelRequired % 10 is 0)               // Is an even multiple of 10
+                    .Where(cfc => cfc is { ContentType.RowId: 2, HighLevelRoulette: true }) // Dungeons type
+                    .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)          // Above minimum level
+                    .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)        // Below maximum level
+                    .Where(cfc => cfc.ClassJobLevelRequired % 10 is 0)                      // Is an even multiple of 10
                     .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
                     .Where(instanceContent => instanceContent.HasValue)
                     .OfType<InstanceContent>();
