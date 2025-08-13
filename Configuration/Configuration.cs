@@ -101,7 +101,7 @@ public static class Configuration {
     internal static DirectoryInfo GetCharacterDirectoryInfo(this IDalamudPluginInterface pluginInterface, ulong contentId) {
         var directoryInfo = new DirectoryInfo(Path.Combine(pluginInterface.ConfigDirectory.FullName, contentId.ToString()));
         
-        if (directoryInfo is { Exists: false }) {
+        if (directoryInfo is { Exists: false } && contentId is not 0) {
             directoryInfo.Create();
         }
         
