@@ -11,10 +11,10 @@ using FFXIVClientStructs.FFXIV.Common.Math;
 
 namespace KamiLib.Configuration;
 
-public class CharacterConfiguration  : IPluginConfiguration {
-    public int Version { get; set; }
-    public string CharacterName { get; set; } = string.Empty;
-    public string CharacterWorld { get; set; } = string.Empty;
+public class CharacterConfiguration : IPluginConfiguration {
+    public int Version { get; set; } = 2;
+    public string CharacterName { get; set; } = "Unknown Name";
+    public string CharacterWorld { get; set; } = "Unknown World";
     public ulong ContentId { get; set; }
     public string? LodestoneId { get; set; }
 

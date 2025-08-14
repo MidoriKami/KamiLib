@@ -21,22 +21,20 @@ public static class Configuration {
     /// <param name="pluginInterface">Dalamud Plugin Interface used to find the correct directory.</param>
     /// <param name="contentId">ContentId of the desired character file.</param>
     /// <param name="fileName">Specific name of the file you wish to load.</param>
-    /// <param name="createFunc">A function to create that file if loading fails.</param>
     /// <typeparam name="T">Type of file to load, needed for serialization.</typeparam>
     /// <returns>Either a loaded config file, or a new'd file of type T.</returns>
-    public static T LoadCharacterFile<T>(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName, Func<T> createFunc) where T : new() 
-        => LoadFile(pluginInterface, pluginInterface.GetCharacterFileInfo(contentId, fileName).FullName, createFunc);
+    public static T LoadCharacterFile<T>(this IDalamudPluginInterface pluginInterface, ulong contentId, string fileName) where T : new() 
+        => LoadFile<T>(pluginInterface, pluginInterface.GetCharacterFileInfo(contentId, fileName).FullName);
 
     /// <summary>
     /// Load a configuration file from the plugin specific config directory.
     /// </summary>
     /// <param name="pluginInterface">Dalamud Plugin Interface used to find the correct directory.</param>
     /// <param name="fileName">Specific name of the file you wish you load.</param>
-    /// <param name="createFunc">A function to create the file if loading fails.</param>
     /// <typeparam name="T">Type of file to load, needed for serialization.</typeparam>
     /// <returns>Either a loaded config file, or a new'd file of type T.</returns>
-    public static T LoadConfigFile<T>(this IDalamudPluginInterface pluginInterface, string fileName, Func<T> createFunc) where T : new() 
-        => LoadFile(pluginInterface, Path.Combine(pluginInterface.ConfigDirectory.FullName, fileName), createFunc);
+    public static T LoadConfigFile<T>(this IDalamudPluginInterface pluginInterface, string fileName) where T : new() 
+        => LoadFile<T>(pluginInterface, Path.Combine(pluginInterface.ConfigDirectory.FullName, fileName));
 
     /// <summary>
     /// Save a configuration file for a specific character.
@@ -59,7 +57,7 @@ public static class Configuration {
     public static void SaveConfigFile<T>(this IDalamudPluginInterface pluginInterface, string fileName, T file)
         => SaveFile(pluginInterface, Path.Combine(pluginInterface.GetPluginConfigDirectory(), fileName), file);
 
-    private static T LoadFile<T>(IDalamudPluginInterface pluginInterface, string filePath, Func<T> createFunc) where T : new() {
+    private static T LoadFile<T>(IDalamudPluginInterface pluginInterface, string filePath) where T : new() {
         var fileInfo = new FileInfo(filePath);
         if (fileInfo is { Exists: true }) {
             try {
@@ -68,7 +66,7 @@ public static class Configuration {
 
                 // If deserialize result is null, create a new instance instead and save it.
                 if (dataObject is null) {
-                    dataObject = createFunc();
+                    dataObject = new T();
                     SaveFile(pluginInterface, filePath, dataObject);
                 }
                 
@@ -79,11 +77,11 @@ public static class Configuration {
                 var localLog = pluginInterface.Create<LogWrapper>();
                 localLog?.Log.Error(e, $"Error trying to load file {filePath}, creating a new one instead.");
                 
-                SaveFile(pluginInterface, filePath, createFunc());
+                SaveFile(pluginInterface, filePath, new T());
             }
         }
 
-        var newFile = createFunc();
+        var newFile = new T();
         SaveFile(pluginInterface, filePath, newFile);
         
         return newFile;
@@ -99,11 +97,11 @@ public static class Configuration {
             localLog?.Log.Error(e, $"Error trying to save file {filePath}");
         }
     } 
-
+ 
     internal static DirectoryInfo GetCharacterDirectoryInfo(this IDalamudPluginInterface pluginInterface, ulong contentId) {
         var directoryInfo = new DirectoryInfo(Path.Combine(pluginInterface.ConfigDirectory.FullName, contentId.ToString()));
         
-        if (directoryInfo is { Exists: false }) {
+        if (directoryInfo is { Exists: false } && contentId is not 0) {
             directoryInfo.Create();
         }
         
@@ -119,7 +117,12 @@ public static class Configuration {
         => pluginInterface.GetAllCharacterContentIds().Select(pluginInterface.LoadCharacterConfiguration);
 
     private static CharacterConfiguration LoadCharacterConfiguration(this IDalamudPluginInterface pluginInterface, ulong contentId) {
-        var loadedConfiguration = pluginInterface.LoadCharacterFile(contentId, "System.config.json", () => CreateNewCharacterConfig(contentId));
+        var loadedConfiguration = pluginInterface.LoadCharacterFile<CharacterConfiguration>(contentId, "System.config.json");
+
+        if (loadedConfiguration.ContentId is 0) {
+            loadedConfiguration.ContentId = contentId;
+        }
+        
         if (loadedConfiguration is { Version: not 2, ContentId: 0 }) {
             loadedConfiguration.Version = 2;
             loadedConfiguration.ContentId = contentId;
@@ -138,12 +141,4 @@ public static class Configuration {
             }
         }
     }
-
-    private static CharacterConfiguration CreateNewCharacterConfig(ulong contentId) 
-        => new() {
-            CharacterName = "Unknown Name",
-            ContentId = contentId,
-            Version = 2,
-            CharacterWorld = "Unknown World",
-        };
 }
