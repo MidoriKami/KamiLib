@@ -20,9 +20,7 @@ public static class WondrousTailsResolver {
                 return dataManager.GetExcelSheet<ContentFinderCondition>()
                     .Where(cfc => cfc.ContentType.RowId is 2)                        // Dungeons type
                     .Where(cfc => cfc.ClassJobLevelRequired == orderData.Data.RowId) // Matches duty level specifically
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
 
             // Dungeons by Range
             case 2:
@@ -30,9 +28,7 @@ public static class WondrousTailsResolver {
                     .Where(cfc => cfc.ContentType.RowId is 2)                        // Dungeons type
                     .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)   // Above minimum level
                     .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId) // Below maximum level
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
 
             // Data is InstanceContentType
             case 3:
@@ -53,9 +49,7 @@ public static class WondrousTailsResolver {
                     .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)                           // Above minimum level
                     .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)                         // Below maximum level
                     .Where(cfc => !(cfc.ClassJobLevelRequired >= 50 && cfc.ClassJobLevelRequired % 10 is 0)) // Not an even multiple of 10, over 50
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
 
             // High Level Dungeons, specifically divisible by 10
             case 6:
@@ -64,9 +58,7 @@ public static class WondrousTailsResolver {
                     .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)          // Above minimum level
                     .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)        // Below maximum level
                     .Where(cfc => cfc.ClassJobLevelRequired % 10 is 0)                      // Is an even multiple of 10
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
 
             // Trials in Range
             case 7:
@@ -74,9 +66,7 @@ public static class WondrousTailsResolver {
                     .Where(cfc => cfc.ContentType.RowId is 4)                        // Trials type
                     .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)   // Above minimum level
                     .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId) // Below maximum level
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
 
             // Alliance Raids in Range
             case 8:
@@ -84,9 +74,7 @@ public static class WondrousTailsResolver {
                     .Where(cfc => cfc is { ContentType.RowId: 5, ContentMemberType.RowId: 4 }) // Alliance Raids type
                     .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)             // Above minimum level
                     .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)           // Below maximum level
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
 
             // Normal Raids in Range
             case 9:
@@ -94,9 +82,7 @@ public static class WondrousTailsResolver {
                     .Where(cfc => cfc is { ContentType.RowId: 5, ContentMemberType.RowId: 3, NormalRaidRoulette: true }) // Normal Raids type
                     .Where(cfc => cfc.ClassJobLevelRequired >= orderData.Unknown2)                                       // Above minimum level
                     .Where(cfc => cfc.ClassJobLevelRequired <= orderData.Data.RowId)                                     // Below maximum level
-                    .Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
-                    .Where(instanceContent => instanceContent.HasValue)
-                    .OfType<InstanceContent>();
+                    .AsInstanceContent();
         }
 
         return [];
@@ -124,4 +110,9 @@ public static class WondrousTailsResolver {
 
         return cfcInstanceContent.RowId == instanceContent.RowId;
     }
+    
+    private static IEnumerable<InstanceContent> AsInstanceContent(this IEnumerable<ContentFinderCondition> enumerable)
+        => enumerable.Select(cfc => cfc.Content.GetValueOrDefault<InstanceContent>())
+            .Where(instanceContent => instanceContent.HasValue)
+            .OfType<InstanceContent>();
 }
