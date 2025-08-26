@@ -69,6 +69,32 @@ public static class ImGuiTweaks {
         return false;
     }
 
+    public static bool EnumFlagCombo<T>(string label, ref T refValue) where T : Enum {
+        using var combo = ImRaii.Combo(label, refValue.GetDescription());
+        if (!combo) return false;
+
+        foreach (Enum enumValue in Enum.GetValues(refValue.GetType())) {
+            if (ImGui.Selectable(enumValue.GetDescription(), refValue.HasFlag(enumValue))) {
+                if (!refValue.HasFlag(enumValue)) {
+                    var intRefValue = Convert.ToInt32(refValue);
+                    var intFlagValue = Convert.ToInt32(enumValue);
+                    var result = intRefValue | intFlagValue;
+                    refValue = (T)Enum.ToObject(refValue.GetType(), result);
+                }
+                else {
+                    var intRefValue = Convert.ToInt32(refValue);
+                    var intFlagValue = Convert.ToInt32(enumValue);
+                    var result = intRefValue & ~intFlagValue;
+                    refValue = (T)Enum.ToObject(refValue.GetType(), result);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static bool Checkbox(string label, ref bool value, string? hintText) {
         using var group = ImRaii.Group();
         
