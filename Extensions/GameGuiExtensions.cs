@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.Attributes;
@@ -6,7 +7,8 @@ using FFXIVClientStructs.Attributes;
 namespace KamiLib.Extensions;
 
 public static class GameGuiExtensions {
-    public static unsafe T* GetAddonByName<T>(this IGameGui gameGui, string addonName) where T : unmanaged
+    [Obsolete("Don't forget to switch this to Dalamud.IGameGui.GetAddonByName, after the next dalamud stable release.")]
+    public static unsafe T* InternalGetAddonByName<T>(this IGameGui gameGui, string addonName) where T : unmanaged
         => (T*) gameGui.GetAddonByName(addonName).Address;
 
     public static unsafe T* GetAddon<T>(this IGameGui gameGui) where T : unmanaged {
