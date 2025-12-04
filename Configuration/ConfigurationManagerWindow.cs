@@ -23,8 +23,8 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
     [PluginService] private ITextureProvider TextureProvider { get; set; } = null!;
     [PluginService] private INotificationManager NotificationManager { get; set; } = null!;
     [PluginService] private IPluginLog Log { get; set; } = null!;
-    [PluginService] private IClientState ClientState { get; set; } = null!;
     [PluginService] private IChatGui ChatGui { get; set; } = null!;
+    [PluginService] private IPlayerState PlayerState { get; set; } = null!;
 
     private List<CharacterConfiguration> characters = [];
 
@@ -177,7 +177,7 @@ public class ConfigurationManagerWindow : Window.Window, IDisposable {
                         return true;
                     }
 
-                    if (character.ContentId == ClientState.LocalContentId) {
+                    if (character.ContentId == PlayerState.ContentId) {
                         ChatGui.PrintError("Unable to select currently logged in character as target.", PluginInterface.InternalName, 45);
                         return true;
                     }
